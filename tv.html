@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Axxess - TV Dashboard</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    /* TV-SPECIFIC FULL SCREEN STYLES */
+    body { 
+      margin: 0; 
+      padding: 0; 
+      overflow: hidden;
+      background: linear-gradient(135deg, #0099cc 0%, #0078a8 100%);
+    }
+    
+    .tv-shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      padding: 0;
+      gap: 20px;
+    }
+    
+    .tv-header {
+      background: #0099cc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    
+    .tv-main, .tv-footer {
+      margin: 0 24px;
+    }
+    
+    .tv-header .brand { display: flex; align-items: center; gap: 20px; }
+    .tv-header .logo { height: 50px; width: auto; border-radius: 4px; background: white; padding: 6px; }
+    .tv-header .title { 
+      font-size: 32px; 
+      font-weight: 300; 
+      color: white; 
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .tv-header .subtitle { font-size: 14px; color: rgba(255,255,255,0.85); margin-top: 4px; font-weight: 400; }
+    .tv-header .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: white;
+      color: #0099cc;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .tv-header .live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    
+    .tv-main {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 20px;
+      min-height: 0;
+    }
+    
+    .tv-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    
+    .tv-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .tv-card.grow { flex: 1; min-height: 0; }
+    .tv-left .tv-card.grow { flex: 1.2; }
+    .tv-left .tv-card:not(.grow) { flex: 0 0 auto; }
+    
+    .tv-card-header {
+      padding: 20px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .tv-card-title { font-size: 22px; font-weight: 800; color: #2d3748; }
+    .tv-card-hint { font-size: 13px; color: #718096; margin-top: 4px; }
+    .tv-card-badge { font-size: 14px; color: #0078a8; font-weight: 700; }
+    
+    .tv-card-body { padding: 20px 24px; flex: 1; overflow: visible; min-height: 0; }
+    
+    /* Weekly Top 5 */
+    .tv-rank-list { display: flex; flex-direction: column; gap: 12px; }
+    .tv-rank-row {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    /* Gold, Silver, Bronze for top 3 */
+    .tv-rank-row.rank-1 {
+      background: linear-gradient(135deg, #fef9c3 0%, #fef08a 50%, #fde047 100%);
+      border-color: #eab308;
+      box-shadow: 0 4px 20px rgba(234, 179, 8, 0.3);
+    }
+    .tv-rank-row.rank-2 {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+      border-color: #94a3b8;
+      box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3);
+    }
+    .tv-rank-row.rank-3 {
+      background: linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fb923c 100%);
+      border-color: #ea580c;
+      box-shadow: 0 4px 15px rgba(234, 88, 12, 0.25);
+    }
+    
+    .tv-rank-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0099cc, #0078a8);
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .rank-1 .tv-rank-num {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+      animation: glow-gold 2s ease-in-out infinite;
+    }
+    .rank-2 .tv-rank-num {
+      background: linear-gradient(135deg, #9ca3af, #6b7280);
+      box-shadow: 0 0 15px rgba(156, 163, 175, 0.5);
+    }
+    .rank-3 .tv-rank-num {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      box-shadow: 0 0 15px rgba(249, 115, 22, 0.5);
+    }
+    
+    /* Trophy icon for #1 */
+    .tv-rank-num.gold::after {
+      content: "🏆";
+      position: absolute;
+      top: -12px;
+      right: -8px;
+      font-size: 20px;
+      animation: bounce 1s ease-in-out infinite;
+    }
+    .tv-rank-num.silver::after {
+      content: "🥈";
+      position: absolute;
+      top: -10px;
+      right: -6px;
+      font-size: 16px;
+    }
+    .tv-rank-num.bronze::after {
+      content: "🥉";
+      position: absolute;
+      top: -10px;
+      right: -6px;
+      font-size: 16px;
+    }
+    
+    @keyframes glow-gold {
+      0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+      50% { box-shadow: 0 0 35px rgba(251, 191, 36, 0.9); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    
+    .tv-rank-name { font-size: 18px; font-weight: 800; color: #2d3748; }
+    .tv-rank-meta { font-size: 12px; color: #718096; margin-top: 4px; }
+    .tv-rank-score { font-size: 24px; font-weight: 900; color: #0078a8; text-align: right; }
+    .rank-1 .tv-rank-score { color: #b45309; }
+    .rank-2 .tv-rank-score { color: #475569; }
+    .rank-3 .tv-rank-score { color: #c2410c; }
+    .tv-rank-reason { font-size: 12px; color: #718096; text-align: right; max-width: 160px; }
+    
+    /* Highlight Slide - Professional */
+    .tv-highlight {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      text-align: center;
+      position: relative;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    }
+    .tv-highlight::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0099cc, #0078a8);
+    }
+    .tv-celebration-badge {
+      background: #0099cc;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+    .tv-quote {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.4;
+      max-width: 90%;
+      margin-bottom: 24px;
+      animation: fadeSlideIn 0.5s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tv-keywords { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 10px; 
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .tv-keyword {
+      padding: 10px 18px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .tv-agent-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #f8fafc;
+      padding: 20px 28px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .tv-agent-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #0099cc;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .tv-agent-info { text-align: left; }
+    .tv-agent-name { font-size: 18px; font-weight: 700; color: #1e293b; }
+    .tv-agent-team { font-size: 13px; color: #64748b; margin-top: 4px; }
+    .tv-agent-source {
+      margin-left: auto;
+      padding: 10px 20px;
+      border-radius: 6px;
+      background: #0099cc;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    
+    /* Monthly Leaders */
+    .tv-podium { display: flex; flex-direction: column; gap: 14px; }
+    .tv-podium-card {
+      padding: 16px;
+      background: linear-gradient(135deg, #fef9c3 0%, #fef08a 50%, #fde047 100%);
+      border-radius: 12px;
+      border: 2px solid #eab308;
+      box-shadow: 0 4px 20px rgba(234, 179, 8, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .tv-podium-card::before {
+      content: "⭐";
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 24px;
+      animation: twinkle 1.5s ease-in-out infinite;
+    }
+    .tv-podium-card:nth-child(2) {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+      border-color: #94a3b8;
+      box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3);
+    }
+    .tv-podium-card:nth-child(2)::before {
+      content: "✨";
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
+    .tv-podium-top { display: flex; align-items: center; justify-content: space-between; }
+    .tv-podium-info { display: flex; align-items: center; gap: 16px; }
+    .tv-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0099cc, #0078a8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .tv-podium-name { font-size: 20px; font-weight: 800; color: #2d3748; }
+    .tv-podium-meta { font-size: 14px; color: #718096; margin-top: 4px; }
+    .tv-themes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .tv-theme {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      color: #718096;
+      font-size: 13px;
+    }
+    
+    /* Footer Ticker */
+    .tv-footer {
+      background: linear-gradient(135deg, #0099cc 0%, #0078a8 100%);
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,120,168,.3);
+      overflow: hidden;
+    }
+    .tv-ticker {
+      white-space: nowrap;
+      animation: tickerScroll 30s linear infinite;
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* RESPONSIVE: Large TVs (1920px+) */
+    @media (min-width: 1920px) {
+      .tv-shell { padding: 32px; gap: 28px; }
+      .tv-header { padding: 28px 40px; }
+      .tv-header .logo { height: 64px; }
+      .tv-header .title { font-size: 36px; }
+      .tv-header .subtitle { font-size: 16px; }
+      .tv-header .live-badge { padding: 14px 24px; font-size: 16px; }
+      .tv-main { gap: 28px; }
+      .tv-left { gap: 28px; }
+      .tv-card-header { padding: 24px 32px; }
+      .tv-card-title { font-size: 28px; }
+      .tv-card-body { padding: 24px 32px; }
+      .tv-rank-list { gap: 16px; }
+      .tv-rank-row { padding: 18px 20px; gap: 20px; }
+      .tv-rank-num { width: 60px; height: 60px; font-size: 28px; }
+      .tv-rank-name { font-size: 22px; }
+      .tv-rank-meta { font-size: 15px; }
+      .tv-rank-score { font-size: 30px; }
+      .tv-quote { font-size: 42px; }
+      .tv-keyword { padding: 12px 20px; font-size: 16px; }
+      .tv-source-name { font-size: 22px; }
+      .tv-avatar { width: 68px; height: 68px; font-size: 24px; }
+      .tv-podium-name { font-size: 24px; }
+      .tv-footer { padding: 20px 32px; }
+      .tv-ticker { font-size: 18px; }
+    }
+
+    /* RESPONSIVE: Extra Large TVs (2560px+) */
+    @media (min-width: 2560px) {
+      .tv-shell { padding: 48px; gap: 36px; }
+      .tv-header { padding: 36px 56px; border-radius: 24px; }
+      .tv-header .logo { height: 80px; }
+      .tv-header .title { font-size: 48px; }
+      .tv-header .subtitle { font-size: 20px; }
+      .tv-header .live-badge { padding: 18px 32px; font-size: 20px; }
+      .tv-card { border-radius: 24px; }
+      .tv-card-header { padding: 32px 40px; }
+      .tv-card-title { font-size: 36px; }
+      .tv-card-body { padding: 32px 40px; }
+      .tv-rank-list { gap: 20px; }
+      .tv-rank-row { padding: 24px 28px; gap: 28px; border-radius: 18px; }
+      .tv-rank-num { width: 76px; height: 76px; font-size: 36px; border-radius: 18px; }
+      .tv-rank-name { font-size: 28px; }
+      .tv-rank-meta { font-size: 18px; }
+      .tv-rank-score { font-size: 38px; }
+      .tv-rank-reason { font-size: 16px; max-width: 220px; }
+      .tv-quote { font-size: 54px; line-height: 1.25; }
+      .tv-keywords { gap: 14px; }
+      .tv-keyword { padding: 14px 24px; font-size: 18px; }
+      .tv-source-row { padding-top: 28px; margin-top: 28px; }
+      .tv-source-name { font-size: 28px; }
+      .tv-source-meta { font-size: 16px; }
+      .tv-source-badge { padding: 14px 24px; font-size: 18px; }
+      .tv-podium { gap: 24px; }
+      .tv-podium-card { padding: 28px; border-radius: 18px; }
+      .tv-avatar { width: 84px; height: 84px; font-size: 30px; border-radius: 20px; }
+      .tv-podium-name { font-size: 30px; }
+      .tv-podium-meta { font-size: 18px; }
+      .tv-themes { gap: 12px; margin-top: 20px; }
+      .tv-theme { padding: 10px 18px; font-size: 16px; }
+      .tv-footer { padding: 24px 40px; border-radius: 24px; }
+      .tv-ticker { font-size: 22px; }
+    }
+
+    /* RESPONSIVE: Medium monitors (1440px - 1680px) */
+    @media (max-width: 1680px) and (min-width: 1441px) {
+      .tv-shell { padding: 20px; gap: 16px; }
+      .tv-header .title { font-size: 26px; }
+      .tv-card-title { font-size: 20px; }
+      .tv-rank-name { font-size: 16px; }
+      .tv-rank-score { font-size: 22px; }
+      .tv-quote { font-size: 28px; }
+    }
+
+    /* RESPONSIVE: Standard monitors (1280px - 1440px) */
+    @media (max-width: 1440px) and (min-width: 1281px) {
+      .tv-shell { padding: 16px; gap: 12px; }
+      .tv-header { padding: 14px 20px; }
+      .tv-header .logo { height: 40px; }
+      .tv-header .title { font-size: 22px; }
+      .tv-card-header { padding: 14px 18px; }
+      .tv-card-title { font-size: 18px; }
+      .tv-card-body { padding: 14px 18px; }
+      .tv-rank-list { gap: 8px; }
+      .tv-rank-row { padding: 10px 12px; gap: 12px; }
+      .tv-rank-num { width: 36px; height: 36px; font-size: 16px; border-radius: 10px; }
+      .tv-rank-name { font-size: 14px; }
+      .tv-rank-meta { font-size: 11px; }
+      .tv-rank-score { font-size: 18px; }
+      .tv-rank-reason { font-size: 10px; max-width: 120px; }
+      .tv-highlight { gap: 14px; padding: 6px; }
+      .tv-quote { font-size: 22px; }
+      .tv-keywords { gap: 6px; }
+      .tv-keyword { padding: 6px 12px; font-size: 12px; }
+      .tv-source-row { padding-top: 12px; }
+      .tv-source-name { font-size: 14px; }
+      .tv-source-meta { font-size: 11px; }
+      .tv-source-badge { padding: 8px 14px; font-size: 12px; }
+      .tv-podium { gap: 10px; }
+      .tv-podium-card { padding: 12px; }
+      .tv-avatar { width: 40px; height: 40px; font-size: 14px; border-radius: 10px; }
+      .tv-podium-name { font-size: 15px; }
+      .tv-podium-meta { font-size: 11px; }
+      .tv-themes { gap: 5px; margin-top: 8px; }
+      .tv-theme { padding: 4px 8px; font-size: 10px; }
+      .tv-footer { padding: 10px 16px; }
+      .tv-ticker { font-size: 12px; }
+    }
+
+    /* RESPONSIVE: Smaller monitors/laptops (1024px - 1280px) */
+    @media (max-width: 1280px) and (min-width: 1025px) {
+      .tv-shell { padding: 16px; gap: 14px; }
+      .tv-header { padding: 14px 20px; }
+      .tv-header .logo { height: 40px; }
+      .tv-header .title { font-size: 22px; }
+      .tv-header .subtitle { font-size: 12px; }
+      .tv-header .live-badge { padding: 8px 14px; font-size: 12px; }
+      .tv-main { gap: 14px; }
+      .tv-left { gap: 14px; }
+      .tv-card-header { padding: 14px 18px; }
+      .tv-card-title { font-size: 18px; }
+      .tv-card-hint { font-size: 11px; }
+      .tv-card-body { padding: 14px 18px; }
+      .tv-rank-list { gap: 8px; }
+      .tv-rank-row { padding: 10px 12px; gap: 12px; }
+      .tv-rank-num { width: 38px; height: 38px; font-size: 18px; border-radius: 10px; }
+      .tv-rank-name { font-size: 15px; }
+      .tv-rank-meta { font-size: 11px; }
+      .tv-rank-score { font-size: 20px; }
+      .tv-rank-reason { font-size: 10px; max-width: 120px; }
+      .tv-quote { font-size: 24px; }
+      .tv-keywords { gap: 6px; margin-top: 12px; }
+      .tv-keyword { padding: 6px 12px; font-size: 12px; }
+      .tv-source-row { padding-top: 14px; margin-top: 14px; }
+      .tv-source-name { font-size: 14px; }
+      .tv-source-meta { font-size: 11px; }
+      .tv-source-badge { padding: 8px 14px; font-size: 12px; }
+      .tv-podium { gap: 10px; }
+      .tv-podium-card { padding: 14px; }
+      .tv-avatar { width: 44px; height: 44px; font-size: 16px; }
+      .tv-podium-name { font-size: 16px; }
+      .tv-podium-meta { font-size: 12px; }
+      .tv-themes { gap: 6px; margin-top: 10px; }
+      .tv-theme { padding: 5px 10px; font-size: 11px; }
+      .tv-footer { padding: 12px 18px; }
+      .tv-ticker { font-size: 13px; }
+    }
+
+    /* RESPONSIVE: Small screens/tablets (≤1024px) */
+    @media (max-width: 1024px) {
+      .tv-shell { padding: 12px; gap: 12px; }
+      .tv-header { padding: 12px 16px; border-radius: 12px; }
+      .tv-header .logo { height: 36px; }
+      .tv-header .title { font-size: 18px; }
+      .tv-header .subtitle { font-size: 11px; }
+      .tv-header .live-badge { padding: 6px 12px; font-size: 11px; gap: 6px; }
+      .tv-header .live-dot { width: 8px; height: 8px; }
+      .tv-main { grid-template-columns: 1fr; gap: 12px; }
+      .tv-left { flex-direction: row; gap: 12px; }
+      .tv-left > .tv-card { flex: 1; }
+      .tv-card { border-radius: 12px; }
+      .tv-card-header { padding: 12px 14px; }
+      .tv-card-title { font-size: 16px; }
+      .tv-card-hint { font-size: 10px; }
+      .tv-card-badge { font-size: 11px; }
+      .tv-card-body { padding: 12px 14px; }
+      .tv-rank-list { gap: 6px; }
+      .tv-rank-row { padding: 8px 10px; gap: 10px; border-radius: 8px; }
+      .tv-rank-num { width: 32px; height: 32px; font-size: 14px; border-radius: 8px; }
+      .tv-rank-name { font-size: 13px; }
+      .tv-rank-meta { font-size: 10px; }
+      .tv-rank-score { font-size: 16px; }
+      .tv-rank-reason { font-size: 9px; max-width: 100px; }
+      .tv-quote { font-size: 20px; line-height: 1.35; }
+      .tv-keywords { gap: 5px; margin-top: 10px; }
+      .tv-keyword { padding: 5px 10px; font-size: 11px; }
+      .tv-source-row { padding-top: 12px; margin-top: 12px; }
+      .tv-source-name { font-size: 13px; }
+      .tv-source-meta { font-size: 10px; }
+      .tv-source-badge { padding: 6px 12px; font-size: 11px; }
+      .tv-podium { gap: 8px; }
+      .tv-podium-card { padding: 12px; border-radius: 8px; }
+      .tv-avatar { width: 36px; height: 36px; font-size: 14px; border-radius: 10px; }
+      .tv-podium-name { font-size: 14px; }
+      .tv-podium-meta { font-size: 11px; }
+      .tv-themes { gap: 5px; margin-top: 8px; }
+      .tv-theme { padding: 4px 8px; font-size: 10px; }
+      .tv-footer { padding: 10px 14px; border-radius: 12px; }
+      .tv-ticker { font-size: 12px; }
+    }
+
+    /* RESPONSIVE: Very small/mobile (≤768px) - for previewing on phone/tablet */
+    @media (max-width: 768px) {
+      .tv-shell { padding: 10px; gap: 10px; }
+      .tv-left { flex-direction: column; }
+      .tv-main { gap: 10px; }
+      .tv-header .title { font-size: 16px; }
+      .tv-header .logo { height: 32px; }
+      .tv-quote { font-size: 18px; }
+      .tv-rank-row { grid-template-columns: 28px 1fr auto; }
+      .tv-rank-num { width: 28px; height: 28px; font-size: 12px; }
+    }
+
+    /* Portrait orientation (vertical TV/monitor) */
+    @media (orientation: portrait) {
+      .tv-main { grid-template-columns: 1fr; }
+      .tv-left { flex-direction: column; }
+      .tv-quote { font-size: 28px; }
+    }
+
+    /* Scrollbar styling for overflow areas */
+    .tv-card-body::-webkit-scrollbar { width: 6px; }
+    .tv-card-body::-webkit-scrollbar-track { background: transparent; }
+    .tv-card-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 3px; }
+    .tv-card-body::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.25); }
+  </style>
+</head>
+<body>
+  <div class="tv-shell">
+    <header class="tv-header">
+      <div class="brand">
+        <img class="logo" src="https://i.ibb.co/1GrhnMc4/images.jpg" alt="Axxess" />
+        <div>
+          <div class="title">Customer Recognition Dashboard</div>
+          <div class="subtitle" id="tvWeek">Week</div>
+        </div>
+      </div>
+      <div class="live-badge"><span class="live-dot"></span> Live · Auto-refresh</div>
+    </header>
+
+    <main class="tv-main">
+      <div class="tv-left">
+        <div class="tv-card grow">
+          <div class="tv-card-header">
+            <div>
+              <div class="tv-card-title">Weekly Top 5</div>
+              <div class="tv-card-hint">Recognition leaders</div>
+            </div>
+            <div class="tv-card-badge" id="tvWeekSmall"></div>
+          </div>
+          <div class="tv-card-body">
+            <div class="tv-rank-list" id="weeklyList"></div>
+          </div>
+        </div>
+
+        <div class="tv-card">
+          <div class="tv-card-header">
+            <div>
+              <div class="tv-card-title">Monthly Leaders</div>
+              <div class="tv-card-hint" id="tvMonth">Month</div>
+            </div>
+            <div class="tv-card-badge">Top 2</div>
+          </div>
+          <div class="tv-card-body">
+            <div class="tv-podium" id="monthlyPodium"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tv-card grow">
+        <div class="tv-card-header">
+          <div>
+            <div class="tv-card-title">Live Highlights</div>
+            <div class="tv-card-hint">Customer feedback</div>
+          </div>
+          <div class="tv-card-badge" id="slideCounter"></div>
+        </div>
+        <div class="tv-card-body">
+          <div class="tv-highlight" id="highlightSlide"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="tv-footer">
+      <div class="tv-ticker" id="ticker"></div>
+    </footer>
+  </div>
+
+  <script src="./app.js"></script>
+  <script>
+(function() {
+  var root = document.documentElement;
+  var state = loadState();
+
+  var elWeek = document.getElementById("tvWeek");
+  var elWeekSmall = document.getElementById("tvWeekSmall");
+  var elMonth = document.getElementById("tvMonth");
+  var weeklyList = document.getElementById("weeklyList");
+  var podium = document.getElementById("monthlyPodium");
+  var ticker = document.getElementById("ticker");
+  var slide = document.getElementById("highlightSlide");
+  var counter = document.getElementById("slideCounter");
+  var highlightIdx = 0;
+  var highlights = [];
+
+  function formatWeekRange(startIso) {
+    var d = new Date(startIso);
+    var end = new Date(d);
+    end.setDate(end.getDate() + 6);
+    var fmt = function(x) { return x.toLocaleDateString(undefined, { day: "2-digit", month: "short" }); };
+    return "Week of " + fmt(d) + " - " + fmt(end);
+  }
+
+  function formatMonthLabel(now) {
+    now = now || new Date();
+    return now.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  }
+
+  function initials(name) {
+    return String(name || "").split(" ").filter(Boolean).slice(0, 2).map(function(p) { return p[0]; }).join("").toUpperCase();
+  }
+
+  function render() {
+    state = loadState();
+
+    var now = new Date();
+    var lb = computeLeaderboards(state, now);
+
+    elWeek.textContent = formatWeekRange(lb.weekStart);
+    elWeekSmall.textContent = formatWeekRange(lb.weekStart);
+    elMonth.textContent = formatMonthLabel(now);
+
+    // Weekly Top 5
+    weeklyList.innerHTML = lb.weeklyTop.slice(0, 5).map(function(r, i) {
+      var rankClass = i < 3 ? ' rank-' + (i + 1) : '';
+      var medalClass = i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : '';
+      return '<div class="tv-rank-row' + rankClass + '">' +
+        '<div class="tv-rank-num' + medalClass + '">' + (i + 1) + '</div>' +
+        '<div><div class="tv-rank-name">' + r.agent + '</div>' +
+        '<div class="tv-rank-meta">' + r.team + ' · ' + r.count + ' mentions</div></div>' +
+        '<div><div class="tv-rank-score">' + Math.round(r.score) + '</div>' +
+        '<div class="tv-rank-reason">' + ((r.themes || []).join(" · ") || "Great feedback") + '</div></div>' +
+        '</div>';
+    }).join("");
+
+    // Monthly Leaders - using TV classes
+    podium.innerHTML = lb.monthlyTop.map(function(m, i) {
+      return '<div class="tv-podium-card">' +
+        '<div class="tv-podium-top">' +
+        '<div class="tv-podium-info"><div class="tv-avatar">' + initials(m.agent) + '</div>' +
+        '<div><div class="tv-podium-name">#' + (i + 1) + ' ' + m.agent + '</div>' +
+        '<div class="tv-podium-meta">' + m.team + ' · Score ' + Math.round(m.score) + '</div></div></div>' +
+        '<div class="tv-rank-num" style="width:48px;height:48px;">' + (i + 1) + '</div></div>' +
+        '<div class="tv-themes">' + (m.themes || []).map(function(t) { return '<span class="tv-theme">' + t + '</span>'; }).join("") + '</div>' +
+        '</div>';
+    }).join("");
+
+    highlights = lb.highlights;
+    highlightIdx = 0;
+    renderSlide();
+
+    var approvedCount = state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; }).length;
+    var pendingCount = state.items.filter(function(i) { return i.status === "Pending"; }).length;
+    var sync = "✓ Approved: " + approvedCount + "  ·  Pending: " + pendingCount;
+    var theme = lb.weeklyTop[0] && lb.weeklyTop[0].themes && lb.weeklyTop[0].themes[0] ? "Top theme: " + lb.weeklyTop[0].themes[0] : "Top theme: Fast resolution";
+    var loop = [sync, theme, "Google reviews", "Internal feedback"];
+    loop = loop.concat(loop).concat(loop);
+    ticker.textContent = loop.map(function(t) { return "     " + t + "     "; }).join("·");
+  }
+
+  function renderSlide() {
+    if (!highlights.length) {
+      slide.innerHTML = '<div class="tv-quote">No approved highlights yet</div>' +
+        '<div class="tv-agent-card">' +
+        '<div class="tv-agent-avatar">?</div>' +
+        '<div class="tv-agent-info"><div class="tv-agent-name">Waiting for approvals</div>' +
+        '<div class="tv-agent-team">Approve items in the Manager Portal</div></div>' +
+        '<div class="tv-agent-source">Manager Portal</div></div>';
+      counter.textContent = "0/0";
+      return;
+    }
+
+    var s = highlights[highlightIdx % highlights.length];
+    var quote = s.tvSnippet || s.text;
+    slide.innerHTML = '<div class="tv-celebration-badge">Customer Feedback</div>' +
+      '<div class="tv-quote">"' + quote + '"</div>' +
+      '<div class="tv-keywords">' + (s.keywords || []).slice(0, 5).map(function(k) { return '<span class="tv-keyword">' + k + '</span>'; }).join("") + '</div>' +
+      '<div class="tv-agent-card">' +
+      '<div class="tv-agent-avatar">' + initials(s.agent) + '</div>' +
+      '<div class="tv-agent-info"><div class="tv-agent-name">' + s.agent + '</div>' +
+      '<div class="tv-agent-team">' + s.team + (s.theme ? ' · ' + s.theme : '') + '</div></div>' +
+      '<div class="tv-agent-source">' + s.source + '</div></div>';
+    counter.textContent = ((highlightIdx % highlights.length) + 1) + "/" + highlights.length;
+    highlightIdx += 1;
+  }
+
+  render();
+  setInterval(renderSlide, 8000);
+  setInterval(render, 20000);
+
+  console.log("TV Dashboard ready. Approved items:", getApprovedItems(state).length);
+})();
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "axxess-reviews-scraper",
+  "version": "1.0.0",
+  "description": "Scraper for Google Reviews for axxess.co.za",
+  "main": "scrape-reviews-serpapi.js",
+  "scripts": {
+    "scrape": "node scrape-reviews-serpapi.js",
+    "scrape:puppeteer": "node scrape-reviews.js",
+    "scrape:places-api": "node scrape-reviews-api.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.6.1"
+  }
+}

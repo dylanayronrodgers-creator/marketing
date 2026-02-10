@@ -1,0 +1,262 @@
+/**
+ * Google Reviews Scraper using SerpAPI
+ * 
+ * SerpAPI provides reliable, structured Google Reviews data.
+ * This is the recommended approach for production use.
+ * 
+ * Setup:
+ * 1. Get your API key from https://serpapi.com/dashboard
+ * 2. Set your API key: set SERPAPI_KEY=your_api_key_here
+ * 
+ * Usage: node scrape-reviews-serpapi.js
+ * Output: ../data/google-reviews.json
+ */
+
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
+
+// Set your SerpAPI key here or use environment variable
+const SERPAPI_KEY = process.env.SERPAPI_KEY || 'YOUR_SERPAPI_KEY_HERE';
+
+// Search query to find Axxess on Google Maps
+const SEARCH_QUERY = 'Axxess DSL South Africa';
+
+// Data ID for Axxess (if known) - speeds up the process
+// You can find this by searching on SerpAPI playground first
+let PLACE_DATA_ID = null;
+
+async function fetchJSON(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(new Error('Failed to parse JSON: ' + data.substring(0, 200)));
+        }
+      });
+    }).on('error', reject);
+  });
+}
+
+async function findPlaceDataId() {
+  if (PLACE_DATA_ID) {
+    console.log('📍 Using cached Place Data ID:', PLACE_DATA_ID);
+    return PLACE_DATA_ID;
+  }
+
+  console.log('🔍 Searching for Axxess on Google Maps...');
+  
+  const searchUrl = `https://serpapi.com/search.json?engine=google_maps&q=${encodeURIComponent(SEARCH_QUERY)}&type=search&api_key=${SERPAPI_KEY}`;
+  
+  const result = await fetchJSON(searchUrl);
+  
+  if (result.error) {
+    throw new Error(`SerpAPI error: ${result.error}`);
+  }
+  
+  if (!result.local_results || result.local_results.length === 0) {
+    throw new Error('No results found for Axxess. Try a different search query.');
+  }
+  
+  // Find Axxess in results
+  const axxess = result.local_results.find(r => 
+    r.title.toLowerCase().includes('axxess')
+  ) || result.local_results[0];
+  
+  console.log(`✅ Found: ${axxess.title}`);
+  console.log(`   Address: ${axxess.address || 'N/A'}`);
+  console.log(`   Rating: ${axxess.rating} (${axxess.reviews} reviews)`);
+  console.log(`   Data ID: ${axxess.data_id}`);
+  
+  return axxess.data_id;
+}
+
+async function fetchReviews(dataId, nextPageToken = null) {
+  console.log(nextPageToken ? '📄 Fetching next page of reviews...' : '📝 Fetching reviews...');
+  
+  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&data_id=${dataId}&api_key=${SERPAPI_KEY}`;
+  
+  if (nextPageToken) {
+    reviewsUrl += `&next_page_token=${nextPageToken}`;
+  }
+  
+  const result = await fetchJSON(reviewsUrl);
+  
+  if (result.error) {
+    throw new Error(`SerpAPI error: ${result.error}`);
+  }
+  
+  return result;
+}
+
+async function scrapeAllReviews() {
+  if (SERPAPI_KEY === 'YOUR_SERPAPI_KEY_HERE') {
+    console.error('❌ Error: Please set your SerpAPI key');
+    console.log('\nTo set your API key:');
+    console.log('  Windows: set SERPAPI_KEY=your_key_here');
+    console.log('  Mac/Linux: export SERPAPI_KEY=your_key_here');
+    console.log('\nGet your key at: https://serpapi.com/dashboard');
+    process.exit(1);
+  }
+
+  console.log('🚀 Starting Google Reviews scrape via SerpAPI...\n');
+  console.log('⚠️  Note: Each page of reviews uses 1 API credit\n');
+
+  try {
+    // Step 1: Find the place
+    const dataId = await findPlaceDataId();
+    
+    // Step 2: Fetch reviews (first page)
+    let allReviews = [];
+    let result = await fetchReviews(dataId);
+    
+    const placeInfo = result.place_info || {};
+    console.log(`\n📊 Place Info:`);
+    console.log(`   Name: ${placeInfo.title || 'Axxess'}`);
+    console.log(`   Rating: ${placeInfo.rating}`);
+    console.log(`   Total Reviews: ${placeInfo.reviews}`);
+    
+    if (result.reviews) {
+      allReviews = allReviews.concat(result.reviews);
+      console.log(`   Fetched: ${result.reviews.length} reviews`);
+    }
+    
+    // Step 3: Fetch more pages if available (be mindful of API credits)
+    // Uncomment below to fetch more pages (each page = 1 API credit)
+    /*
+    let pageCount = 1;
+    const maxPages = 5; // Limit to save API credits
+    
+    while (result.serpapi_pagination && result.serpapi_pagination.next_page_token && pageCount < maxPages) {
+      pageCount++;
+      result = await fetchReviews(dataId, result.serpapi_pagination.next_page_token);
+      if (result.reviews) {
+        allReviews = allReviews.concat(result.reviews);
+        console.log(`   Page ${pageCount}: +${result.reviews.length} reviews (Total: ${allReviews.length})`);
+      }
+    }
+    */
+    
+    console.log(`\n✅ Total reviews fetched: ${allReviews.length}`);
+    
+    // Step 4: Transform to dashboard format
+    const dashboardReviews = allReviews.map((review, idx) => {
+      const rating = review.rating || 5;
+      const sentiment = rating >= 4 ? 'Positive' : rating === 3 ? 'Neutral' : 'Negative';
+      const status = sentiment === 'Negative' ? 'Flagged (Negative)' : 'Pending';
+      
+      // Extract keywords from text
+      const text = review.snippet || review.extracted_snippet?.original || '';
+      const textLower = text.toLowerCase();
+      
+      const positiveWords = ['great', 'excellent', 'amazing', 'helpful', 'professional', 'friendly', 'fast', 'quick', 'good', 'best', 'reliable', 'awesome'];
+      const negativeWords = ['slow', 'bad', 'poor', 'terrible', 'awful', 'unhelpful', 'rude', 'delayed', 'worst', 'horrible'];
+      const keywords = [...positiveWords, ...negativeWords].filter(w => textLower.includes(w));
+      
+      // Determine theme
+      let theme = '';
+      if (textLower.includes('support') || textLower.includes('help')) theme = 'Great support';
+      else if (textLower.includes('fast') || textLower.includes('quick') || textLower.includes('speed')) theme = 'Fast service';
+      else if (textLower.includes('friendly') || textLower.includes('professional')) theme = 'Professional service';
+      else if (textLower.includes('install') || textLower.includes('fibre') || textLower.includes('fiber')) theme = 'Smooth installation';
+      else if (textLower.includes('price') || textLower.includes('value') || textLower.includes('affordable')) theme = 'Great value';
+      else if (sentiment === 'Positive') theme = 'Great service';
+      else if (sentiment === 'Negative') theme = 'Needs improvement';
+      
+      // Create TV snippet
+      const tvSnippet = text.length > 120 ? text.substring(0, 120) + '...' : text;
+      
+      // Parse date
+      let createdAt;
+      if (review.iso_date) {
+        createdAt = review.iso_date;
+      } else if (review.date) {
+        createdAt = parseRelativeDate(review.date);
+      } else {
+        createdAt = new Date().toISOString();
+      }
+      
+      return {
+        id: `GR-${String(10000 + idx).padStart(5, '0')}`,
+        createdAt: createdAt,
+        source: 'Google',
+        rating: rating,
+        sentiment: sentiment,
+        status: status,
+        agent: 'Unknown',
+        team: 'Unknown',
+        theme: theme,
+        keywords: keywords.length > 0 ? keywords : ['customer feedback'],
+        tvSnippet: tvSnippet,
+        text: text,
+        reviewerName: review.user?.name || 'Anonymous',
+        reviewerLink: review.user?.link || null,
+        reviewerThumbnail: review.user?.thumbnail || null,
+        likes: review.likes || 0
+      };
+    });
+    
+    // Step 5: Save to file
+    const outputPath = path.join(__dirname, '..', 'data', 'google-reviews.json');
+    const output = {
+      scrapedAt: new Date().toISOString(),
+      businessName: placeInfo.title || 'Axxess',
+      overallRating: placeInfo.rating || null,
+      totalReviews: placeInfo.reviews || allReviews.length,
+      scrapedCount: dashboardReviews.length,
+      dataId: dataId,
+      reviews: dashboardReviews
+    };
+    
+    fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
+    console.log(`\n💾 Saved ${dashboardReviews.length} reviews to data/google-reviews.json`);
+    
+    // Show sample
+    if (dashboardReviews.length > 0) {
+      console.log('\n📋 Sample review:');
+      const sample = dashboardReviews[0];
+      console.log(`   "${sample.tvSnippet}"`);
+      console.log(`   - ${sample.reviewerName}, ${sample.rating}★`);
+    }
+    
+    return output;
+    
+  } catch (error) {
+    console.error('\n❌ Error:', error.message);
+    throw error;
+  }
+}
+
+function parseRelativeDate(dateText) {
+  const now = new Date();
+  const text = (dateText || '').toLowerCase();
+  
+  const match = text.match(/(\d+)/);
+  const num = match ? parseInt(match[1]) : 1;
+  
+  if (text.includes('day')) {
+    now.setDate(now.getDate() - num);
+  } else if (text.includes('week')) {
+    now.setDate(now.getDate() - (num * 7));
+  } else if (text.includes('month')) {
+    now.setMonth(now.getMonth() - num);
+  } else if (text.includes('year')) {
+    now.setFullYear(now.getFullYear() - num);
+  }
+  
+  return now.toISOString();
+}
+
+// Run the scraper
+scrapeAllReviews()
+  .then(result => {
+    console.log('\n✨ Done! Reviews are ready for the dashboard.');
+    console.log('   Open the dashboard to see the reviews automatically loaded.');
+  })
+  .catch(err => {
+    process.exit(1);
+  });

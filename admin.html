@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Axxess - Manager Portal</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="adminShell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="logo" src="https://i.ibb.co/1GrhnMc4/images.jpg" alt="Axxess" />
+        <div class="titleBlock">
+          <div class="title">Manager Portal</div>
+          <div class="subtitle">Approvals + performance insights</div>
+        </div>
+      </div>
+
+      <div class="navGroup" id="nav">
+        <a class="navItem active" href="#overview" data-view="overview">Overview</a>
+        <a class="navItem" href="#queue" data-view="queue">Approvals Queue</a>
+        <a class="navItem" href="#agents" data-view="agents">Agents &amp; Teams</a>
+        <a class="navItem" href="#negative" data-view="negative">Negative (Internal)</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar" style="margin-bottom:14px;">
+        <div>
+          <div class="title" id="viewTitle">Overview</div>
+          <div class="subtitle" id="viewSubtitle">High level health and pipeline</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn" id="btnBrand">Theme</button>
+          <button class="btn" id="resetBtn">Reset demo data</button>
+          <a class="btn primary" href="./tv.html">Open TV</a>
+          <a class="btn" href="./index.html">Home</a>
+        </div>
+      </div>
+
+      <section id="view-overview">
+        <div id="helpBanner" style="display:none; margin-bottom:14px; padding:14px 18px; border-radius:12px; border:2px solid rgba(0,153,204,.4); background:rgba(0,153,204,.08); color:var(--text);">
+          <div style="font-weight:900; margin-bottom:6px;">👋 Welcome to the Manager Portal</div>
+          <div style="font-size:13px; line-height:1.4; color:var(--muted);">
+            Click <strong style="color:var(--brand-dark);">Reset demo data</strong> (top right) to load <strong style="color:var(--brand-dark);">140 realistic feedback items</strong> across 60 days. Then approve items in the Queue to see them appear on the TV Dashboard.
+          </div>
+        </div>
+
+        <div class="kpis" id="kpis"></div>
+
+        <div class="sectionTitle">Insights (mock)</div>
+        <div class="split">
+          <div class="preview">
+            <div class="previewLabel">Top themes</div>
+            <div class="previewText" id="themes"></div>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Team comparison</div>
+            <div class="previewText" id="teams"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-queue" style="display:none;">
+        <div class="sectionTitle">Approvals Queue</div>
+
+        <div class="preview" style="margin-bottom:14px;">
+          <div class="previewLabel">Filters</div>
+          <div style="display:grid; grid-template-columns:1.2fr .8fr .8fr .8fr; gap:10px; margin-top:10px;">
+            <input class="select" id="qSearch" placeholder="Search text, agent, theme..." />
+            <select class="select" id="qSource"></select>
+            <select class="select" id="qTeam"></select>
+            <select class="select" id="qStatus"></select>
+          </div>
+        </div>
+
+        <div class="split">
+          <div>
+            <table class="table" id="queueTable"></table>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Selected item</div>
+            <div class="previewText" id="previewText">Select a row to preview the full text and actions.</div>
+
+            <div class="previewLabel" style="margin-top:14px;">Assign agent</div>
+            <select class="select" id="agentSelect"></select>
+
+            <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+              <button class="btn success" id="approveBtn">Approve to TV</button>
+              <button class="btn" id="holdBtn">Hold</button>
+              <button class="btn danger" id="flagNegBtn">Flag negative</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-agents" style="display:none;">
+        <div class="sectionTitle">Agents &amp; Teams</div>
+        <div class="split">
+          <div>
+            <table class="table" id="agentsTable"></table>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Teams</div>
+            <div class="previewText" id="teamList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-negative" style="display:none;">
+        <div class="sectionTitle">Negative Feedback (Internal only)</div>
+        <div class="preview">
+          <div class="previewLabel">Top negative themes</div>
+          <div class="previewText" id="negativeThemes"></div>
+        </div>
+
+        <div class="sectionTitle">Notes</div>
+        <div class="preview">
+          <div class="previewLabel">Policy</div>
+          <div class="previewText">Negative feedback is not shown on the TV dashboard. Items can be reviewed, categorized, and used for coaching and operational improvements.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+  <script>
+(function() {
+  var root = document.documentElement;
+  var state = loadState();
+  root.style.setProperty("--brand", state.brand.primary);
+
+  var views = ["overview", "queue", "agents", "negative"];
+  var viewTitle = document.getElementById("viewTitle");
+  var viewSubtitle = document.getElementById("viewSubtitle");
+
+  var sections = {
+    overview: document.getElementById("view-overview"),
+    queue: document.getElementById("view-queue"),
+    agents: document.getElementById("view-agents"),
+    negative: document.getElementById("view-negative")
+  };
+
+  var subtitles = {
+    overview: "High level health and pipeline",
+    queue: "Review items before they appear on the TV dashboard",
+    agents: "Manage agent directory and team mapping",
+    negative: "Internal-only negative feedback themes"
+  };
+
+  function setActive(view) {
+    views.forEach(function(v) {
+      if (sections[v]) sections[v].style.display = v === view ? "block" : "none";
+    });
+    document.querySelectorAll("#nav .navItem").forEach(function(a) {
+      a.classList.toggle("active", a.getAttribute("data-view") === view);
+    });
+    viewTitle.textContent = view === "overview" ? "Overview" : view === "queue" ? "Approvals Queue" : view === "agents" ? "Agents & Teams" : "Negative (Internal)";
+    viewSubtitle.textContent = subtitles[view] || "";
+  }
+
+  function parseHash() {
+    var raw = (location.hash || "#overview").replace("#", "");
+    return views.indexOf(raw) !== -1 ? raw : "overview";
+  }
+
+  window.addEventListener("hashchange", function() { setActive(parseHash()); });
+  setActive(parseHash());
+
+  var kpis = document.getElementById("kpis");
+  var themes = document.getElementById("themes");
+  var teams = document.getElementById("teams");
+  var selectedId = null;
+
+  var queueTable = document.getElementById("queueTable");
+  var previewText = document.getElementById("previewText");
+  var agentSelect = document.getElementById("agentSelect");
+  var qSearch = document.getElementById("qSearch");
+  var qSource = document.getElementById("qSource");
+  var qTeam = document.getElementById("qTeam");
+  var qStatus = document.getElementById("qStatus");
+
+  function renderAgentSelect(current) {
+    var options = ["Unknown"].concat(state.agents.map(function(a) { return a.name; }));
+    agentSelect.innerHTML = options.map(function(n) { return '<option value="' + n + '">' + n + '</option>'; }).join("");
+    agentSelect.value = current || "Unknown";
+  }
+
+  function rowBadge(text) {
+    return '<span class="pill">' + String(text || "") + '</span>';
+  }
+
+  function populateFilters() {
+    if (qSource) {
+      var sources = ["All"].concat(Array.from(new Set(state.items.map(function(i) { return i.source; }))).sort());
+      qSource.innerHTML = sources.map(function(s) { return '<option value="' + s + '">' + s + '</option>'; }).join("");
+    }
+    if (qTeam) {
+      var teamsList = ["All"].concat(state.teams);
+      qTeam.innerHTML = teamsList.map(function(t) { return '<option value="' + t + '">' + t + '</option>'; }).join("");
+    }
+    if (qStatus) {
+      var statuses = ["All", "Pending", "On hold", "Approved", "Flagged (Negative)"];
+      qStatus.innerHTML = statuses.map(function(s) { return '<option value="' + s + '">' + s + '</option>'; }).join("");
+    }
+  }
+
+  function getFilteredQueue() {
+    var search = (qSearch && qSearch.value || "").trim().toLowerCase();
+    var source = qSource && qSource.value || "All";
+    var team = qTeam && qTeam.value || "All";
+    var status = qStatus && qStatus.value || "All";
+
+    return state.items
+      .filter(function(i) { return i.status !== "Approved" || i.sentiment === "Negative"; })
+      .filter(function(i) { return source === "All" || i.source === source; })
+      .filter(function(i) { return team === "All" || i.team === team; })
+      .filter(function(i) { return status === "All" || i.status === status; })
+      .filter(function(i) {
+        if (!search) return true;
+        var blob = (i.id + " " + i.source + " " + i.sentiment + " " + i.status + " " + i.agent + " " + i.team + " " + i.theme + " " + i.text).toLowerCase();
+        return blob.indexOf(search) !== -1;
+      })
+      .sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+  }
+
+  function renderQueue() {
+    var items = getFilteredQueue();
+    if (!selectedId && items[0]) selectedId = items[0].id;
+
+    queueTable.innerHTML = '<thead><tr><th>Date</th><th>Source</th><th>Rating</th><th>Sentiment</th><th>Agent</th><th>Team</th><th>Status</th></tr></thead><tbody>' +
+      items.map(function(q) {
+        var rating = q.rating == null ? "—" : q.rating + "/5";
+        var isSelected = q.id === selectedId;
+        var d = new Date(q.createdAt);
+        var dateLabel = isNaN(d.getTime()) ? q.createdAt : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" });
+        return '<tr data-id="' + q.id + '" style="cursor:pointer; background:' + (isSelected ? "rgba(11,126,168,.15)" : "transparent") + '"><td>' + dateLabel + '</td><td>' + rowBadge(q.source) + '</td><td>' + rating + '</td><td>' + rowBadge(q.sentiment) + '</td><td>' + q.agent + '</td><td>' + q.team + '</td><td>' + rowBadge(q.status) + '</td></tr>';
+      }).join("") + '</tbody>';
+
+    queueTable.querySelectorAll("tbody tr").forEach(function(tr) {
+      tr.addEventListener("click", function() {
+        selectedId = tr.getAttribute("data-id");
+        renderQueue();
+        renderPreview();
+      });
+    });
+  }
+
+  function renderPreview() {
+    var item = state.items.find(function(q) { return q.id === selectedId; });
+    if (!item) {
+      previewText.textContent = "Select a row to preview the full text and actions.";
+      renderAgentSelect("Unknown");
+      return;
+    }
+    previewText.textContent = item.text;
+    renderAgentSelect(item.agent);
+  }
+
+  function updateSelectedStatus(status) {
+    var item = state.items.find(function(q) { return q.id === selectedId; });
+    if (!item) {
+      showToast("Please select an item first", "error");
+      return;
+    }
+    var patch = { status: status };
+    if (status === "Flagged (Negative)") patch.sentiment = "Negative";
+    state = updateItem(item.id, patch);
+    renderAll();
+    showToast("Item " + item.id + " → " + status, "success");
+  }
+
+  document.getElementById("approveBtn").addEventListener("click", function() { updateSelectedStatus("Approved"); });
+  document.getElementById("holdBtn").addEventListener("click", function() { updateSelectedStatus("On hold"); });
+  document.getElementById("flagNegBtn").addEventListener("click", function() { updateSelectedStatus("Flagged (Negative)"); });
+
+  agentSelect.addEventListener("change", function() {
+    var item = state.items.find(function(q) { return q.id === selectedId; });
+    if (!item) return;
+    var nextAgent = agentSelect.value;
+    var agent = state.agents.find(function(a) { return a.name === nextAgent; });
+    state = updateItem(item.id, { agent: nextAgent, team: agent ? agent.team : "Unknown" });
+    renderAll();
+    showToast("Assigned to " + nextAgent, "success");
+  });
+
+  if (qSearch) qSearch.addEventListener("input", function() { renderAll(); });
+  if (qSource) qSource.addEventListener("change", function() { renderAll(); });
+  if (qTeam) qTeam.addEventListener("change", function() { renderAll(); });
+  if (qStatus) qStatus.addEventListener("change", function() { renderAll(); });
+
+  var agentsTable = document.getElementById("agentsTable");
+  var teamList = document.getElementById("teamList");
+
+  function renderAgents() {
+    agentsTable.innerHTML = '<thead><tr><th>Name</th><th>Team</th><th>Email</th></tr></thead><tbody>' +
+      state.agents.map(function(a) {
+        return '<tr><td>' + a.name + '</td><td>' + rowBadge(a.team) + '</td><td>' + a.email + '</td></tr>';
+      }).join("") + '</tbody>';
+    teamList.innerHTML = state.teams.map(function(t) { return '<span class="themeChip">' + t + '</span>'; }).join(" ");
+  }
+
+  var negativeThemes = document.getElementById("negativeThemes");
+
+  function renderNegativeThemes() {
+    var neg = state.items.filter(function(i) { return i.sentiment === "Negative" || i.status === "Flagged (Negative)"; });
+    var map = {};
+    neg.forEach(function(it) {
+      var key = it.theme || "Uncategorized";
+      map[key] = (map[key] || 0) + 1;
+    });
+    var rows = Object.keys(map).map(function(k) { return [k, map[k]]; }).sort(function(a, b) { return b[1] - a[1]; });
+    negativeThemes.innerHTML = rows.map(function(r) {
+      return '<div style="display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.06);"><span>' + r[0] + '</span><span style="color:var(--muted); font-weight:900;">' + r[1] + '</span></div>';
+    }).join("");
+  }
+
+  function renderOverview() {
+    var stats = computeStats(state);
+    var kpiMap = [
+      { label: "Pending approvals", value: stats.pending },
+      { label: "Approved items", value: state.items.filter(function(i) { return i.status === "Approved"; }).length },
+      { label: "Avg sentiment", value: stats.avgSentiment },
+      { label: "Negative flagged", value: stats.negativeFlagged }
+    ];
+    kpis.innerHTML = kpiMap.map(function(k) {
+      return '<div class="kpi"><div class="kpiLabel">' + k.label + '</div><div class="kpiValue">' + k.value + '</div></div>';
+    }).join("");
+
+    var lb = computeLeaderboards(state, new Date());
+    var topThemes = [];
+    lb.weeklyTop.forEach(function(a) { (a.themes || []).forEach(function(t) { if (topThemes.indexOf(t) === -1) topThemes.push(t); }); });
+    themes.textContent = topThemes.length ? topThemes.slice(0, 6).join(", ") : "Fast resolution, Clear communication";
+
+    var byTeam = {};
+    state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; }).forEach(function(it) {
+      byTeam[it.team] = (byTeam[it.team] || 0) + 1;
+    });
+    var teamPairs = Object.keys(byTeam).map(function(t) { return [t, byTeam[t]]; }).sort(function(a, b) { return b[1] - a[1]; });
+    teams.textContent = teamPairs.map(function(p) { return p[0] + ": " + p[1]; }).join(" · ") || "No approved items yet";
+  }
+
+  function renderAll() {
+    state = loadState();
+    root.style.setProperty("--brand", state.brand.primary);
+    populateFilters();
+    renderOverview();
+    renderQueue();
+    renderPreview();
+    renderAgents();
+    renderNegativeThemes();
+
+    var helpBanner = document.getElementById("helpBanner");
+    if (helpBanner) helpBanner.style.display = state.items.length < 50 ? "block" : "none";
+  }
+
+  renderAll();
+
+  document.getElementById("btnBrand").addEventListener("click", function() {
+    var current = getComputedStyle(root).getPropertyValue("--brand").trim();
+    var next = current.toLowerCase() === "#0099cc" ? "#0078a8" : "#0099cc";
+    state = updateBrandPrimary(next);
+    root.style.setProperty("--brand", state.brand.primary);
+    renderAll();
+    showToast("Brand color updated", "success");
+  });
+
+  var resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function() {
+      if (!confirm("Reset to demo data? This will clear all changes and load 140 fresh items.")) return;
+      state = resetState();
+      root.style.setProperty("--brand", state.brand.primary);
+      renderAll();
+      showToast("Demo data reset: " + state.items.length + " items loaded", "success");
+    });
+  }
+
+  console.log("Manager Portal ready. Items:", state.items.length);
+})();
+  </script>
+</body>
+</html>

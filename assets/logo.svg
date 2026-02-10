@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="52" viewBox="0 0 260 52">
+  <rect x="0" y="0" width="260" height="52" fill="none"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="0">
+    <circle cx="24" cy="26" r="18" fill="#FF6A2B"/>
+    <path d="M14 26c7-9 21-12 30-8" stroke="#FFFFFF" stroke-width="2" opacity=".9"/>
+    <path d="M12 30c9-8 22-10 30-6" stroke="#FFFFFF" stroke-width="2" opacity=".75"/>
+    <path d="M18 18c6 3 12 10 14 18" stroke="#FFFFFF" stroke-width="2" opacity=".75"/>
+  </g>
+  <text x="52" y="33" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">axxess</text>
+  <circle cx="152" cy="28" r="3" fill="#FFFFFF" opacity=".9"/>
+  <text x="52" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#C9D7E6" opacity=".95">internet your way</text>
+</svg>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Axxess - Customer Recognition Dashboard</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    body {
+      background: #f1f5f9;
+      min-height: 100vh;
+    }
+    .launch {
+      background: transparent;
+    }
+    .launchCard {
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .launchHeader {
+      background: #0099cc;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .launchHeader .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .launchHeader .logo {
+      height: 44px;
+      border-radius: 6px;
+      background: white;
+      padding: 4px;
+    }
+    .launchHeader .title {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .launchHeader .subtitle {
+      color: rgba(255,255,255,.75);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+    .launchHeader .badge {
+      background: rgba(255,255,255,.15);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    
+    .launchBody {
+      padding: 32px;
+    }
+    .launchGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .bigLink {
+      padding: 24px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #fafbfc;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .bigLink:hover {
+      border-color: #0099cc;
+      background: #f0f9ff;
+      box-shadow: 0 4px 12px rgba(0,153,204,.1);
+    }
+    .bigLinkTitle {
+      font-weight: 700;
+      font-size: 17px;
+      color: #1e293b;
+    }
+    .bigLinkDesc {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .bigLinkArrow {
+      margin-top: 8px;
+      color: #0099cc;
+      font-weight: 600;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="launch">
+    <div class="launchCard">
+      <div class="launchHeader">
+        <div class="brand">
+          <img class="logo" src="https://i.ibb.co/1GrhnMc4/images.jpg" alt="Axxess" />
+          <div class="titleBlock">
+            <div class="title">Customer Recognition Dashboard</div>
+            <div class="subtitle">Marketing Team Portal</div>
+          </div>
+        </div>
+        <div class="badge">Prototype v1.0</div>
+      </div>
+
+      <div class="launchBody">
+        <div class="launchGrid">
+          <a class="bigLink" href="./tv.html">
+            <div class="bigLinkTitle">TV Dashboard</div>
+            <div class="bigLinkDesc">Full-screen display for the office showing weekly top performers, customer highlights, and monthly leaders.</div>
+            <div class="bigLinkArrow">Open Dashboard →</div>
+          </a>
+          <a class="bigLink" href="./admin.html">
+            <div class="bigLinkTitle">Manager Portal</div>
+            <div class="bigLinkDesc">Review and approve feedback, manage agents and teams, view internal reports.</div>
+            <div class="bigLinkArrow">Open Portal →</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
