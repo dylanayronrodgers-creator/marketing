@@ -20,6 +20,7 @@
       <div class="navGroup" id="nav">
         <a class="navItem active" href="#overview" data-view="overview">Overview</a>
         <a class="navItem" href="#queue" data-view="queue">Approvals Queue</a>
+        <a class="navItem" href="#approved" data-view="approved">Approved Reviews</a>
         <a class="navItem" href="#agents" data-view="agents">Agents &amp; Teams</a>
         <a class="navItem" href="#negative" data-view="negative">Negative (Internal)</a>
       </div>
@@ -95,6 +96,20 @@
         </div>
       </section>
 
+      <section id="view-approved" style="display:none;">
+        <div class="sectionTitle" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Approved Reviews</span>
+          <div style="display:flex; gap:10px;">
+            <button class="btn danger" id="resetApprovedBtn" style="font-size:12px;">Reset All to Pending</button>
+          </div>
+        </div>
+        <div class="preview" style="margin-bottom:10px;">
+          <div class="previewLabel">Approved items shown on TV Dashboard</div>
+          <div class="previewText" style="font-size:12px; color:var(--muted);">These reviews are visible on the TV Dashboard. You can remove individual reviews or reset all back to Pending.</div>
+        </div>
+        <div id="approvedReviewsList"></div>
+      </section>
+
       <section id="view-agents" style="display:none;">
         <div class="sectionTitle">Agents &amp; Teams</div>
         <div class="split">
@@ -148,13 +163,14 @@
   var state = loadState();
   root.style.setProperty("--brand", state.brand.primary);
 
-  var views = ["overview", "queue", "agents", "negative"];
+  var views = ["overview", "queue", "approved", "agents", "negative"];
   var viewTitle = document.getElementById("viewTitle");
   var viewSubtitle = document.getElementById("viewSubtitle");
 
   var sections = {
     overview: document.getElementById("view-overview"),
     queue: document.getElementById("view-queue"),
+    approved: document.getElementById("view-approved"),
     agents: document.getElementById("view-agents"),
     negative: document.getElementById("view-negative")
   };
@@ -162,6 +178,7 @@
   var subtitles = {
     overview: "High level health and pipeline",
     queue: "Review items before they appear on the TV dashboard",
+    approved: "Manage approved reviews shown on the TV dashboard",
     agents: "Manage agent directory and team mapping",
     negative: "Internal-only negative feedback themes"
   };
@@ -173,7 +190,8 @@
     document.querySelectorAll("#nav .navItem").forEach(function(a) {
       a.classList.toggle("active", a.getAttribute("data-view") === view);
     });
-    viewTitle.textContent = view === "overview" ? "Overview" : view === "queue" ? "Approvals Queue" : view === "agents" ? "Agents & Teams" : "Negative (Internal)";
+    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)" };
+    viewTitle.textContent = titles[view] || view;
     viewSubtitle.textContent = subtitles[view] || "";
   }
 
@@ -375,6 +393,69 @@
     showToast("Added team " + teamName, "success");
   });
 
+  // --- APPROVED REVIEWS MANAGEMENT ---
+  var approvedReviewsList = document.getElementById("approvedReviewsList");
+
+  function renderApproved() {
+    var approved = state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; });
+    approved.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+
+    approvedReviewsList.innerHTML = approved.length ? approved.map(function(item) {
+      var d = new Date(item.createdAt);
+      var dateLabel = isNaN(d.getTime()) ? item.createdAt : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" });
+      var ratingStr = item.rating != null ? item.rating + "/5" : "—";
+      var reviewer = item.reviewerName || item.agent || "Unknown";
+      var textPreview = item.text.length > 200 ? item.text.substring(0, 200) + "..." : item.text;
+      return '<div class="preview" style="margin-bottom:10px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+          '<div><strong>' + reviewer + '</strong> · ' + rowBadge(item.source) + ' · ' + rowBadge(ratingStr) + ' · ' + rowBadge(item.theme || "General") + '</div>' +
+          '<div style="display:flex; gap:8px; align-items:center;">' +
+            '<span style="color:var(--muted); font-size:12px;">' + dateLabel + '</span>' +
+            '<button class="btn danger" data-unapprove="' + item.id + '" style="padding:4px 10px; font-size:11px;">Remove from TV</button>' +
+            '<button class="btn" data-delete-review="' + item.id + '" style="padding:4px 10px; font-size:11px;">Delete</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="previewText" style="font-size:13px; line-height:1.5;">' + textPreview + '</div>' +
+      '</div>';
+    }).join("") : '<div class="preview"><div class="previewText" style="color:var(--muted);">No approved reviews yet. Approve items from the Queue to see them here and on the TV Dashboard.</div></div>';
+
+    // Bind unapprove buttons (set back to Pending)
+    approvedReviewsList.querySelectorAll("[data-unapprove]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var id = btn.getAttribute("data-unapprove");
+        state = updateItem(id, { status: "Pending" });
+        renderAll();
+        showToast("Moved back to Pending", "success");
+      });
+    });
+
+    // Bind delete buttons (permanently remove)
+    approvedReviewsList.querySelectorAll("[data-delete-review]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var id = btn.getAttribute("data-delete-review");
+        var item = state.items.find(function(i) { return i.id === id; });
+        if (!item) return;
+        if (!confirm("Permanently delete this review?")) return;
+        state.items = state.items.filter(function(i) { return i.id !== id; });
+        saveState(state);
+        renderAll();
+        showToast("Review deleted", "success");
+      });
+    });
+  }
+
+  // Reset All Approved to Pending
+  document.getElementById("resetApprovedBtn").addEventListener("click", function() {
+    var approved = state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; });
+    if (approved.length === 0) { showToast("No approved reviews to reset", "error"); return; }
+    if (!confirm("Reset all " + approved.length + " approved reviews back to Pending?")) return;
+    approved.forEach(function(item) {
+      state = updateItem(item.id, { status: "Pending" });
+    });
+    renderAll();
+    showToast(approved.length + " reviews reset to Pending", "success");
+  });
+
   // --- NEGATIVE TAB ---
   var negativeThemes = document.getElementById("negativeThemes");
   var negativeReviewsList = document.getElementById("negativeReviewsList");
@@ -449,6 +530,7 @@
     renderQueue();
     renderPreview();
     renderAgents();
+    renderApproved();
     renderNegative();
 
     var helpBanner = document.getElementById("helpBanner");

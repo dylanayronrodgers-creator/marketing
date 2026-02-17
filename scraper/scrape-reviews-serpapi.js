@@ -170,7 +170,7 @@ async function scrapeAllReviews() {
     
     // Step 3: Fetch more pages (each page = 1 API credit)
     let pageCount = 1;
-    const maxPages = 5; // 5 pages ≈ 50 reviews, uses 5 credits per run
+    const maxPages = 3; // 3 pages ≈ 30 reviews, uses 3 credits per run (~180/month)
     
     while (result.serpapi_pagination && result.serpapi_pagination.next_page_token && pageCount < maxPages) {
       pageCount++;
