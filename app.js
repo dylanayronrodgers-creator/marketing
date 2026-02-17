@@ -249,10 +249,27 @@ function loadGoogleReviews() {
       
       var state = loadState();
       
-      // Replace ALL items with Google reviews only (remove mock data)
-      state.items = data.reviews;
+      // Keep existing Google reviews, add new ones (avoid duplicates by ID)
+      var existingIds = {};
+      state.items.forEach(function(item) {
+        if (item.id.startsWith('GR-')) {
+          existingIds[item.id] = true;
+        }
+      });
       
-      // Sort by date
+      // Remove mock data (IDs starting with IT-) but keep existing Google reviews
+      state.items = state.items.filter(function(item) {
+        return item.id.startsWith('GR-');
+      });
+      
+      // Add new reviews that don't already exist
+      data.reviews.forEach(function(review) {
+        if (!existingIds[review.id]) {
+          state.items.push(review);
+        }
+      });
+      
+      // Sort by date (newest first)
       state.items.sort(function(a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });

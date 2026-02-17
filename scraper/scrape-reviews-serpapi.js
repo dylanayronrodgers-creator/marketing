@@ -192,6 +192,11 @@ async function scrapeAllReviews() {
       const sentiment = rating >= 4 ? 'Positive' : rating === 3 ? 'Neutral' : 'Negative';
       const status = sentiment === 'Negative' ? 'Flagged (Negative)' : 'Pending';
       
+      // Generate unique ID based on reviewer and date to avoid duplicates across scrapes
+      const reviewerId = review.user?.link?.match(/contrib\/(\d+)/)?.[1] || 'unknown';
+      const reviewDate = review.iso_date || review.date || '';
+      const uniqueId = `GR-${reviewerId.slice(-8)}-${reviewDate.slice(0, 10).replace(/-/g, '')}`;
+      
       // Extract keywords from text
       const text = review.snippet || review.extracted_snippet?.original || '';
       const textLower = text.toLowerCase();
@@ -224,7 +229,7 @@ async function scrapeAllReviews() {
       }
       
       return {
-        id: `GR-${String(10000 + idx).padStart(5, '0')}`,
+        id: uniqueId,
         createdAt: createdAt,
         source: 'Google',
         rating: rating,
