@@ -168,11 +168,9 @@ async function scrapeAllReviews() {
       console.log(`   Fetched: ${result.reviews.length} reviews`);
     }
     
-    // Step 3: Fetch more pages if available (be mindful of API credits)
-    // Uncomment below to fetch more pages (each page = 1 API credit)
-    /*
+    // Step 3: Fetch more pages (each page = 1 API credit)
     let pageCount = 1;
-    const maxPages = 5; // Limit to save API credits
+    const maxPages = 5; // 5 pages ≈ 50 reviews, uses 5 credits per run
     
     while (result.serpapi_pagination && result.serpapi_pagination.next_page_token && pageCount < maxPages) {
       pageCount++;
@@ -182,7 +180,6 @@ async function scrapeAllReviews() {
         console.log(`   Page ${pageCount}: +${result.reviews.length} reviews (Total: ${allReviews.length})`);
       }
     }
-    */
     
     console.log(`\n✅ Total reviews fetched: ${allReviews.length}`);
     

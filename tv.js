@@ -95,7 +95,9 @@ function render() {
   const pendingCount = state.items.filter((i) => i.status === "Pending").length;
   const sync = `Approved: ${approvedCount} · Pending review: ${pendingCount}`;
   const theme = lb.weeklyTop[0]?.themes?.[0] ? `Top theme: ${lb.weeklyTop[0].themes[0]}` : "Top theme: Fast resolution";
-  const loop = [sync, theme, "Google reviews (mock)", "Email feedback (mock)"]
+  const totalReviews = state.items.length;
+  const googleCount = state.items.filter((i) => i.source === "Google").length;
+  const loop = [sync, theme, `Google reviews: ${googleCount}`, `Total reviews: ${totalReviews}`]
     .flatMap((t) => [t, t])
     .map((t) => `  ·  ${t}  ·  `)
     .join("");

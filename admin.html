@@ -32,7 +32,7 @@
           <div class="subtitle" id="viewSubtitle">High level health and pipeline</div>
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
-          <button class="btn" id="btnBrand">Theme</button>
+          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="color" id="brandColorPicker" style="width:32px; height:32px; border:none; background:none; cursor:pointer;" /><span class="btn" id="btnBrand">Theme</span></label>
           <button class="btn" id="resetBtn">Reset demo data</button>
           <a class="btn primary" href="./tv.html">Open TV</a>
           <a class="btn" href="./index.html">Home</a>
@@ -49,7 +49,7 @@
 
         <div class="kpis" id="kpis"></div>
 
-        <div class="sectionTitle">Insights (mock)</div>
+        <div class="sectionTitle">Insights</div>
         <div class="split">
           <div class="preview">
             <div class="previewLabel">Top themes</div>
@@ -102,8 +102,22 @@
             <table class="table" id="agentsTable"></table>
           </div>
           <div class="preview">
-            <div class="previewLabel">Teams</div>
+            <div class="previewLabel">Add New Agent</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+              <input class="select" id="newAgentName" placeholder="Full name" />
+              <input class="select" id="newAgentEmail" placeholder="Email" />
+            </div>
+            <div style="margin-top:10px;">
+              <select class="select" id="newAgentTeam"></select>
+            </div>
+            <button class="btn success" id="addAgentBtn" style="margin-top:12px; width:100%;">+ Add Agent</button>
+
+            <div class="previewLabel" style="margin-top:20px;">Teams</div>
             <div class="previewText" id="teamList"></div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <input class="select" id="newTeamName" placeholder="New team name" style="flex:1;" />
+              <button class="btn" id="addTeamBtn">+ Add</button>
+            </div>
           </div>
         </div>
       </section>
@@ -115,7 +129,10 @@
           <div class="previewText" id="negativeThemes"></div>
         </div>
 
-        <div class="sectionTitle">Notes</div>
+        <div class="sectionTitle">Negative Reviews</div>
+        <div id="negativeReviewsList"></div>
+
+        <div class="sectionTitle" style="margin-top:14px;">Notes</div>
         <div class="preview">
           <div class="previewLabel">Policy</div>
           <div class="previewText">Negative feedback is not shown on the TV dashboard. Items can be reviewed, categorized, and used for coaching and operational improvements.</div>
@@ -290,37 +307,119 @@
   if (qTeam) qTeam.addEventListener("change", function() { renderAll(); });
   if (qStatus) qStatus.addEventListener("change", function() { renderAll(); });
 
+  // --- AGENTS & TEAMS CRUD ---
   var agentsTable = document.getElementById("agentsTable");
   var teamList = document.getElementById("teamList");
+  var newAgentTeam = document.getElementById("newAgentTeam");
 
   function renderAgents() {
-    agentsTable.innerHTML = '<thead><tr><th>Name</th><th>Team</th><th>Email</th></tr></thead><tbody>' +
+    agentsTable.innerHTML = '<thead><tr><th>Name</th><th>Team</th><th>Email</th><th style="width:80px;">Action</th></tr></thead><tbody>' +
       state.agents.map(function(a) {
-        return '<tr><td>' + a.name + '</td><td>' + rowBadge(a.team) + '</td><td>' + a.email + '</td></tr>';
+        return '<tr><td>' + a.name + '</td><td>' + rowBadge(a.team) + '</td><td>' + a.email + '</td><td><button class="btn danger" data-delete-agent="' + a.id + '" style="padding:4px 10px; font-size:11px;">Remove</button></td></tr>';
       }).join("") + '</tbody>';
+
     teamList.innerHTML = state.teams.map(function(t) { return '<span class="themeChip">' + t + '</span>'; }).join(" ");
+
+    // Populate team dropdown for new agent form
+    if (newAgentTeam) {
+      newAgentTeam.innerHTML = state.teams.map(function(t) { return '<option value="' + t + '">' + t + '</option>'; }).join("");
+    }
+
+    // Bind delete buttons
+    agentsTable.querySelectorAll("[data-delete-agent]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var agentId = btn.getAttribute("data-delete-agent");
+        var agent = state.agents.find(function(a) { return a.id === agentId; });
+        if (!agent) return;
+        if (!confirm("Remove agent " + agent.name + "?")) return;
+        state.agents = state.agents.filter(function(a) { return a.id !== agentId; });
+        saveState(state);
+        renderAll();
+        showToast("Removed " + agent.name, "success");
+      });
+    });
   }
 
-  var negativeThemes = document.getElementById("negativeThemes");
+  // Add Agent button
+  document.getElementById("addAgentBtn").addEventListener("click", function() {
+    var nameEl = document.getElementById("newAgentName");
+    var emailEl = document.getElementById("newAgentEmail");
+    var teamEl = document.getElementById("newAgentTeam");
+    var name = (nameEl.value || "").trim();
+    var email = (emailEl.value || "").trim();
+    var team = teamEl.value;
 
-  function renderNegativeThemes() {
+    if (!name) { showToast("Please enter agent name", "error"); return; }
+    if (!email) { showToast("Please enter agent email", "error"); return; }
+    if (!team) { showToast("Please select a team", "error"); return; }
+
+    var id = "AG-" + String(Date.now()).slice(-6);
+    state.agents.push({ id: id, name: name, team: team, email: email });
+    saveState(state);
+    nameEl.value = "";
+    emailEl.value = "";
+    renderAll();
+    showToast("Added agent " + name, "success");
+  });
+
+  // Add Team button
+  document.getElementById("addTeamBtn").addEventListener("click", function() {
+    var teamInput = document.getElementById("newTeamName");
+    var teamName = (teamInput.value || "").trim();
+    if (!teamName) { showToast("Please enter a team name", "error"); return; }
+    if (state.teams.indexOf(teamName) !== -1) { showToast("Team already exists", "error"); return; }
+    state.teams.push(teamName);
+    saveState(state);
+    teamInput.value = "";
+    renderAll();
+    showToast("Added team " + teamName, "success");
+  });
+
+  // --- NEGATIVE TAB ---
+  var negativeThemes = document.getElementById("negativeThemes");
+  var negativeReviewsList = document.getElementById("negativeReviewsList");
+
+  function renderNegative() {
     var neg = state.items.filter(function(i) { return i.sentiment === "Negative" || i.status === "Flagged (Negative)"; });
+
+    // Theme summary
     var map = {};
     neg.forEach(function(it) {
       var key = it.theme || "Uncategorized";
       map[key] = (map[key] || 0) + 1;
     });
     var rows = Object.keys(map).map(function(k) { return [k, map[k]]; }).sort(function(a, b) { return b[1] - a[1]; });
-    negativeThemes.innerHTML = rows.map(function(r) {
+    negativeThemes.innerHTML = rows.length ? rows.map(function(r) {
       return '<div style="display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.06);"><span>' + r[0] + '</span><span style="color:var(--muted); font-weight:900;">' + r[1] + '</span></div>';
-    }).join("");
+    }).join("") : '<div style="color:var(--muted);">No negative themes found.</div>';
+
+    // Individual negative reviews
+    neg.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+    negativeReviewsList.innerHTML = neg.length ? neg.map(function(item) {
+      var d = new Date(item.createdAt);
+      var dateLabel = isNaN(d.getTime()) ? item.createdAt : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" });
+      var ratingStr = item.rating != null ? item.rating + "/5" : "—";
+      var reviewer = item.reviewerName || item.agent || "Unknown";
+      var textPreview = item.text.length > 300 ? item.text.substring(0, 300) + "..." : item.text;
+      return '<div class="preview" style="margin-bottom:10px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+          '<div><strong>' + reviewer + '</strong> · ' + rowBadge(item.source) + ' · ' + rowBadge(ratingStr) + ' · ' + rowBadge(item.theme || "Uncategorized") + '</div>' +
+          '<div style="color:var(--muted); font-size:12px;">' + dateLabel + '</div>' +
+        '</div>' +
+        '<div class="previewText" style="font-size:13px; line-height:1.5;">' + textPreview + '</div>' +
+        '<div style="margin-top:8px; display:flex; gap:6px;">' +
+          (item.keywords || []).map(function(k) { return '<span class="themeChip">' + k + '</span>'; }).join("") +
+        '</div>' +
+      '</div>';
+    }).join("") : '<div class="preview"><div class="previewText" style="color:var(--muted);">No negative reviews found. Reviews with negative sentiment or flagged status will appear here.</div></div>';
   }
 
+  // --- OVERVIEW ---
   function renderOverview() {
     var stats = computeStats(state);
     var kpiMap = [
+      { label: "Total reviews", value: state.items.length },
       { label: "Pending approvals", value: stats.pending },
-      { label: "Approved items", value: state.items.filter(function(i) { return i.status === "Approved"; }).length },
       { label: "Avg sentiment", value: stats.avgSentiment },
       { label: "Negative flagged", value: stats.negativeFlagged }
     ];
@@ -331,7 +430,7 @@
     var lb = computeLeaderboards(state, new Date());
     var topThemes = [];
     lb.weeklyTop.forEach(function(a) { (a.themes || []).forEach(function(t) { if (topThemes.indexOf(t) === -1) topThemes.push(t); }); });
-    themes.textContent = topThemes.length ? topThemes.slice(0, 6).join(", ") : "Fast resolution, Clear communication";
+    themes.textContent = topThemes.length ? topThemes.slice(0, 6).join(", ") : "No themes yet — approve items to see themes";
 
     var byTeam = {};
     state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; }).forEach(function(it) {
@@ -341,6 +440,7 @@
     teams.textContent = teamPairs.map(function(p) { return p[0] + ": " + p[1]; }).join(" · ") || "No approved items yet";
   }
 
+  // --- RENDER ALL ---
   function renderAll() {
     state = loadState();
     root.style.setProperty("--brand", state.brand.primary);
@@ -349,31 +449,43 @@
     renderQueue();
     renderPreview();
     renderAgents();
-    renderNegativeThemes();
+    renderNegative();
 
     var helpBanner = document.getElementById("helpBanner");
-    if (helpBanner) helpBanner.style.display = state.items.length < 50 ? "block" : "none";
+    if (helpBanner) helpBanner.style.display = state.items.length === 0 ? "block" : "none";
   }
 
   renderAll();
 
+  // --- THEME COLOR PICKER ---
+  var brandColorPicker = document.getElementById("brandColorPicker");
+  brandColorPicker.value = state.brand.primary || "#0099cc";
+
   document.getElementById("btnBrand").addEventListener("click", function() {
-    var current = getComputedStyle(root).getPropertyValue("--brand").trim();
-    var next = current.toLowerCase() === "#0099cc" ? "#0078a8" : "#0099cc";
-    state = updateBrandPrimary(next);
-    root.style.setProperty("--brand", state.brand.primary);
-    renderAll();
-    showToast("Brand color updated", "success");
+    brandColorPicker.click();
   });
 
+  brandColorPicker.addEventListener("input", function() {
+    var color = brandColorPicker.value;
+    state = updateBrandPrimary(color);
+    root.style.setProperty("--brand", color);
+    renderAll();
+  });
+
+  brandColorPicker.addEventListener("change", function() {
+    showToast("Brand color updated to " + brandColorPicker.value, "success");
+  });
+
+  // --- RESET ---
   var resetBtn = document.getElementById("resetBtn");
   if (resetBtn) {
     resetBtn.addEventListener("click", function() {
-      if (!confirm("Reset to demo data? This will clear all changes and load 140 fresh items.")) return;
+      if (!confirm("Reset all data? This will clear all reviews, agents, and settings.")) return;
+      localStorage.removeItem(GOOGLE_REVIEWS_LOADED_KEY);
       state = resetState();
       root.style.setProperty("--brand", state.brand.primary);
       renderAll();
-      showToast("Demo data reset: " + state.items.length + " items loaded", "success");
+      showToast("Data reset. Refresh page to reload Google reviews.", "success");
     });
   }
 
