@@ -670,6 +670,8 @@
   var counter = document.getElementById("slideCounter");
   var highlightIdx = 0;
   var highlights = [];
+  var SLIDE_INTERVAL = 8000;
+  var lastItemCount = -1;
 
   function formatWeekRange(startIso) {
     var d = new Date(startIso);
@@ -688,8 +690,34 @@
     return String(name || "").split(" ").filter(Boolean).slice(0, 2).map(function(p) { return p[0]; }).join("").toUpperCase();
   }
 
+  function stars(rating) {
+    if (rating == null) return "";
+    var full = Math.floor(rating);
+    var html = "";
+    for (var i = 0; i < 5; i++) {
+      html += '<span style="color:' + (i < full ? '#fbbf24' : '#d1d5db') + '; font-size:18px;">★</span>';
+    }
+    return html;
+  }
+
+  function timeAgo(dateStr) {
+    var d = new Date(dateStr);
+    var now = new Date();
+    var diff = Math.floor((now - d) / 1000);
+    if (diff < 60) return "just now";
+    if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+    if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
+    if (diff < 604800) return Math.floor(diff / 86400) + "d ago";
+    return d.toLocaleDateString(undefined, { day: "2-digit", month: "short" });
+  }
+
   function render() {
     state = loadState();
+
+    // Only re-render lists if data changed
+    var currentCount = state.items.length;
+    var dataChanged = currentCount !== lastItemCount;
+    lastItemCount = currentCount;
 
     var now = new Date();
     var lb = computeLeaderboards(state, now);
@@ -698,72 +726,117 @@
     elWeekSmall.textContent = formatWeekRange(lb.weekStart);
     elMonth.textContent = formatMonthLabel(now);
 
-    // Weekly Top 5
-    weeklyList.innerHTML = lb.weeklyTop.slice(0, 5).map(function(r, i) {
-      var rankClass = i < 3 ? ' rank-' + (i + 1) : '';
-      var medalClass = i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : '';
-      return '<div class="tv-rank-row' + rankClass + '">' +
-        '<div class="tv-rank-num' + medalClass + '">' + (i + 1) + '</div>' +
-        '<div><div class="tv-rank-name">' + r.agent + '</div>' +
-        '<div class="tv-rank-meta">' + r.team + ' · ' + r.count + ' mentions</div></div>' +
-        '<div><div class="tv-rank-score">' + Math.round(r.score) + '</div>' +
-        '<div class="tv-rank-reason">' + ((r.themes || []).join(" · ") || "Great feedback") + '</div></div>' +
-        '</div>';
-    }).join("");
+    if (dataChanged) {
+      // Weekly Top 5
+      weeklyList.innerHTML = lb.weeklyTop.slice(0, 5).map(function(r, i) {
+        var rankClass = i < 3 ? ' rank-' + (i + 1) : '';
+        var medalClass = i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : '';
+        return '<div class="tv-rank-row' + rankClass + '">' +
+          '<div class="tv-rank-num' + medalClass + '">' + (i + 1) + '</div>' +
+          '<div><div class="tv-rank-name">' + r.agent + '</div>' +
+          '<div class="tv-rank-meta">' + r.team + ' · ' + r.count + ' mentions</div></div>' +
+          '<div><div class="tv-rank-score">' + Math.round(r.score) + '</div>' +
+          '<div class="tv-rank-reason">' + ((r.themes || []).join(" · ") || "Great feedback") + '</div></div>' +
+          '</div>';
+      }).join("") || '<div style="text-align:center; padding:40px; color:#94a3b8;">No weekly leaders yet — approve reviews to see rankings</div>';
 
-    // Monthly Leaders - using TV classes
-    podium.innerHTML = lb.monthlyTop.map(function(m, i) {
-      return '<div class="tv-podium-card">' +
-        '<div class="tv-podium-top">' +
-        '<div class="tv-podium-info"><div class="tv-avatar">' + initials(m.agent) + '</div>' +
-        '<div><div class="tv-podium-name">#' + (i + 1) + ' ' + m.agent + '</div>' +
-        '<div class="tv-podium-meta">' + m.team + ' · Score ' + Math.round(m.score) + '</div></div></div>' +
-        '<div class="tv-rank-num" style="width:48px;height:48px;">' + (i + 1) + '</div></div>' +
-        '<div class="tv-themes">' + (m.themes || []).map(function(t) { return '<span class="tv-theme">' + t + '</span>'; }).join("") + '</div>' +
-        '</div>';
-    }).join("");
+      // Monthly Leaders
+      podium.innerHTML = lb.monthlyTop.map(function(m, i) {
+        return '<div class="tv-podium-card">' +
+          '<div class="tv-podium-top">' +
+          '<div class="tv-podium-info"><div class="tv-avatar">' + initials(m.agent) + '</div>' +
+          '<div><div class="tv-podium-name">#' + (i + 1) + ' ' + m.agent + '</div>' +
+          '<div class="tv-podium-meta">' + m.team + ' · Score ' + Math.round(m.score) + '</div></div></div>' +
+          '<div class="tv-rank-num" style="width:48px;height:48px;">' + (i + 1) + '</div></div>' +
+          '<div class="tv-themes">' + (m.themes || []).map(function(t) { return '<span class="tv-theme">' + t + '</span>'; }).join("") + '</div>' +
+          '</div>';
+      }).join("") || '<div style="text-align:center; padding:20px; color:#94a3b8;">No monthly leaders yet</div>';
 
-    highlights = lb.highlights;
-    highlightIdx = 0;
-    renderSlide();
+      highlights = lb.highlights;
+      if (highlightIdx >= highlights.length) highlightIdx = 0;
+    }
 
+    // Ticker
     var approvedCount = state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; }).length;
     var pendingCount = state.items.filter(function(i) { return i.status === "Pending"; }).length;
-    var sync = "✓ Approved: " + approvedCount + "  ·  Pending: " + pendingCount;
-    var theme = lb.weeklyTop[0] && lb.weeklyTop[0].themes && lb.weeklyTop[0].themes[0] ? "Top theme: " + lb.weeklyTop[0].themes[0] : "Top theme: Fast resolution";
-    var loop = [sync, theme, "Google reviews", "Internal feedback"];
-    loop = loop.concat(loop).concat(loop);
-    ticker.textContent = loop.map(function(t) { return "     " + t + "     "; }).join("·");
+    var googleCount = state.items.filter(function(i) { return i.source === "Google"; }).length;
+    var negCount = state.items.filter(function(i) { return i.sentiment === "Negative"; }).length;
+    var topTheme = lb.weeklyTop[0] && lb.weeklyTop[0].themes && lb.weeklyTop[0].themes[0] ? lb.weeklyTop[0].themes[0] : "Customer excellence";
+
+    var tickerItems = [
+      "Approved: " + approvedCount,
+      "Pending: " + pendingCount,
+      "Top theme: " + topTheme,
+      "Google reviews: " + googleCount,
+      "Total reviews: " + state.items.length,
+      "Negative flagged: " + negCount
+    ];
+    var loop = tickerItems.concat(tickerItems).concat(tickerItems);
+    ticker.textContent = loop.map(function(t) { return "     ·     " + t; }).join("");
   }
 
   function renderSlide() {
-    if (!highlights.length) {
-      slide.innerHTML = '<div class="tv-quote">No approved highlights yet</div>' +
-        '<div class="tv-agent-card">' +
-        '<div class="tv-agent-avatar">?</div>' +
-        '<div class="tv-agent-info"><div class="tv-agent-name">Waiting for approvals</div>' +
-        '<div class="tv-agent-team">Approve items in the Manager Portal</div></div>' +
-        '<div class="tv-agent-source">Manager Portal</div></div>';
-      counter.textContent = "0/0";
-      return;
-    }
+    // Fade out
+    slide.style.opacity = "0";
 
-    var s = highlights[highlightIdx % highlights.length];
-    var quote = s.tvSnippet || s.text;
-    slide.innerHTML = '<div class="tv-celebration-badge">Customer Feedback</div>' +
-      '<div class="tv-quote">"' + quote + '"</div>' +
-      '<div class="tv-keywords">' + (s.keywords || []).slice(0, 5).map(function(k) { return '<span class="tv-keyword">' + k + '</span>'; }).join("") + '</div>' +
-      '<div class="tv-agent-card">' +
-      '<div class="tv-agent-avatar">' + initials(s.agent) + '</div>' +
-      '<div class="tv-agent-info"><div class="tv-agent-name">' + s.agent + '</div>' +
-      '<div class="tv-agent-team">' + s.team + (s.theme ? ' · ' + s.theme : '') + '</div></div>' +
-      '<div class="tv-agent-source">' + s.source + '</div></div>';
-    counter.textContent = ((highlightIdx % highlights.length) + 1) + "/" + highlights.length;
-    highlightIdx += 1;
+    setTimeout(function() {
+      if (!highlights.length) {
+        slide.innerHTML = '<div style="text-align:center;">' +
+          '<div style="font-size:48px; margin-bottom:16px;">📋</div>' +
+          '<div class="tv-quote" style="font-size:28px;">No approved highlights yet</div>' +
+          '<div class="tv-agent-card" style="margin-top:24px;">' +
+          '<div class="tv-agent-avatar">?</div>' +
+          '<div class="tv-agent-info"><div class="tv-agent-name">Waiting for approvals</div>' +
+          '<div class="tv-agent-team">Approve items in the Manager Portal to display here</div></div>' +
+          '</div></div>';
+        counter.textContent = "0/0";
+        slide.style.opacity = "1";
+        return;
+      }
+
+      var s = highlights[highlightIdx % highlights.length];
+      var quote = s.tvSnippet || s.text;
+      if (quote.length > 180) quote = quote.substring(0, 180) + "...";
+
+      // Reviewer avatar: use thumbnail if available, otherwise initials
+      var avatarHtml;
+      if (s.reviewerThumbnail) {
+        avatarHtml = '<img src="' + s.reviewerThumbnail + '" style="width:60px; height:60px; border-radius:50%; object-fit:cover;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';" />' +
+          '<div class="tv-agent-avatar" style="display:none;">' + initials(s.reviewerName || s.agent) + '</div>';
+      } else {
+        avatarHtml = '<div class="tv-agent-avatar">' + initials(s.agent) + '</div>';
+      }
+
+      var reviewerName = s.reviewerName || s.agent || "Customer";
+      var starsHtml = stars(s.rating);
+      var timeLabel = timeAgo(s.createdAt);
+
+      slide.innerHTML = '<div class="tv-celebration-badge">' + (s.source === "Google" ? "Google Review" : "Customer Feedback") + '</div>' +
+        (starsHtml ? '<div style="margin-bottom:12px;">' + starsHtml + '</div>' : '') +
+        '<div class="tv-quote">"' + quote + '"</div>' +
+        '<div class="tv-keywords">' + (s.keywords || []).slice(0, 5).map(function(k) { return '<span class="tv-keyword">' + k + '</span>'; }).join("") + '</div>' +
+        '<div class="tv-agent-card">' +
+        avatarHtml +
+        '<div class="tv-agent-info"><div class="tv-agent-name">' + reviewerName + '</div>' +
+        '<div class="tv-agent-team">' + (s.agent !== "Unknown" ? s.agent + ' · ' : '') + s.team + (s.theme ? ' · ' + s.theme : '') + '</div></div>' +
+        '<div style="text-align:right;"><div class="tv-agent-source">' + s.source + '</div>' +
+        '<div style="font-size:11px; color:#94a3b8; margin-top:4px;">' + timeLabel + '</div></div>' +
+        '</div>';
+
+      counter.textContent = ((highlightIdx % highlights.length) + 1) + "/" + highlights.length;
+      highlightIdx += 1;
+
+      // Fade in
+      slide.style.opacity = "1";
+    }, 300);
   }
 
+  // Add transition to slide element
+  slide.style.transition = "opacity 0.3s ease";
+
   render();
-  setInterval(renderSlide, 8000);
+  renderSlide();
+  setInterval(renderSlide, SLIDE_INTERVAL);
   setInterval(render, 20000);
 
   console.log("TV Dashboard ready. Approved items:", getApprovedItems(state).length);
