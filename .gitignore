@@ -16,3 +16,4 @@ Thumbs.db
 
 # Scraper output (keep google-reviews.json for deployment)
 scraper/inject-reviews.js
+scraper/.last-scrape.json

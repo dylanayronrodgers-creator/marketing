@@ -16,15 +16,49 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-// Set your SerpAPI key here or use environment variable
-const SERPAPI_KEY = process.env.SERPAPI_KEY || 'YOUR_SERPAPI_KEY_HERE';
+// Set your SerpAPI key via environment variable
+// Windows: set SERPAPI_KEY=your_key_here
+// Mac/Linux: export SERPAPI_KEY=your_key_here
+const SERPAPI_KEY = process.env.SERPAPI_KEY;
 
 // Search query to find Axxess on Google Maps
 const SEARCH_QUERY = 'Axxess DSL South Africa';
 
-// Data ID for Axxess (if known) - speeds up the process
-// You can find this by searching on SerpAPI playground first
-let PLACE_DATA_ID = null;
+// Data ID for Axxess - found via SerpAPI
+// This skips the search step and saves 1 API credit per run
+let PLACE_DATA_ID = '0x1e7ad23632467f91:0x57bec90a7dc50866';
+
+// Cache settings - only scrape once every 12 hours to save API credits
+const CACHE_DURATION_MS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+const CACHE_FILE = path.join(__dirname, '.last-scrape.json');
+
+function shouldScrape() {
+  try {
+    if (!fs.existsSync(CACHE_FILE)) {
+      return true;
+    }
+    const cache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
+    const lastScrape = new Date(cache.lastScrape).getTime();
+    const now = Date.now();
+    const hoursSince = (now - lastScrape) / (1000 * 60 * 60);
+    
+    if (now - lastScrape < CACHE_DURATION_MS) {
+      console.log(`⏰ Last scrape was ${hoursSince.toFixed(1)} hours ago.`);
+      console.log(`   Next scrape allowed in ${(12 - hoursSince).toFixed(1)} hours.`);
+      console.log(`   Use --force to scrape anyway.`);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    return true;
+  }
+}
+
+function updateCache() {
+  fs.writeFileSync(CACHE_FILE, JSON.stringify({
+    lastScrape: new Date().toISOString()
+  }, null, 2));
+}
 
 async function fetchJSON(url) {
   return new Promise((resolve, reject) => {
@@ -94,13 +128,21 @@ async function fetchReviews(dataId, nextPageToken = null) {
 }
 
 async function scrapeAllReviews() {
-  if (SERPAPI_KEY === 'YOUR_SERPAPI_KEY_HERE') {
+  const forceRun = process.argv.includes('--force');
+  
+  if (!SERPAPI_KEY || SERPAPI_KEY === 'YOUR_SERPAPI_KEY_HERE') {
     console.error('❌ Error: Please set your SerpAPI key');
     console.log('\nTo set your API key:');
     console.log('  Windows: set SERPAPI_KEY=your_key_here');
     console.log('  Mac/Linux: export SERPAPI_KEY=your_key_here');
     console.log('\nGet your key at: https://serpapi.com/dashboard');
     process.exit(1);
+  }
+
+  // Check 12-hour cache unless --force is used
+  if (!forceRun && !shouldScrape()) {
+    console.log('\n✅ Using cached reviews. No API credits used.');
+    process.exit(0);
   }
 
   console.log('🚀 Starting Google Reviews scrape via SerpAPI...\n');
@@ -214,6 +256,9 @@ async function scrapeAllReviews() {
     
     fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
     console.log(`\n💾 Saved ${dashboardReviews.length} reviews to data/google-reviews.json`);
+    
+    // Update cache timestamp
+    updateCache();
     
     // Show sample
     if (dashboardReviews.length > 0) {
