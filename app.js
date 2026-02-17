@@ -249,13 +249,8 @@ function loadGoogleReviews() {
       
       var state = loadState();
       
-      // Remove old Google reviews (IDs starting with GR-)
-      state.items = state.items.filter(function(item) {
-        return !item.id.startsWith('GR-');
-      });
-      
-      // Add new Google reviews
-      state.items = data.reviews.concat(state.items);
+      // Replace ALL items with Google reviews only (remove mock data)
+      state.items = data.reviews;
       
       // Sort by date
       state.items.sort(function(a, b) {
@@ -266,6 +261,10 @@ function loadGoogleReviews() {
       localStorage.setItem(GOOGLE_REVIEWS_LOADED_KEY, data.scrapedAt);
       
       console.log('✅ Loaded ' + data.reviews.length + ' Google reviews (Rating: ' + data.overallRating + ')');
+      
+      // Reload page to show new reviews
+      location.reload();
+      
       return data;
     })
     .catch(function(err) {
