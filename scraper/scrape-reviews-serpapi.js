@@ -112,7 +112,8 @@ async function findPlaceDataId() {
 async function fetchReviews(dataId, nextPageToken = null) {
   console.log(nextPageToken ? '📄 Fetching next page of reviews...' : '📝 Fetching reviews...');
   
-  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&data_id=${dataId}&api_key=${SERPAPI_KEY}`;
+  // sort_by=newestFirst gets the most recent reviews instead of "most relevant"
+  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&data_id=${dataId}&sort_by=newestFirst&hl=en&api_key=${SERPAPI_KEY}`;
   
   if (nextPageToken) {
     reviewsUrl += `&next_page_token=${nextPageToken}`;
