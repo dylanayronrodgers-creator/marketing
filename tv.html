@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Top Reviewa - TV Dashboard</title>
+  <link rel="icon" type="image/jpeg" href="https://i.ibb.co/1GrhnMc4/images.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -378,6 +379,12 @@
   var TV_CONFIG_KEY = "axxess_tv_config";
   var tvCfg;
   try { tvCfg = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)) || {}; } catch(e) { tvCfg = {}; }
+
+  // Migrate old title
+  if (tvCfg.tvTitle === "Customer Recognition") {
+    tvCfg.tvTitle = "Top Reviewa";
+    localStorage.setItem(TV_CONFIG_KEY, JSON.stringify(tvCfg));
+  }
 
   // Background themes
   var bgMap = {

@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Top Reviewa - Manager Portal</title>
+  <link rel="icon" type="image/jpeg" href="https://i.ibb.co/1GrhnMc4/images.jpg" />
   <link rel="stylesheet" href="./styles.css" />
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -276,7 +277,7 @@
           <div class="preview">
             <div class="previewLabel">TV Title &amp; Subtitle</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-              <input class="select" id="settingTvTitle" placeholder="Customer Recognition" style="font-size:12px;" />
+              <input class="select" id="settingTvTitle" placeholder="Top Reviewa" style="font-size:12px;" />
               <input class="select" id="settingTvSubtitle" placeholder="Live Dashboard" style="font-size:12px;" />
             </div>
 
@@ -934,7 +935,12 @@
   };
 
   function loadTvConfig() {
-    try { var c = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)); return Object.assign({}, defaultTvConfig, c || {}); } catch(e) { return Object.assign({}, defaultTvConfig); }
+    try {
+      var c = JSON.parse(localStorage.getItem(TV_CONFIG_KEY));
+      var cfg = Object.assign({}, defaultTvConfig, c || {});
+      if (cfg.tvTitle === "Customer Recognition") cfg.tvTitle = "Top Reviewa";
+      return cfg;
+    } catch(e) { return Object.assign({}, defaultTvConfig); }
   }
 
   function saveTvConfig(cfg) {
@@ -1114,7 +1120,7 @@
       brandColor: document.getElementById("settingBrandColor").value,
       logoUrl: document.getElementById("settingLogoUrl").value.trim(),
       companyName: document.getElementById("settingCompanyName").value.trim() || "Axxess",
-      tvTitle: document.getElementById("settingTvTitle").value.trim() || "Customer Recognition",
+      tvTitle: document.getElementById("settingTvTitle").value.trim() || "Top Reviewa",
       tvSubtitle: document.getElementById("settingTvSubtitle").value.trim(),
       bgTheme: tvConfig.bgTheme,
       layout: tvConfig.layout,

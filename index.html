@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Top Reviewa</title>
+  <link rel="icon" type="image/jpeg" href="https://i.ibb.co/1GrhnMc4/images.jpg" />
   <link rel="stylesheet" href="./styles.css" />
   <style>
     :root { --brand: #0099cc; }
@@ -186,6 +187,9 @@
     var TV_CONFIG_KEY = "axxess_tv_config";
     var cfg;
     try { cfg = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)) || {}; } catch(e) { cfg = {}; }
+
+    // Migrate old title
+    if (cfg.tvTitle === "Customer Recognition") cfg.tvTitle = "Top Reviewa";
 
     if (cfg.brandColor) {
       document.documentElement.style.setProperty("--brand", cfg.brandColor);
