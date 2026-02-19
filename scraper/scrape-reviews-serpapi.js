@@ -130,8 +130,9 @@ async function findPlaceDataId() {
 async function fetchReviews(dataId, nextPageToken = null) {
   console.log(nextPageToken ? '📄 Fetching next page of reviews...' : '📝 Fetching reviews...');
   
-  // sort_by=newestFirst gets the most recent reviews instead of "most relevant"
-  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&data_id=${dataId}&sort_by=newestFirst&hl=en&api_key=${SERPAPI_KEY}`;
+  // sort_by=date gets the most recent reviews instead of "most relevant"
+  // SerpAPI values: date (newest), rating_high, rating_low — NOT "newestFirst"
+  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&data_id=${dataId}&sort_by=date&hl=en&api_key=${SERPAPI_KEY}`;
   
   if (nextPageToken) {
     reviewsUrl += `&next_page_token=${nextPageToken}`;
@@ -304,7 +305,11 @@ function parseRelativeDate(dateText) {
   const match = text.match(/(\d+)/);
   const num = match ? parseInt(match[1]) : 1;
   
-  if (text.includes('day')) {
+  if (text.includes('minute') || text.includes('min')) {
+    now.setMinutes(now.getMinutes() - num);
+  } else if (text.includes('hour') || text.includes('hr')) {
+    now.setHours(now.getHours() - num);
+  } else if (text.includes('day')) {
     now.setDate(now.getDate() - num);
   } else if (text.includes('week')) {
     now.setDate(now.getDate() - (num * 7));
@@ -312,6 +317,8 @@ function parseRelativeDate(dateText) {
     now.setMonth(now.getMonth() - num);
   } else if (text.includes('year')) {
     now.setFullYear(now.getFullYear() - num);
+  } else if (text.includes('just now') || text.includes('moment')) {
+    // Keep as now
   }
   
   return now.toISOString();

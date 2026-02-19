@@ -717,9 +717,16 @@
   }
 
   function findColIdx(headers, names) {
+    // First try exact match
     for (var n = 0; n < names.length; n++) {
       var idx = headers.indexOf(names[n]);
       if (idx >= 0) return idx;
+    }
+    // Then try substring/contains match (e.g. "review_text" contains "text")
+    for (var n = 0; n < names.length; n++) {
+      for (var h = 0; h < headers.length; h++) {
+        if (headers[h].indexOf(names[n]) >= 0) return h;
+      }
     }
     return -1;
   }
@@ -736,13 +743,15 @@
       var rawLines = e.target.result.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n").filter(function(l) { return l.trim(); });
       if (rawLines.length < 2) { showToast("CSV needs a header row + at least 1 data row", "error"); return; }
 
-      var headers = parseCSVLine(rawLines[0]).map(function(h) { return h.toLowerCase().replace(/[^a-z0-9]/g, ""); });
+      // Strip BOM, quotes, whitespace, then normalize to lowercase with no special chars
+      var headers = parseCSVLine(rawLines[0]).map(function(h) { return h.replace(/^\uFEFF/, "").toLowerCase().replace(/[^a-z0-9]/g, ""); });
+      console.log("CSV headers detected:", headers);
       csvColMap = {
-        name: findColIdx(headers, ["name", "reviewer", "reviewername", "customer", "from"]),
-        rating: findColIdx(headers, ["rating", "score", "stars"]),
-        text: findColIdx(headers, ["text", "feedback", "comment", "review", "message", "body"]),
-        team: findColIdx(headers, ["team", "department", "group"]),
-        agent: findColIdx(headers, ["agent", "assignee", "rep", "representative"])
+        name: findColIdx(headers, ["name", "reviewer", "customer", "from", "person", "client", "author"]),
+        rating: findColIdx(headers, ["rating", "score", "stars", "rate"]),
+        text: findColIdx(headers, ["text", "feedback", "comment", "review", "message", "body", "description", "note", "content"]),
+        team: findColIdx(headers, ["team", "department", "group", "division"]),
+        agent: findColIdx(headers, ["agent", "assignee", "rep", "representative", "employee", "staff"])
       };
 
       if (csvColMap.text < 0 && csvColMap.name < 0) {
