@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Axxess - Manager Portal</title>
   <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="adminShell">
@@ -171,13 +172,13 @@
             <div id="importResult" style="margin-top:10px; font-size:12px;"></div>
           </div>
           <div class="preview">
-            <div class="previewLabel">Import from CSV File</div>
-            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Upload a CSV with columns: <strong>name, rating, text</strong>, team (optional), agent (optional). Columns are auto-detected from the header row.</div>
-            <input type="file" id="csvFileInput" accept=".csv,.txt" class="select" style="padding:8px;" />
-            <button class="btn" id="csvPreviewBtn" style="margin-top:10px; width:100%;">Preview CSV</button>
-            <div id="csvPreviewArea" style="margin-top:10px; max-height:260px; overflow:auto; font-size:12px;"></div>
-            <button class="btn success" id="csvConfirmBtn" style="margin-top:10px; width:100%; display:none;">Confirm Import</button>
-            <div id="csvResult" style="margin-top:10px; font-size:12px;"></div>
+            <div class="previewLabel">Import from Excel / CSV</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Upload an <strong>.xlsx, .xls, or .csv</strong> file. Columns are auto-detected from the header row. Expected: <strong>name, rating, text</strong> (team, agent optional).</div>
+            <input type="file" id="fileImportInput" accept=".xlsx,.xls,.csv" class="select" style="padding:8px;" />
+            <button class="btn" id="filePreviewBtn" style="margin-top:10px; width:100%;">Preview File</button>
+            <div id="filePreviewArea" style="margin-top:10px; max-height:300px; overflow:auto; font-size:12px;"></div>
+            <button class="btn success" id="fileConfirmBtn" style="margin-top:10px; width:100%; display:none;">Confirm Import</button>
+            <div id="fileResult" style="margin-top:10px; font-size:12px;"></div>
           </div>
         </div>
 
@@ -697,32 +698,12 @@
     showToast("Imported " + imported + " email feedback items", "success");
   });
 
-  // CSV Import with Preview
-  function parseCSVLine(line) {
-    var result = []; var current = ""; var inQuotes = false;
-    for (var i = 0; i < line.length; i++) {
-      var ch = line[i];
-      if (inQuotes) {
-        if (ch === '"' && i + 1 < line.length && line[i + 1] === '"') { current += '"'; i++; }
-        else if (ch === '"') { inQuotes = false; }
-        else { current += ch; }
-      } else {
-        if (ch === '"') { inQuotes = true; }
-        else if (ch === ',') { result.push(current.trim()); current = ""; }
-        else { current += ch; }
-      }
-    }
-    result.push(current.trim());
-    return result;
-  }
-
+  // Excel / CSV Import with Preview (uses SheetJS)
   function findColIdx(headers, names) {
-    // First try exact match
     for (var n = 0; n < names.length; n++) {
       var idx = headers.indexOf(names[n]);
       if (idx >= 0) return idx;
     }
-    // Then try substring/contains match (e.g. "review_text" contains "text")
     for (var n = 0; n < names.length; n++) {
       for (var h = 0; h < headers.length; h++) {
         if (headers[h].indexOf(names[n]) >= 0) return h;
@@ -731,86 +712,101 @@
     return -1;
   }
 
-  var csvParsedRows = [];
-  var csvColMap = {};
+  var fileParsedRows = [];
+  var fileColMap = {};
 
-  document.getElementById("csvPreviewBtn").addEventListener("click", function() {
-    var fileInput = document.getElementById("csvFileInput");
-    if (!fileInput.files || !fileInput.files[0]) { showToast("Please select a CSV file first", "error"); return; }
+  document.getElementById("filePreviewBtn").addEventListener("click", function() {
+    var fileInput = document.getElementById("fileImportInput");
+    if (!fileInput.files || !fileInput.files[0]) { showToast("Please select a file first", "error"); return; }
 
+    var file = fileInput.files[0];
     var reader = new FileReader();
     reader.onload = function(e) {
-      var rawLines = e.target.result.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n").filter(function(l) { return l.trim(); });
-      if (rawLines.length < 2) { showToast("CSV needs a header row + at least 1 data row", "error"); return; }
+      try {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, { type: "array" });
+        var sheetName = workbook.SheetNames[0];
+        var sheet = workbook.Sheets[sheetName];
+        var jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
 
-      // Strip BOM, quotes, whitespace, then normalize to lowercase with no special chars
-      var headers = parseCSVLine(rawLines[0]).map(function(h) { return h.replace(/^\uFEFF/, "").toLowerCase().replace(/[^a-z0-9]/g, ""); });
-      console.log("CSV headers detected:", headers);
-      csvColMap = {
-        name: findColIdx(headers, ["name", "reviewer", "customer", "from", "person", "client", "author"]),
-        rating: findColIdx(headers, ["rating", "score", "stars", "rate"]),
-        text: findColIdx(headers, ["text", "feedback", "comment", "review", "message", "body", "description", "note", "content"]),
-        team: findColIdx(headers, ["team", "department", "group", "division"]),
-        agent: findColIdx(headers, ["agent", "assignee", "rep", "representative", "employee", "staff"])
-      };
+        if (jsonRows.length < 2) { showToast("File needs a header row + at least 1 data row", "error"); return; }
 
-      if (csvColMap.text < 0 && csvColMap.name < 0) {
-        showToast("Could not find a 'name' or 'text' column. Check your CSV headers.", "error");
-        return;
-      }
+        var headers = jsonRows[0].map(function(h) { return String(h).toLowerCase().replace(/[^a-z0-9]/g, ""); });
+        console.log("Sheet: " + sheetName + ", Headers:", headers);
 
-      csvParsedRows = [];
-      for (var i = 1; i < rawLines.length; i++) {
-        var cols = parseCSVLine(rawLines[i]);
-        if (cols.length < 2 || cols.join("").trim() === "") continue;
-        var row = {
-          name: csvColMap.name >= 0 ? (cols[csvColMap.name] || "Anonymous") : "Anonymous",
-          rating: csvColMap.rating >= 0 ? parseInt(cols[csvColMap.rating]) || null : null,
-          text: csvColMap.text >= 0 ? (cols[csvColMap.text] || "") : (cols[0] || ""),
-          team: csvColMap.team >= 0 ? (cols[csvColMap.team] || "Unknown") : "Unknown",
-          agent: csvColMap.agent >= 0 ? (cols[csvColMap.agent] || "Unknown") : "Unknown"
+        fileColMap = {
+          name: findColIdx(headers, ["name", "reviewer", "customer", "from", "person", "client", "author"]),
+          rating: findColIdx(headers, ["rating", "score", "stars", "rate"]),
+          text: findColIdx(headers, ["text", "feedback", "comment", "review", "message", "body", "description", "note", "content"]),
+          team: findColIdx(headers, ["team", "department", "group", "division"]),
+          agent: findColIdx(headers, ["agent", "assignee", "rep", "representative", "employee", "staff"])
         };
-        if (row.rating && (row.rating < 1 || row.rating > 5)) row.rating = null;
-        csvParsedRows.push(row);
+
+        if (fileColMap.text < 0 && fileColMap.name < 0) {
+          var rawHeaders = jsonRows[0].map(function(h) { return String(h); }).join(", ");
+          showToast("Could not auto-detect columns. Found headers: " + rawHeaders, "error");
+          document.getElementById("filePreviewArea").innerHTML = '<div style="color:#f87171; font-size:12px;">Headers found: <strong>' + rawHeaders + '</strong><br>Expected at least one of: name, reviewer, customer, text, feedback, comment, review</div>';
+          return;
+        }
+
+        fileParsedRows = [];
+        for (var i = 1; i < jsonRows.length; i++) {
+          var cols = jsonRows[i];
+          var allEmpty = cols.every(function(c) { return String(c).trim() === ""; });
+          if (allEmpty) continue;
+
+          var name = fileColMap.name >= 0 ? String(cols[fileColMap.name] || "Anonymous") : "Anonymous";
+          var rating = fileColMap.rating >= 0 ? parseInt(cols[fileColMap.rating]) : null;
+          if (rating !== null && (isNaN(rating) || rating < 1 || rating > 5)) rating = null;
+          var text = fileColMap.text >= 0 ? String(cols[fileColMap.text] || "") : String(cols[0] || "");
+          var team = fileColMap.team >= 0 ? String(cols[fileColMap.team] || "Unknown") : "Unknown";
+          var agent = fileColMap.agent >= 0 ? String(cols[fileColMap.agent] || "Unknown") : "Unknown";
+
+          fileParsedRows.push({ name: name, rating: rating, text: text, team: team, agent: agent });
+        }
+
+        if (fileParsedRows.length === 0) { showToast("No valid data rows found", "error"); return; }
+
+        // Column mapping info
+        var mapInfo = Object.keys(fileColMap).map(function(k) {
+          return '<span style="margin-right:10px;"><strong>' + k + ':</strong> ' + (fileColMap[k] >= 0 ? '"' + jsonRows[0][fileColMap[k]] + '" (col ' + (fileColMap[k] + 1) + ')' : '<span style="color:#f87171;">not found</span>') + '</span>';
+        }).join("");
+
+        // Sheet info
+        var html = '<div style="margin-bottom:6px; font-size:11px; color:#94a3b8;">File: <strong>' + file.name + '</strong> &middot; Sheet: <strong>' + sheetName + '</strong> &middot; ' + workbook.SheetNames.length + ' sheet(s)</div>';
+        html += '<div style="margin-bottom:8px; font-size:11px; color:#64748b;">Column mapping: ' + mapInfo + '</div>';
+        html += '<div style="font-size:12px; font-weight:600; margin-bottom:6px; color:#22c55e;">' + fileParsedRows.length + ' rows ready to import</div>';
+        html += '<table class="table" style="font-size:11px;"><thead><tr><th>#</th><th>Name</th><th>Rating</th><th>Text</th><th>Team</th><th>Agent</th></tr></thead><tbody>';
+        var previewCount = Math.min(fileParsedRows.length, 15);
+        for (var j = 0; j < previewCount; j++) {
+          var r = fileParsedRows[j];
+          var shortText = r.text.length > 80 ? r.text.substring(0, 80) + "..." : r.text;
+          html += '<tr><td>' + (j + 1) + '</td><td>' + r.name + '</td><td>' + (r.rating || "\u2014") + '</td><td>' + shortText + '</td><td>' + r.team + '</td><td>' + r.agent + '</td></tr>';
+        }
+        if (fileParsedRows.length > 15) html += '<tr><td colspan="6" style="text-align:center; color:#64748b;">... and ' + (fileParsedRows.length - 15) + ' more rows</td></tr>';
+        html += '</tbody></table>';
+
+        document.getElementById("filePreviewArea").innerHTML = html;
+        document.getElementById("fileConfirmBtn").style.display = "block";
+        document.getElementById("fileResult").innerHTML = "";
+      } catch (err) {
+        showToast("Error reading file: " + err.message, "error");
+        console.error("File import error:", err);
       }
-
-      if (csvParsedRows.length === 0) { showToast("No valid data rows found", "error"); return; }
-
-      // Column mapping info
-      var mapInfo = Object.keys(csvColMap).map(function(k) {
-        return '<span style="margin-right:10px;"><strong>' + k + ':</strong> ' + (csvColMap[k] >= 0 ? 'col ' + (csvColMap[k] + 1) + ' ✓' : '<span style="color:#f87171;">not found</span>') + '</span>';
-      }).join("");
-
-      // Preview table
-      var html = '<div style="margin-bottom:8px; font-size:11px; color:#64748b;">Column mapping: ' + mapInfo + '</div>';
-      html += '<div style="font-size:12px; font-weight:600; margin-bottom:6px; color:#22c55e;">' + csvParsedRows.length + ' rows detected</div>';
-      html += '<table class="table" style="font-size:11px;"><thead><tr><th>#</th><th>Name</th><th>Rating</th><th>Text</th><th>Team</th><th>Agent</th></tr></thead><tbody>';
-      var previewCount = Math.min(csvParsedRows.length, 10);
-      for (var j = 0; j < previewCount; j++) {
-        var r = csvParsedRows[j];
-        var shortText = r.text.length > 60 ? r.text.substring(0, 60) + "..." : r.text;
-        html += '<tr><td>' + (j + 1) + '</td><td>' + r.name + '</td><td>' + (r.rating || "—") + '</td><td>' + shortText + '</td><td>' + r.team + '</td><td>' + r.agent + '</td></tr>';
-      }
-      if (csvParsedRows.length > 10) html += '<tr><td colspan="6" style="text-align:center; color:#64748b;">... and ' + (csvParsedRows.length - 10) + ' more rows</td></tr>';
-      html += '</tbody></table>';
-
-      document.getElementById("csvPreviewArea").innerHTML = html;
-      document.getElementById("csvConfirmBtn").style.display = "block";
-      document.getElementById("csvResult").innerHTML = "";
     };
-    reader.readAsText(fileInput.files[0]);
+    reader.readAsArrayBuffer(file);
   });
 
-  document.getElementById("csvConfirmBtn").addEventListener("click", function() {
-    if (!csvParsedRows.length) { showToast("No data to import. Preview first.", "error"); return; }
+  document.getElementById("fileConfirmBtn").addEventListener("click", function() {
+    if (!fileParsedRows.length) { showToast("No data to import. Preview first.", "error"); return; }
 
     var imported = 0;
     var ts = Date.now();
-    csvParsedRows.forEach(function(row) {
+    fileParsedRows.forEach(function(row) {
       var sentiment = row.rating >= 4 ? "Positive" : row.rating === 3 ? "Neutral" : (row.rating != null && row.rating <= 2) ? "Negative" : "Neutral";
       var status = sentiment === "Negative" ? "Flagged (Negative)" : "Pending";
       state.items.push({
-        id: "CSV-" + String(ts).slice(-6) + "-" + String(imported),
+        id: "IMP-" + String(ts).slice(-6) + "-" + String(imported),
         createdAt: new Date().toISOString(),
         source: "Email",
         rating: row.rating,
@@ -828,13 +824,13 @@
     });
 
     saveState(state);
-    document.getElementById("csvFileInput").value = "";
-    document.getElementById("csvPreviewArea").innerHTML = "";
-    document.getElementById("csvConfirmBtn").style.display = "none";
-    document.getElementById("csvResult").innerHTML = '<span style="color:#22c55e;">Successfully imported ' + imported + ' rows</span>';
-    csvParsedRows = [];
+    document.getElementById("fileImportInput").value = "";
+    document.getElementById("filePreviewArea").innerHTML = "";
+    document.getElementById("fileConfirmBtn").style.display = "none";
+    document.getElementById("fileResult").innerHTML = '<span style="color:#22c55e;">Successfully imported ' + imported + ' rows</span>';
+    fileParsedRows = [];
     renderAll();
-    showToast("Imported " + imported + " items from CSV", "success");
+    showToast("Imported " + imported + " items", "success");
   });
 
   // Export helpers
