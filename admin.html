@@ -23,6 +23,7 @@
         <a class="navItem" href="#approved" data-view="approved">Approved Reviews</a>
         <a class="navItem" href="#agents" data-view="agents">Agents &amp; Teams</a>
         <a class="navItem" href="#negative" data-view="negative">Negative (Internal)</a>
+        <a class="navItem" href="#import" data-view="import">Import / Export</a>
       </div>
     </aside>
 
@@ -86,6 +87,9 @@
 
             <div class="previewLabel" style="margin-top:14px;">Assign agent</div>
             <select class="select" id="agentSelect"></select>
+
+            <div class="previewLabel" style="margin-top:14px;">Manager Rating (adds to agent score)</div>
+            <div style="display:flex; gap:4px; margin-top:6px;" id="managerRatingStars"></div>
 
             <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
               <button class="btn success" id="approveBtn">Approve to TV</button>
@@ -153,6 +157,43 @@
           <div class="previewText">Negative feedback is not shown on the TV dashboard. Items can be reviewed, categorized, and used for coaching and operational improvements.</div>
         </div>
       </section>
+      <section id="view-import" style="display:none;">
+        <div class="sectionTitle">Import Feedback</div>
+        <div class="split">
+          <div class="preview">
+            <div class="previewLabel">Mass Import Email Feedback</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Paste email feedback below (one per line). Format: <strong>reviewer name | rating (1-5) | feedback text</strong></div>
+            <textarea id="emailImportText" class="select" rows="8" style="width:100%; resize:vertical; font-size:12px;" placeholder="John Smith | 5 | Great service from the support team!&#10;Jane Doe | 4 | Fast installation, very happy&#10;Bob Wilson | 2 | Waited too long for a response"></textarea>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <select class="select" id="importTeam" style="flex:1;"></select>
+              <button class="btn success" id="importEmailBtn" style="flex:0 0 auto;">Import Feedback</button>
+            </div>
+            <div id="importResult" style="margin-top:10px; font-size:12px;"></div>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Import from CSV File</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Upload a CSV with columns: name, rating, text, team (optional), agent (optional)</div>
+            <input type="file" id="csvFileInput" accept=".csv" class="select" style="padding:8px;" />
+            <button class="btn" id="importCsvBtn" style="margin-top:10px; width:100%;">Import CSV</button>
+            <div id="csvResult" style="margin-top:10px; font-size:12px;"></div>
+          </div>
+        </div>
+
+        <div class="sectionTitle" style="margin-top:20px;">Export Reports</div>
+        <div class="split">
+          <div class="preview">
+            <div class="previewLabel">Sentiment Report</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted);">Export a summary of sentiment analysis, themes, and agent performance.</div>
+            <button class="btn" id="exportSentimentBtn" style="margin-top:10px; width:100%;">Download Sentiment Report (CSV)</button>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Full Data Export</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted);">Export all reviews with full details for external analysis.</div>
+            <button class="btn" id="exportFullBtn" style="margin-top:10px; width:100%;">Download All Reviews (CSV)</button>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -163,7 +204,7 @@
   var state = loadState();
   root.style.setProperty("--brand", state.brand.primary);
 
-  var views = ["overview", "queue", "approved", "agents", "negative"];
+  var views = ["overview", "queue", "approved", "agents", "negative", "import"];
   var viewTitle = document.getElementById("viewTitle");
   var viewSubtitle = document.getElementById("viewSubtitle");
 
@@ -172,7 +213,8 @@
     queue: document.getElementById("view-queue"),
     approved: document.getElementById("view-approved"),
     agents: document.getElementById("view-agents"),
-    negative: document.getElementById("view-negative")
+    negative: document.getElementById("view-negative"),
+    import: document.getElementById("view-import")
   };
 
   var subtitles = {
@@ -180,7 +222,8 @@
     queue: "Review items before they appear on the TV dashboard",
     approved: "Manage approved reviews shown on the TV dashboard",
     agents: "Manage agent directory and team mapping",
-    negative: "Internal-only negative feedback themes"
+    negative: "Internal-only negative feedback themes",
+    import: "Import email feedback and export reports"
   };
 
   function setActive(view) {
@@ -190,7 +233,7 @@
     document.querySelectorAll("#nav .navItem").forEach(function(a) {
       a.classList.toggle("active", a.getAttribute("data-view") === view);
     });
-    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)" };
+    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)", import: "Import / Export" };
     viewTitle.textContent = titles[view] || view;
     viewSubtitle.textContent = subtitles[view] || "";
   }
@@ -282,15 +325,40 @@
     });
   }
 
+  var managerRatingStars = document.getElementById("managerRatingStars");
+
+  function renderManagerRating(currentRating) {
+    var html = "";
+    for (var i = 1; i <= 5; i++) {
+      var color = i <= (currentRating || 0) ? "#fbbf24" : "#4b5563";
+      html += '<span data-star="' + i + '" style="cursor:pointer; font-size:24px; color:' + color + '; transition:color 0.15s;">★</span>';
+    }
+    html += currentRating ? ' <span style="font-size:12px; color:var(--muted); margin-left:6px;">' + currentRating + '/5</span>' : ' <span style="font-size:12px; color:var(--muted); margin-left:6px;">Not rated</span>';
+    managerRatingStars.innerHTML = html;
+
+    managerRatingStars.querySelectorAll("[data-star]").forEach(function(star) {
+      star.addEventListener("click", function() {
+        var item = state.items.find(function(q) { return q.id === selectedId; });
+        if (!item) { showToast("Select an item first", "error"); return; }
+        var val = parseInt(star.getAttribute("data-star"));
+        state = updateItem(item.id, { managerRating: val });
+        renderManagerRating(val);
+        showToast("Manager rating: " + val + "/5 (+" + (val * 6) + " score points)", "success");
+      });
+    });
+  }
+
   function renderPreview() {
     var item = state.items.find(function(q) { return q.id === selectedId; });
     if (!item) {
       previewText.textContent = "Select a row to preview the full text and actions.";
       renderAgentSelect("Unknown");
+      renderManagerRating(null);
       return;
     }
     previewText.textContent = item.text;
     renderAgentSelect(item.agent);
+    renderManagerRating(item.managerRating);
   }
 
   function updateSelectedStatus(status) {
@@ -570,6 +638,209 @@
       showToast("Data reset. Refresh page to reload Google reviews.", "success");
     });
   }
+
+  // --- IMPORT / EXPORT ---
+
+  // Populate import team dropdown
+  function renderImportTeam() {
+    var importTeam = document.getElementById("importTeam");
+    if (importTeam) {
+      importTeam.innerHTML = state.teams.map(function(t) { return '<option value="' + t + '">' + t + '</option>'; }).join("");
+    }
+  }
+  renderImportTeam();
+
+  // Email Import
+  document.getElementById("importEmailBtn").addEventListener("click", function() {
+    var text = document.getElementById("emailImportText").value.trim();
+    var team = document.getElementById("importTeam").value;
+    if (!text) { showToast("Please paste feedback text", "error"); return; }
+
+    var lines = text.split("\n").filter(function(l) { return l.trim(); });
+    var imported = 0;
+
+    lines.forEach(function(line) {
+      var parts = line.split("|").map(function(p) { return p.trim(); });
+      var name = parts[0] || "Anonymous";
+      var rating = parts.length > 1 ? parseInt(parts[1]) : null;
+      if (rating && (rating < 1 || rating > 5)) rating = null;
+      var feedbackText = parts.length > 2 ? parts[2] : parts[0];
+
+      var sentiment = rating >= 4 ? "Positive" : rating === 3 ? "Neutral" : rating <= 2 ? "Negative" : "Neutral";
+      var status = sentiment === "Negative" ? "Flagged (Negative)" : "Pending";
+
+      var id = "EM-" + String(Date.now()).slice(-6) + "-" + String(imported);
+      state.items.push({
+        id: id,
+        createdAt: new Date().toISOString(),
+        source: "Email",
+        rating: rating,
+        sentiment: sentiment,
+        status: status,
+        agent: "Unknown",
+        team: team,
+        theme: "",
+        keywords: [],
+        tvSnippet: feedbackText.length > 120 ? feedbackText.substring(0, 120) + "..." : feedbackText,
+        text: feedbackText,
+        reviewerName: name
+      });
+      imported++;
+    });
+
+    saveState(state);
+    document.getElementById("emailImportText").value = "";
+    document.getElementById("importResult").innerHTML = '<span style="color:#22c55e;">Imported ' + imported + ' feedback items as "' + team + '"</span>';
+    renderAll();
+    showToast("Imported " + imported + " email feedback items", "success");
+  });
+
+  // CSV Import
+  document.getElementById("importCsvBtn").addEventListener("click", function() {
+    var fileInput = document.getElementById("csvFileInput");
+    if (!fileInput.files || !fileInput.files[0]) { showToast("Please select a CSV file", "error"); return; }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var lines = e.target.result.split("\n").filter(function(l) { return l.trim(); });
+      if (lines.length < 2) { showToast("CSV must have a header row and data", "error"); return; }
+
+      var headers = lines[0].split(",").map(function(h) { return h.trim().toLowerCase().replace(/"/g, ""); });
+      var nameIdx = Math.max(headers.indexOf("name"), headers.indexOf("reviewer"), 0);
+      var ratingIdx = headers.indexOf("rating");
+      var textIdx = Math.max(headers.indexOf("text"), headers.indexOf("feedback"), headers.indexOf("comment"), 0);
+      var teamIdx = headers.indexOf("team");
+      var agentIdx = headers.indexOf("agent");
+
+      var imported = 0;
+      for (var i = 1; i < lines.length; i++) {
+        var cols = lines[i].split(",").map(function(c) { return c.trim().replace(/^"|"$/g, ""); });
+        if (cols.length < 2) continue;
+
+        var name = cols[nameIdx] || "Anonymous";
+        var rating = ratingIdx >= 0 ? parseInt(cols[ratingIdx]) : null;
+        if (rating && (rating < 1 || rating > 5)) rating = null;
+        var feedbackText = cols[textIdx] || "";
+        var team = teamIdx >= 0 && cols[teamIdx] ? cols[teamIdx] : "Unknown";
+        var agent = agentIdx >= 0 && cols[agentIdx] ? cols[agentIdx] : "Unknown";
+
+        var sentiment = rating >= 4 ? "Positive" : rating === 3 ? "Neutral" : rating <= 2 ? "Negative" : "Neutral";
+        var status = sentiment === "Negative" ? "Flagged (Negative)" : "Pending";
+
+        state.items.push({
+          id: "CSV-" + String(Date.now()).slice(-6) + "-" + String(imported),
+          createdAt: new Date().toISOString(),
+          source: "Email",
+          rating: rating,
+          sentiment: sentiment,
+          status: status,
+          agent: agent,
+          team: team,
+          theme: "",
+          keywords: [],
+          tvSnippet: feedbackText.length > 120 ? feedbackText.substring(0, 120) + "..." : feedbackText,
+          text: feedbackText,
+          reviewerName: name
+        });
+        imported++;
+      }
+
+      saveState(state);
+      fileInput.value = "";
+      document.getElementById("csvResult").innerHTML = '<span style="color:#22c55e;">Imported ' + imported + ' rows from CSV</span>';
+      renderAll();
+      showToast("Imported " + imported + " items from CSV", "success");
+    };
+    reader.readAsText(fileInput.files[0]);
+  });
+
+  // Export helpers
+  function downloadCSV(filename, csvContent) {
+    var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    var link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  function escCSV(val) {
+    var s = String(val || "").replace(/"/g, '""');
+    return '"' + s + '"';
+  }
+
+  // Sentiment Report Export
+  document.getElementById("exportSentimentBtn").addEventListener("click", function() {
+    var rows = [["Metric", "Value"]];
+
+    var stats = computeStats(state);
+    rows.push(["Total Reviews", state.items.length]);
+    rows.push(["Pending", stats.pending]);
+    rows.push(["Approved", state.items.filter(function(i) { return i.status === "Approved"; }).length]);
+    rows.push(["Negative Flagged", stats.negativeFlagged]);
+    rows.push(["Avg Sentiment", stats.avgSentiment]);
+    rows.push([]);
+    rows.push(["Theme", "Count", "Avg Rating"]);
+
+    var themeMap = {};
+    state.items.forEach(function(it) {
+      var t = it.theme || "Uncategorized";
+      if (!themeMap[t]) themeMap[t] = { count: 0, totalRating: 0, ratedCount: 0 };
+      themeMap[t].count++;
+      if (it.rating != null) { themeMap[t].totalRating += it.rating; themeMap[t].ratedCount++; }
+    });
+    Object.keys(themeMap).sort(function(a, b) { return themeMap[b].count - themeMap[a].count; }).forEach(function(t) {
+      var avg = themeMap[t].ratedCount > 0 ? (themeMap[t].totalRating / themeMap[t].ratedCount).toFixed(1) : "N/A";
+      rows.push([t, themeMap[t].count, avg]);
+    });
+
+    rows.push([]);
+    rows.push(["Agent", "Team", "Reviews", "Score", "Avg Manager Rating"]);
+    var agentMap = {};
+    state.items.forEach(function(it) {
+      var a = it.agent || "Unknown";
+      if (!agentMap[a]) agentMap[a] = { team: it.team, count: 0, score: 0, mTotal: 0, mCount: 0 };
+      agentMap[a].count++;
+      agentMap[a].score += scoreItem(it);
+      if (it.managerRating != null) { agentMap[a].mTotal += it.managerRating; agentMap[a].mCount++; }
+    });
+    Object.keys(agentMap).sort(function(a, b) { return agentMap[b].score - agentMap[a].score; }).forEach(function(a) {
+      var m = agentMap[a];
+      var avgMgr = m.mCount > 0 ? (m.mTotal / m.mCount).toFixed(1) : "N/A";
+      rows.push([a, m.team, m.count, Math.round(m.score), avgMgr]);
+    });
+
+    var csv = rows.map(function(r) { return r.map(escCSV).join(","); }).join("\n");
+    downloadCSV("axxess-sentiment-report-" + new Date().toISOString().slice(0, 10) + ".csv", csv);
+    showToast("Sentiment report downloaded", "success");
+  });
+
+  // Full Data Export
+  document.getElementById("exportFullBtn").addEventListener("click", function() {
+    var headers = ["ID", "Date", "Source", "Rating", "Manager Rating", "Sentiment", "Status", "Agent", "Team", "Theme", "Keywords", "Reviewer", "Text"];
+    var rows = [headers];
+
+    state.items.forEach(function(it) {
+      rows.push([
+        it.id,
+        it.createdAt,
+        it.source,
+        it.rating != null ? it.rating : "",
+        it.managerRating != null ? it.managerRating : "",
+        it.sentiment,
+        it.status,
+        it.agent,
+        it.team,
+        it.theme,
+        (it.keywords || []).join("; "),
+        it.reviewerName || "",
+        it.text
+      ]);
+    });
+
+    var csv = rows.map(function(r) { return r.map(escCSV).join(","); }).join("\n");
+    downloadCSV("axxess-reviews-export-" + new Date().toISOString().slice(0, 10) + ".csv", csv);
+    showToast("Full data export downloaded (" + state.items.length + " reviews)", "success");
+  });
 
   console.log("Manager Portal ready. Items:", state.items.length);
 })();

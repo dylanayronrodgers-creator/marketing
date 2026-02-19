@@ -318,7 +318,7 @@ function mergeWithSeed(state) {
     if (Array.isArray(state.agents)) s.agents = state.agents;
     if (Array.isArray(state.items)) {
       s.items = state.items.map(function(it) {
-        return {
+        var item = {
           id: String(it.id || Math.random().toString(36).substr(2, 9)),
           createdAt: String(it.createdAt || new Date().toISOString()),
           source: String(it.source || "Google"),
@@ -330,8 +330,14 @@ function mergeWithSeed(state) {
           text: String(it.text || ""),
           keywords: Array.isArray(it.keywords) ? it.keywords.map(String) : [],
           theme: String(it.theme || ""),
-          tvSnippet: String(it.tvSnippet || "")
+          tvSnippet: String(it.tvSnippet || ""),
+          managerRating: it.managerRating == null ? null : Number(it.managerRating)
         };
+        if (it.reviewerName) item.reviewerName = String(it.reviewerName);
+        if (it.reviewerThumbnail) item.reviewerThumbnail = String(it.reviewerThumbnail);
+        if (it.reviewerLink) item.reviewerLink = String(it.reviewerLink);
+        if (it.likes != null) item.likes = Number(it.likes);
+        return item;
       });
     }
   }
@@ -384,7 +390,8 @@ function scoreItem(it) {
   var sentimentScore = it.sentiment === "Positive" ? 35 : it.sentiment === "Neutral" ? 12 : -30;
   var kwBoost = Math.min(25, (it.keywords ? it.keywords.length : 0) * 5);
   var themeBoost = it.theme ? 8 : 0;
-  return ratingScore + sentimentScore + kwBoost + themeBoost;
+  var managerBoost = it.managerRating == null ? 0 : it.managerRating * 6;
+  return ratingScore + sentimentScore + kwBoost + themeBoost + managerBoost;
 }
 
 function computeLeaderboards(state, now) {
