@@ -1,5 +1,5 @@
 {
-  "scrapedAt": "2026-02-19T11:20:36.290Z",
+  "scrapedAt": "2026-02-19T12:18:36.712Z",
   "businessName": "Axxess",
   "overallRating": 4.5,
   "totalReviews": 5645,
@@ -7,28 +7,48 @@
   "dataId": "0x1e7ad23632467f91:0x57bec90a7dc50866",
   "reviews": [
     {
-      "id": "GR-68165914-20260219",
-      "createdAt": "2026-02-19T05:19:12Z",
+      "id": "GR-78820783-20251128",
+      "createdAt": "2025-11-28T09:22:34Z",
       "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
       "agent": "Unknown",
       "team": "Unknown",
-      "theme": "Great service",
+      "theme": "Great support",
       "keywords": [
-        "customer feedback"
+        "good"
       ],
-      "tvSnippet": "Have been with Axxess for over a decade. A dedicated and caring service provider. Haven't had a single issue with them.",
-      "text": "Have been with Axxess for over a decade. A dedicated and caring service provider. Haven't had a single issue with them.",
-      "reviewerName": "Harichand Somaroo",
-      "reviewerLink": "https://www.google.com/maps/contrib/107186797656668165914?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLqxywicRT8IrFr97g4opsO6hu7ybc8dIQwuK9PECaww8Ww6Q=s120-c-rp-mo-br100",
+      "tvSnippet": "We bought a Grandstream handset from Axxess and it’s BEEN giving us problem for YEARS UPON YEARS. We tried to contact Ax...",
+      "text": "We bought a Grandstream handset from Axxess and it’s BEEN giving us problem for YEARS UPON YEARS. We tried to contact Axxcess to help us with this issue and the phone will receive phone calls for one day and the next day back to not working! It is affecting our business!! This is one of the emails I sent to them:\n\nGood morning,\n\nI hope this email finds you well. We have a SERIOUS ISSUE with your Grandstream handset that we should be using to receive phone calls but instead it does not ring and we only can make phone calls with it. I called your helpline 3 weeks back and spoke to numerous call centre agents and none of them managed to help. A specific agent I spoke to was a lady named Ntombi who managed to get the phone to ring for only one day then after that, it stopped working. I am not the only one from my company who has tried resolving this matter. It has been years upon years with us battling with this particular problem and Axxesss not hearing our demands for a service we pay every month for. We are losing valuable customers because of this and if this continues, we will have to cancel our service with Axxess and get better service and help elsewhere. On July the 11th at 3:31pm one of my co workers sent you the same query message that I am sending today and you did not respond to her email. I have called your helpline more than 15 times and I was put on hold for over 45 mins and they took down my number and said they will call me back but to this day, no one has called me yet. This problem has to be solved, enough is enough!",
+      "reviewerName": "Natasha Mhlanga",
+      "reviewerLink": "https://www.google.com/maps/contrib/112758278157978820783?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjXTjTK2GDU7XJHimAHr43lKUHhwqbAEOEK0hCqg3QBZAvBl1UX4=s120-c-rp-mo-ba2-br100",
       "likes": 0
     },
     {
-      "id": "GR-64425774-20260219",
-      "createdAt": "2026-02-19T05:14:20Z",
+      "id": "GR-28803862-20251218",
+      "createdAt": "2025-12-18T19:38:03Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "I have been paying R499/R599 a month for speeds not exceeding 4MB/ps but the package I was on says 75MB/ps, LMAO. See at...",
+      "text": "I have been paying R499/R599 a month for speeds not exceeding 4MB/ps but the package I was on says 75MB/ps, LMAO. See attached screenshots with MTN BUSINESS. I have now cancelled with Axxess. I logged numerous calls but to no avail, seems Axxess/MTN was throttling my speed without being close to the FUP.",
+      "reviewerName": "Zubair Khan",
+      "reviewerLink": "https://www.google.com/maps/contrib/117416679669828803862?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocIyRNWKaKyQWD9ys1C5dwmM6yLqpEenZ_ylV6-wL7DkGDKsmw=s120-c-rp-mo-ba2-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-85065186-20251212",
+      "createdAt": "2025-12-12T07:55:31Z",
       "source": "Google",
       "rating": 5,
       "sentiment": "Positive",
@@ -38,38 +58,21 @@
       "theme": "Great support",
       "keywords": [
         "great",
-        "helpful"
+        "amazing",
+        "helpful",
+        "professional",
+        "quick"
       ],
-      "tvSnippet": "I have been with Axxess for years and have always had great service and your staff are always super helpful",
-      "text": "I have been with Axxess for years and have always had great service and your staff are always super helpful",
-      "reviewerName": "Suzanne Codd",
-      "reviewerLink": "https://www.google.com/maps/contrib/109817282175564425774?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLIXf1OzluQJO15mEgWE4oz082pckPBIjEJviyWCaYJFFTX3Q=s120-c-rp-mo-br100",
+      "tvSnippet": "I had an amazing experience with Xhanti from the Axxess hosting department. His service was professional, quick, and ver...",
+      "text": "I had an amazing experience with Xhanti from the Axxess hosting department. His service was professional, quick, and very helpful. He took the time to understand my issue and made sure everything was resolved smoothly.\n\nThank you, Xhanti, for the great service.",
+      "reviewerName": "Letlhakga Projects",
+      "reviewerLink": "https://www.google.com/maps/contrib/116202281281285065186?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKsbgBpNXjrhsxXZclSri7PAh-y7KJQ8wmaCks2zOyb3m24LQ=s120-c-rp-mo-br100",
       "likes": 0
     },
     {
-      "id": "GR-51981737-20240716",
-      "createdAt": "2024-07-16T19:37:16Z",
-      "source": "Google",
-      "rating": 3,
-      "sentiment": "Neutral",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "Sheridan Hayidakis",
-      "reviewerLink": "https://www.google.com/maps/contrib/113743885079251981737?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVWj2spE5w2Z4JeHr2gKiqRHGM34YrUQchQd3xtf_9ERhdV-znKkQ=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-17964904-20260213",
-      "createdAt": "2026-02-13T08:30:14Z",
+      "id": "GR-70221630-20260114",
+      "createdAt": "2026-01-14T12:04:03Z",
       "source": "Google",
       "rating": 5,
       "sentiment": "Positive",
@@ -78,54 +81,13 @@
       "team": "Unknown",
       "theme": "Fast service",
       "keywords": [
-        "friendly",
         "quick"
       ],
-      "tvSnippet": "Quick to respond on queries , they will assist you with your router setup and guide you. Visited this place a few times ...",
-      "text": "Quick to respond on queries , they will assist you with your router setup and guide you. Visited this place a few times , very friendly and a warm welcome.\n\nThanks to Reception and Gershon!",
-      "reviewerName": "Dee",
-      "reviewerLink": "https://www.google.com/maps/contrib/109071484097917964904?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKRJdwjuU7kYVShLvDmxgh7RyaXxjavkOsZULHNRYYbRkRbEw=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-72785234-20220323",
-      "createdAt": "2022-03-23T17:16:37Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great service",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "Mark Groch",
-      "reviewerLink": "https://www.google.com/maps/contrib/103958576524172785234?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWhNVQNvdjUWpRBVUGf3v_wmV_311vlHklRgSb0c00yKvf-jyc=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-46600361-20260207",
-      "createdAt": "2026-02-07T19:43:52Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Needs improvement",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "Thomas Tlhale",
-      "reviewerLink": "https://www.google.com/maps/contrib/116116372246046600361?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJq_ol6-bJw72ji6yYvDU29mYMRZmqGvlkE3Q7YObf7FJI41w=s120-c-rp-mo-br100",
+      "tvSnippet": "Spoke to a dude named Jared via the Axxess desktop app. Very efficient and quick response time. Didn't give me a run aro...",
+      "text": "Spoke to a dude named Jared via the Axxess desktop app. Very efficient and quick response time. Didn't give me a run around or a hard time regarding cancellation (due to moving, not service related) and answered my host of questions in about 5 minutes. More businesses need this. Well done Axxess and thanks Jared",
+      "reviewerName": "Nicolas Lorenzo",
+      "reviewerLink": "https://www.google.com/maps/contrib/114737888662370221630?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUJIVRvmRx4PW-i1CgHFKKV06gg2YzZWfORv2SU6YHaCfJx4F5f=s120-c-rp-mo-ba6-br100",
       "likes": 0
     },
     {
@@ -149,103 +111,25 @@
       "likes": 0
     },
     {
-      "id": "GR-87374418-20260204",
-      "createdAt": "2026-02-04T07:58:30Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great service",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "Emaan Moodley",
-      "reviewerLink": "https://www.google.com/maps/contrib/116919596521787374418?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVmzu7tPrNU0dZYFFzsl0DoK5nQsBXl6up5Q-9ysKrqriS5gUmK=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-28341862-20260203",
-      "createdAt": "2026-02-03T13:26:14Z",
+      "id": "GR-57845589-20251107",
+      "createdAt": "2025-11-07T06:45:31Z",
       "source": "Google",
       "rating": 1,
       "sentiment": "Negative",
       "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "poor"
-      ],
-      "tvSnippet": "After downgrading my package last month i suddenly realised on 30-Jan that my LTE service was down. After logging ticket...",
-      "text": "After downgrading my package last month i suddenly realised on 30-Jan that my LTE service was down. After logging ticket:##25d43heb22, i was told to adjust my router's network settings. I am unable to find those network settings and informed Axxess on 02-Feb-2026. If there are setting to be changed why do you not inform your customers beforehand? Now that i have cancelled (because of Axxess's poor service), am i expected to have no internet access for the next two months? Axxess must learn to communicate and help customers",
-      "reviewerName": "Ralton Adams",
-      "reviewerLink": "https://www.google.com/maps/contrib/107621177982528341862?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJ9LjDp7iKO0-Zdli8Gzi0rPkFdi35HmDFQNMcJEYGayBUgrQ=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-44586989-20221010",
-      "createdAt": "2022-10-10T13:41:44Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Needs improvement",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "1010 Consultancy",
-      "reviewerLink": "https://www.google.com/maps/contrib/111579400444044586989?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWdsH313OpP8tnVDomEIrJNK-PxBzGg7-Al41-hDwslEEe6fVg=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-69919268-20210330",
-      "createdAt": "2021-03-30T08:25:34Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "The fibre lines have been intermittent. Today all their clients have authentication issues. Many of us pay exorbitant pr...",
-      "text": "The fibre lines have been intermittent. Today all their clients have authentication issues. Many of us pay exorbitant prices for fibre so we can work online. Now we can't work. Also we have to spend hundreds more on back up. Why are we paying such high fees just to have to spend all our money on back up internet? Not only do we lose out on income we get fined if we cannot carry out our duties. This irregularity is becoming a regular occurrence. All that they can say is apologies. How is that going to help us who are struggling to get money in? Edit: It's back up but when will it just decide to randomly have issues again as it does USELESS service. I have to do my work. Third time in two days it goes down. Clean up your act we pay too much for such uselessness.Tired of pathetic service. I called four times today totalling ³ and a half hours. No one could help me. They said frogfoot then frogfoot days Axxess now it's Eastern Cape. I lost out on income. Axxess should give clients discounts or reduced rates. Apologies don't cut it when your livelihood is on the line.",
-      "reviewerName": "Peter James Lee Ching",
-      "reviewerLink": "https://www.google.com/maps/contrib/114685382367569919268?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVcGhhS2kvlfCuZ3-q23jn9gu1pcaScUpUnCSjKQg1sI1geywtuUA=s120-c-rp-mo-ba4-br100",
-      "likes": 2
-    },
-    {
-      "id": "GR-48981949-20260127",
-      "createdAt": "2026-01-27T13:29:20Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
       "agent": "Unknown",
       "team": "Unknown",
       "theme": "Fast service",
       "keywords": [
-        "quick"
+        "fast",
+        "good",
+        "slow"
       ],
-      "tvSnippet": "Returned wifi router. Service was quick and efficient. No hassle, no wasted time!",
-      "text": "Returned wifi router. Service was quick and efficient. No hassle, no wasted time!",
-      "reviewerName": "Rochelle Shepherd",
-      "reviewerLink": "https://www.google.com/maps/contrib/109354790521248981949?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVW5IXRqmMD7_mchP6pANr7K0GJOW6n3OSfaMgUj9PZm9KxnUFulg=s120-c-rp-mo-ba5-br100",
+      "tvSnippet": "Axxess will lure you in with a promise that they do not believe in contracts and that your subscription with them is on ...",
+      "text": "Axxess will lure you in with a promise that they do not believe in contracts and that your subscription with them is on a month-to-month basis and that you can cancel at any time should you not be happy with their services.\n\nThey promise ultra fast internet speeds: \"Say goodbye to buffering and slow speeds\". However, I got EXTREMELY frustrated with VERY slow internet speeds. This was resolved within two days, and I decided to pay my monthly fee of R425-00. However, the next day I was back to \"snail pace\" internet speeds. After only a week with them, I decided to cancel my subscription.\n\nI distinctly remembered reading the following on their website:\nTheir answer to the question \"Do I need to sign up for a contract?\" reads as follows: \"No siree! At Axxess, we don't like contracts. All our services are month-to-month and can be easily cancelled if you change your mind.\"\n\nBUT, when I tried to cancel my internet subscription with Axxess, I was informed I had to pay a cancellation fee of R499-00 should I decide to cancel within the first 6 months after joining them.\n\nWhen I went back to their web site to read the small print, I saw the following sentence: \"*Cancellation fees may apply if signing up on a Promotional offer.\" I did not sign up for a promotional offer, but STILL they charge a cancellation fee?!? SHARKS!!!",
+      "reviewerName": "Hannetjie van der Post",
+      "reviewerLink": "https://www.google.com/maps/contrib/104740550970257845589?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjXWu3C5jKofp5D8TbmsqCppqqkV5TxcZZEpS_YHjck-qxpV28mW=s120-c-rp-mo-ba3-br100",
       "likes": 0
     },
     {
@@ -266,8 +150,70 @@
       "tvSnippet": "Excellent service which is what saves any situation.\nI rely heavily on connectivity and our line speed had been bad for ...",
       "text": "Excellent service which is what saves any situation.\nI rely heavily on connectivity and our line speed had been bad for a while. We'd have the line reset, reboot the router, have good speeds and then it would drop shortly after.\n\nOn Friday morning I reported the issue via WhatsApp (very convenient!l). After attempting two line resets a ticket was logged at 12:00. At 12:15 I received a call from Marvel with the cause (hight traffic) and a solution (router upgrade). By 13:15 I collected my new router from Marvel at their offices.\n\nThanks for the continued support with your services.",
       "reviewerName": "Jason Howard",
-      "reviewerLink": "https://www.google.com/maps/contrib/118203291511483156707?hl=en",
+      "reviewerLink": "https://www.google.com/maps/contrib/118203291511483156707?hl=en-US",
       "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUqjl7qmSJSANGykNTgAxbhCynR6W5IXtR2Qdn_URAlnEPKjDvF=s120-c-rp-mo-ba3-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-05257168-20251019",
+      "createdAt": "2025-10-19T11:34:08Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "excellent",
+        "reliable"
+      ],
+      "tvSnippet": "Axxess provides reliable fibre services with excellent speed and uptime, and minimal interruptions. Their fibre packages...",
+      "text": "Axxess provides reliable fibre services with excellent speed and uptime, and minimal interruptions. Their fibre packages are well-regarded for their consistent speeds and no downtime. I love that their pricing is competitive, and I can roll over my unused CallTime for up to three months. The setup process was simple, and their app works perfectly for managing calls. Overall, Axxess is a solid choice for home users and small businesses prioritizing affordability, flexibility, and seamless communication backed by reliable fibre connectivity.",
+      "reviewerName": "Portia Mthanti",
+      "reviewerLink": "https://www.google.com/maps/contrib/102205754145805257168?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWCLopHzX1Pk1-QojIGIfZt0A_tHNOY9QCJiv64B4eS_TEsQgFO=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-84488234-20251214",
+      "createdAt": "2025-12-14T16:14:06Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Needs improvement",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "I used to think Axxess was one of the better ISP's out there and used to be happy with their service, but I have grown e...",
+      "text": "I used to think Axxess was one of the better ISP's out there and used to be happy with their service, but I have grown extremely disappointed in their customer service. They have certainly gone backwards. I now have 2 unresolved tickets that no one even bothers to reply to even when I follow up. Not mentioning their chats where the agents simply drop you. This on top of me experiencing intermittent connectivity and logging faults and complaints. Going on for months now. The only thing keeping me from cancelling was a glimmer of faith in past performance but sadly all trust and confidence have now dissipated. They are officially worse than Telkom and I'll be switching to another ISP.",
+      "reviewerName": "Derick van Rooyen",
+      "reviewerLink": "https://www.google.com/maps/contrib/108656550585584488234?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVCAJux5trpNLXQBywbVj7lbN3EFS-XhAF1q9SWnKAQDTSK6jc=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-86400510-20251201",
+      "createdAt": "2025-12-01T12:33:51Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "quick",
+        "good"
+      ],
+      "tvSnippet": "A big thank you to Chrizell at Axxess. You guys have been wonderful, quick to respond, quick to resolve issues, and easy...",
+      "text": "A big thank you to Chrizell at Axxess. You guys have been wonderful, quick to respond, quick to resolve issues, and easy to get hold of.\nHaving dealt with other providers before, you guys have been a breath of fresh air. Keep up the good work.",
+      "reviewerName": "deon van der merwe",
+      "reviewerLink": "https://www.google.com/maps/contrib/113306446209086400510?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjV8XYCVm96ynsv5CIsEmjESHGkyJKizzlkNz-cbX6SP6aV4H-6Z=s120-c-rp-mo-br100",
       "likes": 0
     },
     {
@@ -292,210 +238,28 @@
       "likes": 0
     },
     {
-      "id": "GR-78997692-20260116",
-      "createdAt": "2026-01-16T08:08:47Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Smooth installation",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "Fibre box does not work. Constantly advising to change cords to no avail. Unable and unwilling to fix fibre box. Don’t w...",
-      "text": "Fibre box does not work. Constantly advising to change cords to no avail. Unable and unwilling to fix fibre box. Don’t waste your time",
-      "reviewerName": "Winston Wilson",
-      "reviewerLink": "https://www.google.com/maps/contrib/101318209378878997692?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWqP7sQ9ubitoI597isohfE7okwO_4P42jFdN6Y0yATvl2RRdkL=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-70221630-20260114",
-      "createdAt": "2026-01-14T12:04:03Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Fast service",
-      "keywords": [
-        "quick"
-      ],
-      "tvSnippet": "Spoke to a dude named Jared via the Axxess desktop app. Very efficient and quick response time. Didn't give me a run aro...",
-      "text": "Spoke to a dude named Jared via the Axxess desktop app. Very efficient and quick response time. Didn't give me a run around or a hard time regarding cancellation (due to moving, not service related) and answered my host of questions in about 5 minutes. More businesses need this. Well done Axxess and thanks Jared",
-      "reviewerName": "Nicolas Lorenzo",
-      "reviewerLink": "https://www.google.com/maps/contrib/114737888662370221630?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUJIVRvmRx4PW-i1CgHFKKV06gg2YzZWfORv2SU6YHaCfJx4F5f=s120-c-rp-mo-ba6-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-00850072-20260113",
-      "createdAt": "2026-01-13T12:51:08Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Needs improvement",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "My internet at axxess service provider is down for two days now. I contact them several times about the problem, they ju...",
-      "text": "My internet at axxess service provider is down for two days now. I contact them several times about the problem, they just apologize but nothing is being done.\nThey said a technician will be assign to attend to the problem and that is about that. This totally unacceptable!",
-      "reviewerName": "Henk.A Buitendag",
-      "reviewerLink": "https://www.google.com/maps/contrib/114121100303100850072?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocISfAeQYZv9HHITDbzSt0gbj1fmfb37isCoieriqjYYBEqOlg=s120-c-rp-mo-ba4-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-22847738-20260108",
-      "createdAt": "2026-01-08T18:44:02Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Needs improvement",
-      "keywords": [
-        "poor"
-      ],
-      "tvSnippet": "Absolutely poor after hours service, no answer from the call line at all despite numerous calls.",
-      "text": "Absolutely poor after hours service, no answer from the call line at all despite numerous calls.",
-      "reviewerName": "Demilia Joseph",
-      "reviewerLink": "https://www.google.com/maps/contrib/101744447574322847738?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLmg5rKWucqyPdhXADarwebjDLKB7__29J07ORXFlPK4yGjQw=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-34102154-20240716",
-      "createdAt": "2024-07-16T14:51:39Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "good",
-        "poor"
-      ],
-      "tvSnippet": "They have good processes in place and are committed to good service and have good support availability. They seem unable...",
-      "text": "They have good processes in place and are committed to good service and have good support availability. They seem unable to expedite the same good levels of service from their bulk providers like Openserve. Sometimes the support staff struggle to understand subtleties of an issue.\n\nUpdate: I must downgrade my review. Their service is automated to the point of insanity. Management are invisible and indifferent.  Tech support agents don't look at history and do not apply their minds. They seem to have just about everything that distinguishes them as thinking humans squeezed out of them. Granted they are the subjects in a poorly designed system that leaves them helpless to do much more that serve as a postbox to somewhere else.",
-      "reviewerName": "Rob Mills",
-      "reviewerLink": "https://www.google.com/maps/contrib/114252556257534102154?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWsrWfgvbjyXW9eaLTKqaVX8sR-cfYzdK8K5iuwxecj677CL5Q=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-74372370-20260106",
-      "createdAt": "2026-01-06T09:03:07Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "Support has in the recent months become a tremendous challenge as the wait time for chats is often well over 20 mins. Wh...",
-      "text": "Support has in the recent months become a tremendous challenge as the wait time for chats is often well over 20 mins. Who has time to wait 20 mins to get a response.",
-      "reviewerName": "Kim Hunter",
-      "reviewerLink": "https://www.google.com/maps/contrib/114130316332374372370?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKX1mtzldvu75q1zUE311M7LVo4qQaInVOokN7JGT-szmMq=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-02601733-20230504",
-      "createdAt": "2023-05-04T13:20:35Z",
+      "id": "GR-23234760-20251020",
+      "createdAt": "2025-10-20T02:40:17Z",
       "source": "Google",
       "rating": 4,
       "sentiment": "Positive",
       "status": "Pending",
       "agent": "Unknown",
       "team": "Unknown",
-      "theme": "Fast service",
+      "theme": "Professional service",
       "keywords": [
-        "quick"
+        "professional"
       ],
-      "tvSnippet": "Over the past two years the service has been trouble free and moving an account was quick and easy. Much easier to deal ...",
-      "text": "Over the past two years the service has been trouble free and moving an account was quick and easy. Much easier to deal with Axxess  than MetroFibre who owns the line.",
-      "reviewerName": "Xander Oosthuysen",
-      "reviewerLink": "https://www.google.com/maps/contrib/111293213271702601733?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjU9mCoPYAOTpD67EI_PFeCipL49StFDr-wpfdTgw_oFcgMbZnZl=s120-c-rp-mo-ba3-br100",
+      "tvSnippet": "I've had a smooth surfing year with the service. Satisfied with my home LTE package, issues experienced where dealt with...",
+      "text": "I've had a smooth surfing year with the service. Satisfied with my home LTE package, issues experienced where dealt with and resolved professionally. Thank you Axxess. Will upgrade to fiber when it's available in my area.",
+      "reviewerName": "Simlindile Jafta",
+      "reviewerLink": "https://www.google.com/maps/contrib/104603780581823234760?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVco4Uqg_Y_--FpZfCcdx0HUowTQozkER-N7CVlM6Tct6AVtleG=s120-c-rp-mo-br100",
       "likes": 0
     },
     {
-      "id": "GR-40461179-20251230",
-      "createdAt": "2025-12-30T07:08:58Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great service",
-      "keywords": [
-        "amazing"
-      ],
-      "tvSnippet": "I received amazing service from Kelly when I needed assistance. Going the extra mile just before the Christmss period wa...",
-      "text": "I received amazing service from Kelly when I needed assistance. Going the extra mile just before the Christmss period was phenominal.",
-      "reviewerName": "Christelle Kirsten",
-      "reviewerLink": "https://www.google.com/maps/contrib/109550836892840461179?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKZZ8z8UOV1Nu9vuamB_6Ol1qwji5V0VkCb86hXS0Tx9di2=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-76908658-20240812",
-      "createdAt": "2024-08-12T19:36:54Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "helpful",
-        "fast"
-      ],
-      "tvSnippet": "Fast service and to the point. Consultants where very helpful. This was true when we signed up for the service.  Now I w...",
-      "text": "Fast service and to the point. Consultants where very helpful. This was true when we signed up for the service.  Now I will give them a -10. Constant issues with upload and download speed.  IP address issues and all I get is a please hold.  Now feedback, no help, the most useless company ever.  I used free minutes, 30 minutes and a R100 airtime to try and sort out my problems and it is either not their problem or they can't help me or ish sorry I don't know what is going on and if you ask to speak to a supervisor you are put on hold and they never get back to you.\nMy previous company used only\nAxxess as we knew the owners very well and wanted to support a small business, now I will NOT suggest anyone to use them.  Totally pathetic.\nI phoned them today again with the same issues that I am having and guess what, I get put on hold after asking to speak to a supervisor.",
-      "reviewerName": "Jacques van Huyssteen",
-      "reviewerLink": "https://www.google.com/maps/contrib/113699450004576908658?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJwL2r4uJRafheZnX4xZkl3xptwcChUMJeB55i3oUadryHsMg=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-28803862-20251218",
-      "createdAt": "2025-12-18T19:38:03Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Fast service",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "I have been paying R499/R599 a month for speeds not exceeding 4MB/ps but the package I was on says 75MB/ps, LMAO. See at...",
-      "text": "I have been paying R499/R599 a month for speeds not exceeding 4MB/ps but the package I was on says 75MB/ps, LMAO. See attached screenshots with MTN BUSINESS. I have now cancelled with Axxess. I logged numerous calls but to no avail, seems Axxess/MTN was throttling my speed without being close to the FUP.",
-      "reviewerName": "Zubair Khan",
-      "reviewerLink": "https://www.google.com/maps/contrib/117416679669828803862?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocIyRNWKaKyQWD9ys1C5dwmM6yLqpEenZ_ylV6-wL7DkGDKsmw=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-84488234-20251214",
-      "createdAt": "2025-12-14T16:14:06Z",
+      "id": "GR-12176968-20251003",
+      "createdAt": "2025-10-03T15:43:28Z",
       "source": "Google",
       "rating": 1,
       "sentiment": "Negative",
@@ -506,16 +270,16 @@
       "keywords": [
         "customer feedback"
       ],
-      "tvSnippet": "I used to think Axxess was one of the better ISP's out there and used to be happy with their service, but I have grown e...",
-      "text": "I used to think Axxess was one of the better ISP's out there and used to be happy with their service, but I have grown extremely disappointed in their customer service. They have certainly gone backwards. I now have 2 unresolved tickets that no one even bothers to reply to even when I follow up. Not mentioning their chats where the agents simply drop you. This on top of me experiencing intermittent connectivity and logging faults and complaints. Going on for months now. The only thing keeping me from cancelling was a glimmer of faith in past performance but sadly all trust and confidence have now dissipated. They are officially worse than Telkom and I'll be switching to another ISP.",
-      "reviewerName": "Derick van Rooyen",
-      "reviewerLink": "https://www.google.com/maps/contrib/108656550585584488234?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVCAJux5trpNLXQBywbVj7lbN3EFS-XhAF1q9SWnKAQDTSK6jc=s120-c-rp-mo-br100",
+      "tvSnippet": "I was very disappointed in the service I received. I think I would like to say to anyone wanting to use this provider, f...",
+      "text": "I was very disappointed in the service I received. I think I would like to say to anyone wanting to use this provider, first make sure that they really cover your address. I have paid for my router after checking the address to make sure. Only a day after I received a message to say they dont service that specific place and there is no internet lines there. I immediately ask to stop the router delivery because I will obviously not be able  to use it. I asked to get the router refunded, because it wasnt due to my fault. Well I am still waiting for refund.",
+      "reviewerName": "Jannie Erasmus",
+      "reviewerLink": "https://www.google.com/maps/contrib/117002741466012176968?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJoSlC2Oj_pFdz3lxQRjFAloCVyP9EZwM77Q9cUw2tAHv1dcQ=s120-c-rp-mo-ba2-br100",
       "likes": 0
     },
     {
-      "id": "GR-85065186-20251212",
-      "createdAt": "2025-12-12T07:55:31Z",
+      "id": "GR-97444112-20250819",
+      "createdAt": "2025-08-19T11:22:14Z",
       "source": "Google",
       "rating": 5,
       "sentiment": "Positive",
@@ -525,21 +289,121 @@
       "theme": "Great support",
       "keywords": [
         "great",
-        "amazing",
         "helpful",
         "professional",
-        "quick"
+        "friendly"
       ],
-      "tvSnippet": "I had an amazing experience with Xhanti from the Axxess hosting department. His service was professional, quick, and ver...",
-      "text": "I had an amazing experience with Xhanti from the Axxess hosting department. His service was professional, quick, and very helpful. He took the time to understand my issue and made sure everything was resolved smoothly.\n\nThank you, Xhanti, for the great service.",
-      "reviewerName": "Letlhakga Projects",
-      "reviewerLink": "https://www.google.com/maps/contrib/116202281281285065186?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKsbgBpNXjrhsxXZclSri7PAh-y7KJQ8wmaCks2zOyb3m24LQ=s120-c-rp-mo-br100",
+      "tvSnippet": "Within a week and half after submitting my application my Fibre was installed yesterday and once the installation was co...",
+      "text": "Within a week and half after submitting my application my Fibre was installed yesterday and once the installation was completed, I contacted Axxess and within 10 minutes over the phone, everything was setup, active and live.\nConsultants and installers are very friendly, professional and helpful.\nGreat service so far........",
+      "reviewerName": "Donovan McManus",
+      "reviewerLink": "https://www.google.com/maps/contrib/106361705614897444112?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJehNGZdNQ5BXQRblTL3_i_CDfJddptfg0SEWA76ZStUv5M_A=s120-c-rp-mo-br100",
       "likes": 0
     },
     {
-      "id": "GR-86620956-20251212",
-      "createdAt": "2025-12-12T00:42:32Z",
+      "id": "GR-17694843-20250910",
+      "createdAt": "2025-09-10T14:35:44Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "As an avid gamer and someone who streams a lot, a stable connection with low latency is crucial. I joined Axxess in Augu...",
+      "text": "As an avid gamer and someone who streams a lot, a stable connection with low latency is crucial. I joined Axxess in August 2023 and it's been a game-changer. The speeds are fantastic, the ping is consistently low, and I've had no issues with lag or buffering during peak hours. A top-tier service for anyone with heavy internet usage. It's just exactly on par with what I was looking for.",
+      "reviewerName": "Sanele Buthelezi",
+      "reviewerLink": "https://www.google.com/maps/contrib/114648692301117694843?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWuf2SoHlIc6f-aqpZtBXch9PSB9_ro96h4kN-zLbJl_Gmsn-TuTQ=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-24842096-20250925",
+      "createdAt": "2025-09-25T13:58:32Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Needs improvement",
+      "keywords": [
+        "slow",
+        "terrible"
+      ],
+      "tvSnippet": "Terrible Terrible Terrible\n\nThey don't go an extra mile for their customers. I logged a fault on the 12th of September a...",
+      "text": "Terrible Terrible Terrible\n\nThey don't go an extra mile for their customers. I logged a fault on the 12th of September about slow to no connection. They resolved it 5 days later, citing a technical fault with vodacom. 4 days later, same problem again. To this day they haven't fixed it. I just asked for an update on their WhatsApp line, the agent tells me \"there's no update at this stage\" Like, are you kidding me??? Internet is not just for streaming but work and school purposes and they give me that?? Im so tired of them at this point. I paid R699 for services that aren't being rendered. Also, when you choose to leave, they charge R900.",
+      "reviewerName": "Mmabatho Shibise",
+      "reviewerLink": "https://www.google.com/maps/contrib/113636621809024842096?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWVgwiUo8MMNTha3P2l6H0g4kPuTOFWnHpJcWZyq1W32sXHi0x7=s120-c-rp-mo-ba2-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-33861768-20251011",
+      "createdAt": "2025-10-11T06:30:12Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "fast"
+      ],
+      "tvSnippet": "Super annoyed right now. Axxess service is non- existent. This is the second time this year I advised a customer to use ...",
+      "text": "Super annoyed right now. Axxess service is non- existent. This is the second time this year I advised a customer to use Axxess for their new home fibre and after 2 weeks, they still aren’t able to connect even thought the fibre box is install and active, Axxess just sucks, you pay for services they can never get working because they’re lazy and plain useless. Opened multiple support tickets and call multiple times a day and all they say is “wait till tomorrow” - wth Axxess… wthhh! Will be cancelling and going to Vodacom 5G- don’t waste your time, I should have done this 2 weeks ago, it’s my new go to for my clients, faster than Axxess in both speed and delivery",
+      "reviewerName": "Tash Bhairo",
+      "reviewerLink": "https://www.google.com/maps/contrib/117291027664433861768?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUg4dmaSnB46JLZkKPhmYxF144JChNfiawy6ANkWb3JrkP8iyM4lQ=s120-c-rp-mo-ba3-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-16561803-20250923",
+      "createdAt": "2025-09-23T07:44:17Z",
+      "source": "Google",
+      "rating": 3,
+      "sentiment": "Neutral",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "slow"
+      ],
+      "tvSnippet": "I have been with Axxess for close to five years now. My uptime is steady and speeds are okay. I've never reached promise...",
+      "text": "I have been with Axxess for close to five years now. My uptime is steady and speeds are okay. I've never reached promised speeds, but the ones I get are sufficient.\n\nThe missing one star is for the live chat when requiring assistance. It is slow. On a chat I waited 4 minutes after type just to get a response that says \"one moment\". Meaning I was going to wait longer.",
+      "reviewerName": "Pako Molema",
+      "reviewerLink": "https://www.google.com/maps/contrib/113686448335616561803?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVZ2-UvPrQWNKZsJL79R0W_IO4C1AJ44GgnONACZMrAXhBwPxtO=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-13937807-20251013",
+      "createdAt": "2025-10-13T16:35:49Z",
+      "source": "Google",
+      "rating": 4,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "great"
+      ],
+      "tvSnippet": "After 3 months on using Axxess as my fibre service provider, I have had no issues at all with their services.\nSupport is...",
+      "text": "After 3 months on using Axxess as my fibre service provider, I have had no issues at all with their services.\nSupport is great and always available.\nHighly recommendable.",
+      "reviewerName": "Yousuf Ragie",
+      "reviewerLink": "https://www.google.com/maps/contrib/106839081551813937807?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjX4gbmo9eFIiXucf5LRunZ1r6Tc1wUMNQQnY8vPwjHYVBgCpeFB=s120-c-rp-mo-ba3-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-48973988-20251017",
+      "createdAt": "2025-10-17T08:27:08Z",
       "source": "Google",
       "rating": 5,
       "sentiment": "Positive",
@@ -548,18 +412,18 @@
       "team": "Unknown",
       "theme": "Great service",
       "keywords": [
-        "customer feedback"
+        "great"
       ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "Daniel J",
-      "reviewerLink": "https://www.google.com/maps/contrib/100040487437186620956?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUhtOwYWFQGtt7Z1XSyWnUhxlOmP2r5Y9b3yJDC4sDIIe57MmCvnw=s120-c-rp-mo-br100",
+      "tvSnippet": "i personally dont have you as an ISP but i have clients that i have put your services into and i love your service, each...",
+      "text": "i personally dont have you as an ISP but i have clients that i have put your services into and i love your service, each of my clients feel great as they feel they get almost personal attention. keep up the great work and team work",
+      "reviewerName": "Debbie Atkins",
+      "reviewerLink": "https://www.google.com/maps/contrib/104669382882048973988?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocIIQ6v1Tx2ITwtI5M_ToOzTBFkBqZoNwWa-X-hPv1A4Qr83BQ=s120-c-rp-mo-br100",
       "likes": 0
     },
     {
-      "id": "GR-98382330-20251209",
-      "createdAt": "2025-12-09T20:34:28Z",
+      "id": "GR-11642656-20251002",
+      "createdAt": "2025-10-02T06:43:12Z",
       "source": "Google",
       "rating": 3,
       "sentiment": "Neutral",
@@ -568,13 +432,158 @@
       "team": "Unknown",
       "theme": "",
       "keywords": [
+        "great",
+        "best",
+        "slow",
+        "bad"
+      ],
+      "tvSnippet": "Axxess is sometimes great and sometimes thats why i left a 3 star rating if they. Could go an extra mile for their custo...",
+      "text": "Axxess is sometimes great and sometimes thats why i left a 3 star rating if they. Could go an extra mile for their customers they would be the best in SA .. their Live agents are slow but they tend to get the job Done  overall they aren't a Bad Company i prefer them over any company to provide services to you",
+      "reviewerName": "CEDRIC NDALA",
+      "reviewerLink": "https://www.google.com/maps/contrib/108779584448811642656?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocIAMTBaj2VR-p_qVcg9Tn4m9PzsyvwZQHxikvPXnsF65ocQ4Q=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-97245816-20251021",
+      "createdAt": "2025-10-21T15:20:03Z",
+      "source": "Google",
+      "rating": 4,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Smooth installation",
+      "keywords": [
+        "great"
+      ],
+      "tvSnippet": "I have been using Axxess for a while now. The fibre internet is great and pricing is reasonable. I first used them when ...",
+      "text": "I have been using Axxess for a while now. The fibre internet is great and pricing is reasonable. I first used them when I had a MTN Fixed LTE years back and the service was great.",
+      "reviewerName": "Vukosi Shibambu",
+      "reviewerLink": "https://www.google.com/maps/contrib/110758275821397245816?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjXnhEV-JmzjzqavRqg4tOC9otZo_vOg4CdxzsVqK4kVrhtlyZMd=s120-c-rp-mo-ba2-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-24023972-20251110",
+      "createdAt": "2025-11-10T11:02:00Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "worst"
+      ],
+      "tvSnippet": "The worst ISP experience I've had in a very long time.\nFor just over a year I have had countless issues with either inte...",
+      "text": "The worst ISP experience I've had in a very long time.\nFor just over a year I have had countless issues with either intermittent access or days on end without any access at all (strangely each time over a weekend or public holiday (or both).\nI gave notice for end October and didn't have access to my WiFi network from  the 29th.  I then discovered that they had CHANGED my WiFi password without my consent or knowledge.  I cannot help but wonder how many times they had done that over the past months, leaving me without access to a network that I had paid for!!\nSteer very far away from this company!",
+      "reviewerName": "Suretta Barnard",
+      "reviewerLink": "https://www.google.com/maps/contrib/110422229260524023972?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWQ58ER8_hX-8XcZ8nieqtPZ5NQMGxqOYx_F5cBCkJ5lAa7o-hy=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-38901442-20251005",
+      "createdAt": "2025-10-05T20:08:13Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "good"
+      ],
+      "tvSnippet": "Got MTN 5G in April 2025 worked well until August 2025. DL speeds were always above 200 Mbps and only dropped below that...",
+      "text": "Got MTN 5G in April 2025 worked well until August 2025. DL speeds were always above 200 Mbps and only dropped below that during some peak hours 18:00 to 21:00. UL speeds were never very good and ranged between 2Mbps and 8Mbps. Since August 2025 the DL speed was throttled to 60 Mbps. I logged a service ticket and it was back to normal for less than a week and the process repeated for about 3 weeks after which my tickets were ignored and the responses changed to the service is not throttled while it is and speed test proof was supplied.",
+      "reviewerName": "Jacob Coetzee",
+      "reviewerLink": "https://www.google.com/maps/contrib/112548599430938901442?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVm51C8n5Eautaw2TjLFEmu6yK9Xel8uCStR_B2_5u3i36Oa4A=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-36122730-20251013",
+      "createdAt": "2025-10-13T19:29:32Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
         "customer feedback"
       ],
-      "tvSnippet": "",
-      "text": "",
-      "reviewerName": "Carel du Preez",
-      "reviewerLink": "https://www.google.com/maps/contrib/110154860380798382330?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVJLCKOplxRsq5MyG1H4v7h0fbl4m679Wcs6fw1Ko009FstPLI6-w=s120-c-rp-mo-ba4-br100",
+      "tvSnippet": "They have low speeds and unfair FUP (Fair Usage Policy).\n\nI decided to cancel and they offered their useless 3 months re...",
+      "text": "They have low speeds and unfair FUP (Fair Usage Policy).\n\nI decided to cancel and they offered their useless 3 months retention deal. Half off! Of course I took it and now they won't cancel after the 3 months passes and want to keep me for an additional 2 months.\n\nI struggle with their connection all the time and I thought during this retention period, they would do anything to try and retain me as a customer but nothing has changed thus my request to leave them!\n\nThey are liars, they have impossible standards with a weak internet connection and have rigid rules.\n\nStay away from Axxess at all cost.",
+      "reviewerName": "Mbongeni Ngwenya",
+      "reviewerLink": "https://www.google.com/maps/contrib/104167617092436122730?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjU5Um0j2FJZWT18nTSUooBJaMRO7JBMhDmfw4BXN-E2D_GCOLY=s120-c-rp-mo-ba3-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-84264170-20251003",
+      "createdAt": "2025-10-03T21:18:02Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "I waited in the support queue for over 2 hours and 15 minutes, hoping to resolve a simple issue. Unfortunately, not a si...",
+      "text": "I waited in the support queue for over 2 hours and 15 minutes, hoping to resolve a simple issue. Unfortunately, not a single problem was addressed and I didn’t receive any help at all. The long wait felt pointless, and no staff member reached out to assist me or provide updates. Two hours for basic support is unacceptable—I wouldn’t recommend Axxess to anyone based on this experience.",
+      "reviewerName": "Samukeliso knight",
+      "reviewerLink": "https://www.google.com/maps/contrib/103644277933384264170?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUPo9KL_5-8gALNXUQ_pmjLv1Sza63tLsXW9ECA0WXCMQgKsQ=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-13714113-20251111",
+      "createdAt": "2025-11-11T10:50:36Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "excellent",
+        "professional",
+        "quick"
+      ],
+      "tvSnippet": "Thank you for the excellent assistance provided regarding my SIM/account issue. The support was quick and effective.\n\nI ...",
+      "text": "Thank you for the excellent assistance provided regarding my SIM/account issue. The support was quick and effective.\n\nI appreciate the professionalism and prompt response.",
+      "reviewerName": "Mario Grewe",
+      "reviewerLink": "https://www.google.com/maps/contrib/116489017476313714113?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVLBNOmEX7kx1_nmURoKAoYqYJfQs5Yu3FWf6ckVS7XYU3UiRfv=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-78636614-20250901",
+      "createdAt": "2025-09-01T07:43:35Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Professional service",
+      "keywords": [
+        "professional"
+      ],
+      "tvSnippet": "⭐️⭐️⭐️⭐️⭐️🌕Outstanding service from Axxess, especially from Batandwa Ndamane! He went above and beyond to assist me wit...",
+      "text": "⭐️⭐️⭐️⭐️⭐️🌕Outstanding service from Axxess, especially from Batandwa Ndamane! He went above and beyond to assist me with my issue, showing patience and professionalism. Thanks to his dedication, my problem was resolved smoothly. If I could give more than 5 stars, I absolutely would. Axxess is lucky to have him!.",
+      "reviewerName": "Imu",
+      "reviewerLink": "https://www.google.com/maps/contrib/116817462726678636614?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLhbvZQkbseMGJ75PnEaGnbjQUzAOUU4Vm6KJswWwCUKVjDLw=s120-c-rp-mo-br100",
       "likes": 0
     }
   ]
