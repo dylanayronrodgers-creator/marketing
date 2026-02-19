@@ -81,14 +81,10 @@
     /* Main Content */
     .tv-main {
       display: grid;
-      grid-template-columns: 1.1fr 1fr;
+      grid-template-columns: 1fr 1.4fr;
       gap: 20px;
       min-height: 0;
       overflow: hidden;
-    }
-    .tv-left {
-      display: flex; flex-direction: column; gap: 16px;
-      min-height: 0; overflow: hidden;
     }
 
     /* Cards */
@@ -97,8 +93,6 @@
       display: flex; flex-direction: column;
     }
     .tv-card.grow { flex: 1; min-height: 0; }
-    .tv-left .tv-card.grow { flex: 1.2; }
-    .tv-left .tv-card:not(.grow) { flex: 0 0 auto; }
 
     .tv-card-header {
       padding: 16px 20px;
@@ -174,8 +168,8 @@
       margin-bottom: 16px; border: 1px solid rgba(59,130,246,0.2);
     }
     .tv-quote {
-      font-size: 28px; font-weight: 600; color: #f1f5f9;
-      line-height: 1.4; max-width: 90%; margin-bottom: 20px;
+      font-size: 22px; font-weight: 600; color: #f1f5f9;
+      line-height: 1.45; max-width: 90%; margin-bottom: 20px;
     }
     .tv-keywords { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; }
     .tv-keyword {
@@ -324,31 +318,16 @@
 
     <!-- Main Content -->
     <main class="tv-main">
-      <div class="tv-left">
-        <div class="tv-card glass grow">
-          <div class="tv-card-header">
-            <div>
-              <div class="tv-card-title">Weekly Top 5</div>
-              <div class="tv-card-hint">Agent recognition leaders</div>
-            </div>
-            <div class="tv-card-badge" id="tvWeekSmall"></div>
+      <div class="tv-card glass grow">
+        <div class="tv-card-header">
+          <div>
+            <div class="tv-card-title">Monthly Leaders</div>
+            <div class="tv-card-hint" id="tvMonth">Month</div>
           </div>
-          <div class="tv-card-body">
-            <div class="tv-rank-list" id="weeklyList"></div>
-          </div>
+          <div class="tv-card-badge">Top 5</div>
         </div>
-
-        <div class="tv-card glass">
-          <div class="tv-card-header">
-            <div>
-              <div class="tv-card-title">Monthly Leaders</div>
-              <div class="tv-card-hint" id="tvMonth">Month</div>
-            </div>
-            <div class="tv-card-badge">Top 2</div>
-          </div>
-          <div class="tv-card-body">
-            <div class="tv-podium" id="monthlyPodium"></div>
-          </div>
+        <div class="tv-card-body">
+          <div class="tv-rank-list" id="monthlyList"></div>
         </div>
       </div>
 
@@ -429,33 +408,23 @@
 
   // Layout adjustments
   var tvMain = document.querySelector(".tv-main");
-  var tvLeft = document.querySelector(".tv-left");
-  var highlightCard = tvMain ? tvMain.querySelector(":scope > .tv-card.glass.grow") : null;
+  var monthlyCard = tvMain ? tvMain.children[0] : null;
+  var highlightCard = tvMain ? tvMain.children[1] : null;
 
-  if (tvCfg.layout === "highlights-only" && tvMain && tvLeft) {
-    tvLeft.style.display = "none";
+  if (tvCfg.layout === "highlights-only" && tvMain && monthlyCard) {
+    monthlyCard.style.display = "none";
     tvMain.style.gridTemplateColumns = "1fr";
   } else if (tvCfg.layout === "leaderboard-only" && tvMain && highlightCard) {
     highlightCard.style.display = "none";
     tvMain.style.gridTemplateColumns = "1fr";
   }
 
-  // Weekly/Monthly visibility within left panel
-  if (tvLeft) {
-    var weeklyCard = tvLeft.querySelector(".tv-card.glass.grow");
-    var monthlyCard = tvLeft.querySelector(".tv-card.glass:not(.grow)");
-    if (weeklyCard && tvCfg.showWeekly === false) weeklyCard.style.display = "none";
-    if (monthlyCard && tvCfg.showMonthly === false) monthlyCard.style.display = "none";
-  }
-
+  if (monthlyCard && tvCfg.showMonthly === false) { monthlyCard.style.display = "none"; tvMain.style.gridTemplateColumns = "1fr"; }
   if (highlightCard && tvCfg.showHighlights === false) highlightCard.style.display = "none";
 
   var state = loadState();
-  var elWeek = document.getElementById("tvWeek");
-  var elWeekSmall = document.getElementById("tvWeekSmall");
   var elMonth = document.getElementById("tvMonth");
-  var weeklyList = document.getElementById("weeklyList");
-  var podium = document.getElementById("monthlyPodium");
+  var monthlyList = document.getElementById("monthlyList");
   var ticker = document.getElementById("ticker");
   var slide = document.getElementById("highlightSlide");
   var counter = document.getElementById("slideCounter");
@@ -513,8 +482,6 @@
     document.getElementById("statSentiment").textContent = stats.avgSentiment;
     document.getElementById("statNegative").textContent = stats.negativeFlagged;
 
-    elWeek.textContent = formatWeekRange(lb.weekStart);
-    elWeekSmall.textContent = formatWeekRange(lb.weekStart);
     elMonth.textContent = formatMonthLabel(now);
 
     // Check if data changed
@@ -522,8 +489,8 @@
     if (hash !== lastStateHash) {
       lastStateHash = hash;
 
-      // Weekly Top 5
-      weeklyList.innerHTML = lb.weeklyTop.slice(0, 5).map(function(r, i) {
+      // Monthly Leaders (rank list format)
+      monthlyList.innerHTML = lb.monthlyTop.slice(0, 5).map(function(r, i) {
         var rankClass = i < 3 ? ' rank-' + (i + 1) : '';
         var medalClass = i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : '';
         return '<div class="tv-rank-row' + rankClass + '">' +
@@ -532,17 +499,7 @@
           '<div class="tv-rank-meta">' + r.team + ' · ' + r.count + ' reviews</div></div>' +
           '<div><div class="tv-rank-score">' + Math.round(r.score) + ' pts</div>' +
           '<div class="tv-rank-reason">' + ((r.themes || []).join(" · ") || "Great feedback") + '</div></div></div>';
-      }).join("") || '<div style="text-align:center; padding:40px; color:#475569;">No weekly leaders yet</div>';
-
-      // Monthly
-      podium.innerHTML = lb.monthlyTop.map(function(m, i) {
-        return '<div class="tv-podium-card">' +
-          '<div class="tv-podium-top"><div class="tv-podium-info"><div class="tv-avatar">' + initials(m.agent) + '</div>' +
-          '<div><div class="tv-podium-name">#' + (i+1) + ' ' + m.agent + '</div>' +
-          '<div class="tv-podium-meta">' + m.team + ' · ' + Math.round(m.score) + ' pts</div></div></div>' +
-          '<div class="tv-rank-num" style="width:40px;height:40px;font-size:14px;">' + (i+1) + '</div></div>' +
-          '<div class="tv-themes">' + (m.themes || []).map(function(t) { return '<span class="tv-theme">' + t + '</span>'; }).join("") + '</div></div>';
-      }).join("") || '<div style="text-align:center; padding:20px; color:#475569;">No monthly leaders yet</div>';
+      }).join("") || '<div style="text-align:center; padding:40px; color:#475569;">No monthly leaders yet</div>';
 
       highlights = lb.highlights;
       if (highlightIdx >= highlights.length) highlightIdx = 0;
@@ -551,7 +508,7 @@
     // Ticker
     var approvedCount = state.items.filter(function(i) { return i.status === "Approved" && i.sentiment !== "Negative"; }).length;
     var googleCount = state.items.filter(function(i) { return i.source === "Google"; }).length;
-    var topTheme = lb.weeklyTop[0] && lb.weeklyTop[0].themes && lb.weeklyTop[0].themes[0] ? lb.weeklyTop[0].themes[0] : "Customer excellence";
+    var topTheme = lb.monthlyTop[0] && lb.monthlyTop[0].themes && lb.monthlyTop[0].themes[0] ? lb.monthlyTop[0].themes[0] : "Customer excellence";
     var tickerItems = [
       "Approved: " + approvedCount,
       "Pending: " + stats.pending,
@@ -579,7 +536,7 @@
       }
       var s = highlights[highlightIdx % highlights.length];
       var quote = s.tvSnippet || s.text;
-      if (quote.length > 180) quote = quote.substring(0, 180) + "...";
+      if (quote.length > 350) quote = quote.substring(0, 350) + "...";
 
       var avatarHtml;
       if (s.reviewerThumbnail) {

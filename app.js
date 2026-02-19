@@ -449,7 +449,7 @@ function computeLeaderboards(state, now) {
     weekStart: startOfWeek.toISOString(),
     monthStart: startOfMonth.toISOString(),
     weeklyTop: byAgent(inWeek).slice(0, 5),
-    monthlyTop: byAgent(inMonth).slice(0, 2),
+    monthlyTop: byAgent(inMonth).slice(0, 5),
     highlights: approved.slice().sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); }).slice(0, 20)
   };
 }
