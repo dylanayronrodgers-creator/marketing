@@ -105,11 +105,11 @@
     .tv-card-body { padding: 16px 20px; flex: 1; overflow: auto; min-height: 0; }
 
     /* Rank List */
-    .tv-rank-list { display: flex; flex-direction: column; gap: 8px; }
+    .tv-rank-list { display: flex; flex-direction: column; gap: 5px; }
     .tv-rank-row {
-      display: grid; grid-template-columns: 44px 1fr auto;
-      gap: 14px; align-items: center;
-      padding: 12px 14px; border-radius: 12px;
+      display: grid; grid-template-columns: 36px 1fr auto;
+      gap: 12px; align-items: center;
+      padding: 8px 12px; border-radius: 10px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
       transition: all 0.2s;
@@ -131,9 +131,9 @@
     }
 
     .tv-rank-num {
-      width: 44px; height: 44px; border-radius: 12px;
+      width: 36px; height: 36px; border-radius: 10px;
       background: linear-gradient(135deg, #3b82f6, #2563eb);
-      color: white; font-size: 18px; font-weight: 800;
+      color: white; font-size: 15px; font-weight: 800;
       display: flex; align-items: center; justify-content: center;
       position: relative;
     }
@@ -145,9 +145,9 @@
     .tv-rank-num.silver::after { content: "🥈"; position: absolute; top: -8px; right: -5px; font-size: 14px; }
     .tv-rank-num.bronze::after { content: "🥉"; position: absolute; top: -8px; right: -5px; font-size: 14px; }
 
-    .tv-rank-name { font-size: 15px; font-weight: 700; color: #f1f5f9; }
-    .tv-rank-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
-    .tv-rank-score { font-size: 20px; font-weight: 800; color: #3b82f6; text-align: right; }
+    .tv-rank-name { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+    .tv-rank-meta { font-size: 10px; color: #64748b; margin-top: 1px; }
+    .tv-rank-score { font-size: 17px; font-weight: 800; color: #3b82f6; text-align: right; }
     .rank-1 .tv-rank-score { color: #fbbf24; }
     .rank-2 .tv-rank-score { color: #94a3b8; }
     .rank-3 .tv-rank-score { color: #f97316; }
@@ -324,7 +324,7 @@
             <div class="tv-card-title">Monthly Leaders</div>
             <div class="tv-card-hint" id="tvMonth">Month</div>
           </div>
-          <div class="tv-card-badge">Top 5</div>
+          <div class="tv-card-badge">Top 10</div>
         </div>
         <div class="tv-card-body">
           <div class="tv-rank-list" id="monthlyList"></div>
@@ -489,8 +489,8 @@
     if (hash !== lastStateHash) {
       lastStateHash = hash;
 
-      // Monthly Leaders (rank list format)
-      monthlyList.innerHTML = lb.monthlyTop.slice(0, 5).map(function(r, i) {
+      // Monthly Leaders (top 10, gold/silver/bronze for top 3)
+      monthlyList.innerHTML = lb.monthlyTop.slice(0, 10).map(function(r, i) {
         var rankClass = i < 3 ? ' rank-' + (i + 1) : '';
         var medalClass = i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : '';
         return '<div class="tv-rank-row' + rankClass + '">' +
