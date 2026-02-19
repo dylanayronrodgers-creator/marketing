@@ -971,97 +971,96 @@
     { id: "leaderboard-only", label: "Leaderboard Only (Full Width)" }
   ];
 
-  function renderSettings() {
+  // Settings DOM refs (cached once)
+  var sBrandInput = document.getElementById("settingBrandColor");
+  var sBrandHex = document.getElementById("settingBrandHex");
+  var sPresets = document.getElementById("colorPresets");
+  var sLogoInput = document.getElementById("settingLogoUrl");
+  var sLogoPreview = document.getElementById("settingLogoPreview");
+  var sLogoStatus = document.getElementById("settingLogoStatus");
+  var sCompany = document.getElementById("settingCompanyName");
+  var sTvTitle = document.getElementById("settingTvTitle");
+  var sTvSubtitle = document.getElementById("settingTvSubtitle");
+  var sBgThemes = document.getElementById("bgThemeOptions");
+  var sLayouts = document.getElementById("tvLayoutOptions");
+  var sSlider = document.getElementById("settingSlideInterval");
+  var sSliderLabel = document.getElementById("settingSlideLabel");
+  var sTickerMsg = document.getElementById("settingTickerMsg");
+
+  function updateSettingsUI() {
     var cfg = tvConfig;
 
     // Brand color
-    var brandInput = document.getElementById("settingBrandColor");
-    brandInput.value = cfg.brandColor;
-    document.getElementById("settingBrandHex").textContent = cfg.brandColor;
-
-    brandInput.addEventListener("input", function() {
-      document.getElementById("settingBrandHex").textContent = brandInput.value;
-    });
+    sBrandInput.value = cfg.brandColor;
+    sBrandHex.textContent = cfg.brandColor;
 
     // Color presets
-    document.getElementById("colorPresets").innerHTML = presetColors.map(function(p) {
+    sPresets.innerHTML = presetColors.map(function(p) {
       var isActive = cfg.brandColor.toLowerCase() === p.color.toLowerCase();
       return '<div data-preset-color="' + p.color + '" style="cursor:pointer; width:36px; height:36px; border-radius:8px; background:' + p.color + '; border:2px solid ' + (isActive ? 'white' : 'transparent') + '; display:flex; align-items:center; justify-content:center;" title="' + p.label + '">' + (isActive ? '<span style="color:white; font-size:14px;">✓</span>' : '') + '</div>';
     }).join("");
 
-    document.querySelectorAll("[data-preset-color]").forEach(function(el) {
+    sPresets.querySelectorAll("[data-preset-color]").forEach(function(el) {
       el.addEventListener("click", function() {
-        brandInput.value = el.getAttribute("data-preset-color");
-        document.getElementById("settingBrandHex").textContent = brandInput.value;
-        renderSettings();
+        tvConfig.brandColor = el.getAttribute("data-preset-color");
+        sBrandInput.value = tvConfig.brandColor;
+        sBrandHex.textContent = tvConfig.brandColor;
+        // Live-apply to admin
+        state = updateBrandPrimary(tvConfig.brandColor);
+        root.style.setProperty("--brand", tvConfig.brandColor);
+        updateSettingsUI();
       });
     });
 
     // Logo
-    var logoInput = document.getElementById("settingLogoUrl");
-    logoInput.value = cfg.logoUrl;
-    var logoPreview = document.getElementById("settingLogoPreview");
-    var logoStatus = document.getElementById("settingLogoStatus");
+    sLogoInput.value = cfg.logoUrl;
     if (cfg.logoUrl) {
-      logoPreview.src = cfg.logoUrl;
-      logoPreview.style.display = "block";
-      logoStatus.textContent = "Logo loaded";
+      sLogoPreview.src = cfg.logoUrl;
+      sLogoPreview.style.display = "block";
+      sLogoStatus.textContent = "Logo loaded";
+    } else {
+      sLogoPreview.style.display = "none";
+      sLogoStatus.textContent = "Enter a URL to preview";
     }
-    logoInput.addEventListener("input", function() {
-      var url = logoInput.value.trim();
-      if (url) {
-        logoPreview.src = url;
-        logoPreview.style.display = "block";
-        logoPreview.onerror = function() { logoPreview.style.display = "none"; logoStatus.textContent = "Failed to load image"; };
-        logoPreview.onload = function() { logoStatus.textContent = "Logo loaded"; };
-      } else {
-        logoPreview.style.display = "none";
-        logoStatus.textContent = "Enter a URL to preview";
-      }
-    });
 
     // Company name
-    document.getElementById("settingCompanyName").value = cfg.companyName;
+    sCompany.value = cfg.companyName;
 
     // TV title/subtitle
-    document.getElementById("settingTvTitle").value = cfg.tvTitle;
-    document.getElementById("settingTvSubtitle").value = cfg.tvSubtitle;
+    sTvTitle.value = cfg.tvTitle;
+    sTvSubtitle.value = cfg.tvSubtitle;
 
     // Background theme
-    document.getElementById("bgThemeOptions").innerHTML = bgThemes.map(function(t) {
+    sBgThemes.innerHTML = bgThemes.map(function(t) {
       var isActive = cfg.bgTheme === t.id;
       return '<div data-bg-theme="' + t.id + '" style="cursor:pointer; padding:8px 14px; border-radius:8px; border:2px solid ' + (isActive ? 'var(--brand)' : 'var(--border)') + '; background:' + (isActive ? 'rgba(0,153,204,.1)' : 'transparent') + '; font-size:12px;">' +
         '<div style="font-weight:600;">' + t.label + '</div>' +
         '<div style="font-size:10px; color:var(--muted);">' + t.colors + '</div></div>';
     }).join("");
 
-    document.querySelectorAll("[data-bg-theme]").forEach(function(el) {
+    sBgThemes.querySelectorAll("[data-bg-theme]").forEach(function(el) {
       el.addEventListener("click", function() {
-        cfg.bgTheme = el.getAttribute("data-bg-theme");
-        renderSettings();
+        tvConfig.bgTheme = el.getAttribute("data-bg-theme");
+        updateSettingsUI();
       });
     });
 
     // Layout
-    document.getElementById("tvLayoutOptions").innerHTML = tvLayouts.map(function(l) {
+    sLayouts.innerHTML = tvLayouts.map(function(l) {
       var isActive = cfg.layout === l.id;
       return '<div data-tv-layout="' + l.id + '" style="cursor:pointer; padding:8px 14px; border-radius:8px; border:2px solid ' + (isActive ? 'var(--brand)' : 'var(--border)') + '; background:' + (isActive ? 'rgba(0,153,204,.1)' : 'transparent') + '; font-size:12px; font-weight:' + (isActive ? '600' : '400') + ';">' + l.label + '</div>';
     }).join("");
 
-    document.querySelectorAll("[data-tv-layout]").forEach(function(el) {
+    sLayouts.querySelectorAll("[data-tv-layout]").forEach(function(el) {
       el.addEventListener("click", function() {
-        cfg.layout = el.getAttribute("data-tv-layout");
-        renderSettings();
+        tvConfig.layout = el.getAttribute("data-tv-layout");
+        updateSettingsUI();
       });
     });
 
     // Slide interval
-    var slider = document.getElementById("settingSlideInterval");
-    slider.value = cfg.slideInterval;
-    document.getElementById("settingSlideLabel").textContent = cfg.slideInterval + "s";
-    slider.addEventListener("input", function() {
-      document.getElementById("settingSlideLabel").textContent = slider.value + "s";
-    });
+    sSlider.value = cfg.slideInterval;
+    sSliderLabel.textContent = cfg.slideInterval + "s";
 
     // Checkboxes
     document.getElementById("settingShowStats").checked = cfg.showStats;
@@ -1072,10 +1071,41 @@
     document.getElementById("settingShowClock").checked = cfg.showClock;
 
     // Ticker
-    document.getElementById("settingTickerMsg").value = cfg.tickerMsg;
+    sTickerMsg.value = cfg.tickerMsg;
   }
 
-  renderSettings();
+  // One-time event bindings (never duplicated)
+  sBrandInput.addEventListener("input", function() {
+    tvConfig.brandColor = sBrandInput.value;
+    sBrandHex.textContent = sBrandInput.value;
+    // Live-apply to admin portal
+    state = updateBrandPrimary(sBrandInput.value);
+    root.style.setProperty("--brand", sBrandInput.value);
+  });
+
+  sBrandInput.addEventListener("change", function() {
+    updateSettingsUI();
+    showToast("Brand colour updated to " + sBrandInput.value, "success");
+  });
+
+  sLogoInput.addEventListener("input", function() {
+    var url = sLogoInput.value.trim();
+    if (url) {
+      sLogoPreview.src = url;
+      sLogoPreview.style.display = "block";
+      sLogoPreview.onerror = function() { sLogoPreview.style.display = "none"; sLogoStatus.textContent = "Failed to load image"; };
+      sLogoPreview.onload = function() { sLogoStatus.textContent = "Logo loaded"; };
+    } else {
+      sLogoPreview.style.display = "none";
+      sLogoStatus.textContent = "Enter a URL to preview";
+    }
+  });
+
+  sSlider.addEventListener("input", function() {
+    sSliderLabel.textContent = sSlider.value + "s";
+  });
+
+  updateSettingsUI();
 
   // Save settings
   document.getElementById("saveSettingsBtn").addEventListener("click", function() {
@@ -1102,7 +1132,7 @@
     state = updateBrandPrimary(tvConfig.brandColor);
     root.style.setProperty("--brand", tvConfig.brandColor);
     renderAll();
-    renderSettings();
+    updateSettingsUI();
     showToast("All settings saved. TV dashboard will update on next refresh.", "success");
   });
 
@@ -1114,7 +1144,7 @@
     state = updateBrandPrimary(tvConfig.brandColor);
     root.style.setProperty("--brand", tvConfig.brandColor);
     renderAll();
-    renderSettings();
+    updateSettingsUI();
     showToast("Settings reset to defaults", "success");
   });
 
