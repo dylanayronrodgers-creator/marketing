@@ -190,7 +190,7 @@ async function scrapeAllReviews() {
     
     // Step 3: Fetch more pages (each page = 1 API credit)
     let pageCount = 1;
-    const maxPages = 3; // 3 pages ≈ 30 reviews, uses 3 credits per run (~180/month)
+    const maxPages = 10; // 10 pages ≈ 100 reviews, uses 10 credits per run
     
     while (result.serpapi_pagination && result.serpapi_pagination.next_page_token && pageCount < maxPages) {
       pageCount++;
@@ -207,6 +207,12 @@ async function scrapeAllReviews() {
     }
     
     console.log(`\n✅ Total reviews fetched: ${allReviews.length}`);
+
+    // Log date range of fetched reviews
+    const dates = allReviews.map(r => r.iso_date || r.date || '').filter(Boolean);
+    if (dates.length) {
+      console.log(`📅 Date range: ${dates[dates.length - 1]} → ${dates[0]}`);
+    }
     
     // Step 4: Transform to dashboard format
     const dashboardReviews = allReviews.map((review, idx) => {
@@ -279,7 +285,7 @@ async function scrapeAllReviews() {
       totalReviews: placeInfo.reviews || allReviews.length,
       scrapedCount: dashboardReviews.length,
       dataId: dataId,
-      reviews: dashboardReviews
+      reviews: dashboardReviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     };
     
     fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
