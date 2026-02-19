@@ -316,6 +316,10 @@ a{color:inherit; text-decoration:none}
 }
 
 .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+.kpi:nth-child(5)::before{background:linear-gradient(90deg, #06b6d4, #0891b2);}
+.kpi:nth-child(6)::before{background:linear-gradient(90deg, #ec4899, #db2777);}
+.kpi:nth-child(7)::before{background:linear-gradient(90deg, #14b8a6, #0d9488);}
+.kpi:nth-child(8)::before{background:linear-gradient(90deg, #f97316, #ea580c);}
 .kpi{
   padding:16px;
   border-radius:12px;
