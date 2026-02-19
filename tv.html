@@ -523,7 +523,7 @@
           '<div class="tv-rank-num' + medalClass + '">' + (i + 1) + '</div>' +
           '<div><div class="tv-rank-name">' + r.agent + '</div>' +
           '<div class="tv-rank-meta">' + r.team + ' · ' + r.count + ' reviews</div></div>' +
-          '<div><div class="tv-rank-score">' + Math.round(r.score) + '</div>' +
+          '<div><div class="tv-rank-score">' + Math.round(r.score) + ' pts</div>' +
           '<div class="tv-rank-reason">' + ((r.themes || []).join(" · ") || "Great feedback") + '</div></div></div>';
       }).join("") || '<div style="text-align:center; padding:40px; color:#475569;">No weekly leaders yet</div>';
 
@@ -532,7 +532,7 @@
         return '<div class="tv-podium-card">' +
           '<div class="tv-podium-top"><div class="tv-podium-info"><div class="tv-avatar">' + initials(m.agent) + '</div>' +
           '<div><div class="tv-podium-name">#' + (i+1) + ' ' + m.agent + '</div>' +
-          '<div class="tv-podium-meta">' + m.team + ' · Score ' + Math.round(m.score) + '</div></div></div>' +
+          '<div class="tv-podium-meta">' + m.team + ' · ' + Math.round(m.score) + ' pts</div></div></div>' +
           '<div class="tv-rank-num" style="width:40px;height:40px;font-size:14px;">' + (i+1) + '</div></div>' +
           '<div class="tv-themes">' + (m.themes || []).map(function(t) { return '<span class="tv-theme">' + t + '</span>'; }).join("") + '</div></div>';
       }).join("") || '<div style="text-align:center; padding:20px; color:#475569;">No monthly leaders yet</div>';

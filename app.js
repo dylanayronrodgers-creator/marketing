@@ -386,12 +386,12 @@ function computeStats(state) {
 }
 
 function scoreItem(it) {
-  var ratingScore = it.rating == null ? 0 : it.rating * 8;
-  var sentimentScore = it.sentiment === "Positive" ? 35 : it.sentiment === "Neutral" ? 12 : -30;
-  var kwBoost = Math.min(25, (it.keywords ? it.keywords.length : 0) * 5);
-  var themeBoost = it.theme ? 8 : 0;
-  var managerBoost = it.managerRating == null ? 0 : it.managerRating * 6;
-  return ratingScore + sentimentScore + kwBoost + themeBoost + managerBoost;
+  var r = it.rating == null ? 0 : Number(it.rating);
+  if (r >= 5) return 10;
+  if (r >= 4) return 7;
+  if (r >= 3) return 3;
+  if (r >= 2) return 1;
+  return 0;
 }
 
 function computeLeaderboards(state, now) {
