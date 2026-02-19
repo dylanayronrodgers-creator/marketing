@@ -25,6 +25,7 @@
         <a class="navItem" href="#agents" data-view="agents">Agents &amp; Teams</a>
         <a class="navItem" href="#negative" data-view="negative">Negative (Internal)</a>
         <a class="navItem" href="#import" data-view="import">Agents Import / Config</a>
+        <a class="navItem" href="#settings" data-view="settings">Settings</a>
       </div>
     </aside>
 
@@ -35,10 +36,9 @@
           <div class="subtitle" id="viewSubtitle">High level health and pipeline</div>
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
-          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="color" id="brandColorPicker" style="width:32px; height:32px; border:none; background:none; cursor:pointer;" /><span class="btn" id="btnBrand">Theme</span></label>
           <button class="btn" id="resetBtn">Reset demo data</button>
-          <a class="btn primary" href="./tv.html">Open TV</a>
-          <a class="btn" href="./index.html">Home</a>
+          <a class="btn primary" href="./tv.html" target="_blank">Open TV</a>
+          <a class="btn" href="#settings" data-view="settings">Settings</a>
         </div>
       </div>
 
@@ -242,6 +242,85 @@
         </div>
       </section>
 
+      <section id="view-settings" style="display:none;">
+        <div class="sectionTitle">Admin Portal Theme</div>
+        <div class="split">
+          <div class="preview">
+            <div class="previewLabel">Brand Colour</div>
+            <div style="display:flex; gap:12px; align-items:center; margin-top:10px;">
+              <input type="color" id="settingBrandColor" style="width:48px; height:48px; border:none; cursor:pointer; background:none;" />
+              <div>
+                <div style="font-size:13px; font-weight:600;" id="settingBrandHex">#0099cc</div>
+                <div style="font-size:11px; color:var(--muted);">Used across admin portal and TV dashboard</div>
+              </div>
+            </div>
+            <div class="previewLabel" style="margin-top:16px;">Quick Presets</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;" id="colorPresets"></div>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Company Logo URL</div>
+            <div style="margin-top:10px;">
+              <input class="select" id="settingLogoUrl" placeholder="https://example.com/logo.png" style="font-size:12px;" />
+              <div style="margin-top:8px; display:flex; align-items:center; gap:12px;">
+                <img id="settingLogoPreview" src="" alt="Logo preview" style="height:40px; max-width:160px; object-fit:contain; display:none;" />
+                <span style="font-size:11px; color:var(--muted);" id="settingLogoStatus">Enter a URL to preview</span>
+              </div>
+            </div>
+            <div class="previewLabel" style="margin-top:16px;">Company Name</div>
+            <input class="select" id="settingCompanyName" placeholder="Axxess" style="margin-top:8px; font-size:12px;" />
+          </div>
+        </div>
+
+        <div class="sectionTitle" style="margin-top:20px;">TV Dashboard Customisation</div>
+        <div class="split">
+          <div class="preview">
+            <div class="previewLabel">TV Title &amp; Subtitle</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+              <input class="select" id="settingTvTitle" placeholder="Customer Recognition" style="font-size:12px;" />
+              <input class="select" id="settingTvSubtitle" placeholder="Live Dashboard" style="font-size:12px;" />
+            </div>
+
+            <div class="previewLabel" style="margin-top:16px;">Background Theme</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;" id="bgThemeOptions"></div>
+
+            <div class="previewLabel" style="margin-top:16px;">Slide Interval (seconds)</div>
+            <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+              <input type="range" id="settingSlideInterval" min="4" max="20" value="8" style="flex:1;" />
+              <span id="settingSlideLabel" style="font-size:13px; font-weight:600; min-width:30px;">8s</span>
+            </div>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">TV Layout</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;" id="tvLayoutOptions"></div>
+
+            <div class="previewLabel" style="margin-top:16px;">Show on TV</div>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="checkbox" id="settingShowStats" checked /> Stat cards row</label>
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="checkbox" id="settingShowWeekly" checked /> Weekly leaderboard</label>
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="checkbox" id="settingShowMonthly" checked /> Monthly leaders</label>
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="checkbox" id="settingShowHighlights" checked /> Live highlights</label>
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="checkbox" id="settingShowTicker" checked /> Footer ticker</label>
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="checkbox" id="settingShowClock" checked /> Clock</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="sectionTitle" style="margin-top:20px;">Ticker Customisation</div>
+        <div class="preview">
+          <div class="previewLabel">Custom Ticker Message (optional)</div>
+          <div style="margin-top:10px;">
+            <input class="select" id="settingTickerMsg" placeholder="e.g. Welcome to Axxess — Celebrating our amazing team!" style="font-size:12px; width:100%;" />
+            <div style="font-size:11px; color:var(--muted); margin-top:4px;">Leave blank to use auto-generated stats ticker. Custom message will be appended to stats.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; gap:10px;">
+          <button class="btn success" id="saveSettingsBtn" style="padding:10px 24px;">Save All Settings</button>
+          <button class="btn" id="resetSettingsBtn" style="padding:10px 24px;">Reset to Defaults</button>
+          <button class="btn primary" id="previewTvBtn" style="padding:10px 24px;">Preview TV Dashboard</button>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -252,7 +331,7 @@
   var state = loadState();
   root.style.setProperty("--brand", state.brand.primary);
 
-  var views = ["overview", "queue", "approved", "agents", "negative", "import"];
+  var views = ["overview", "queue", "approved", "agents", "negative", "import", "settings"];
   var viewTitle = document.getElementById("viewTitle");
   var viewSubtitle = document.getElementById("viewSubtitle");
 
@@ -262,7 +341,8 @@
     approved: document.getElementById("view-approved"),
     agents: document.getElementById("view-agents"),
     negative: document.getElementById("view-negative"),
-    import: document.getElementById("view-import")
+    import: document.getElementById("view-import"),
+    settings: document.getElementById("view-settings")
   };
 
   var subtitles = {
@@ -271,7 +351,8 @@
     approved: "Manage approved reviews shown on the TV dashboard",
     agents: "Manage agent directory and team mapping",
     negative: "Internal-only negative feedback themes",
-    import: "Import agents, configure review sources, and export reports"
+    import: "Import agents, configure review sources, and export reports",
+    settings: "Customise admin portal, TV dashboard, and branding"
   };
 
   function setActive(view) {
@@ -281,7 +362,7 @@
     document.querySelectorAll("#nav .navItem").forEach(function(a) {
       a.classList.toggle("active", a.getAttribute("data-view") === view);
     });
-    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)", import: "Import & Config" };
+    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)", import: "Import & Config", settings: "Settings" };
     viewTitle.textContent = titles[view] || view;
     viewSubtitle.textContent = subtitles[view] || "";
   }
@@ -830,23 +911,218 @@
 
   renderAll();
 
-  // --- THEME COLOR PICKER ---
-  var brandColorPicker = document.getElementById("brandColorPicker");
-  brandColorPicker.value = state.brand.primary || "#0099cc";
+  // --- SETTINGS ---
+  var TV_CONFIG_KEY = "axxess_tv_config";
 
-  document.getElementById("btnBrand").addEventListener("click", function() {
-    brandColorPicker.click();
-  });
+  var defaultTvConfig = {
+    brandColor: "#0099cc",
+    logoUrl: "https://i.ibb.co/fGy3TCJd/logo-axxess-1.png",
+    companyName: "Axxess",
+    tvTitle: "Customer Recognition",
+    tvSubtitle: "",
+    bgTheme: "dark",
+    layout: "default",
+    slideInterval: 8,
+    showStats: true,
+    showWeekly: true,
+    showMonthly: true,
+    showHighlights: true,
+    showTicker: true,
+    showClock: true,
+    tickerMsg: ""
+  };
 
-  brandColorPicker.addEventListener("input", function() {
-    var color = brandColorPicker.value;
-    state = updateBrandPrimary(color);
-    root.style.setProperty("--brand", color);
+  function loadTvConfig() {
+    try { var c = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)); return Object.assign({}, defaultTvConfig, c || {}); } catch(e) { return Object.assign({}, defaultTvConfig); }
+  }
+
+  function saveTvConfig(cfg) {
+    localStorage.setItem(TV_CONFIG_KEY, JSON.stringify(cfg));
+  }
+
+  var tvConfig = loadTvConfig();
+
+  // Color presets
+  var presetColors = [
+    { label: "Axxess Blue", color: "#0099cc" },
+    { label: "Ocean", color: "#0ea5e9" },
+    { label: "Emerald", color: "#10b981" },
+    { label: "Purple", color: "#8b5cf6" },
+    { label: "Rose", color: "#f43f5e" },
+    { label: "Amber", color: "#f59e0b" },
+    { label: "Indigo", color: "#6366f1" },
+    { label: "Teal", color: "#14b8a6" },
+    { label: "Slate", color: "#64748b" },
+    { label: "Orange", color: "#f97316" }
+  ];
+
+  var bgThemes = [
+    { id: "dark", label: "Dark Navy", colors: "#0f172a → #1e293b" },
+    { id: "midnight", label: "Midnight", colors: "#020617 → #0f172a" },
+    { id: "charcoal", label: "Charcoal", colors: "#18181b → #27272a" },
+    { id: "ocean", label: "Deep Ocean", colors: "#0c1222 → #162032" },
+    { id: "forest", label: "Forest", colors: "#052e16 → #14532d" },
+    { id: "wine", label: "Wine", colors: "#1c0a1a → #2d1228" }
+  ];
+
+  var tvLayouts = [
+    { id: "default", label: "Default (Leaderboard + Highlights)" },
+    { id: "highlights-only", label: "Highlights Only (Full Width)" },
+    { id: "leaderboard-only", label: "Leaderboard Only (Full Width)" }
+  ];
+
+  function renderSettings() {
+    var cfg = tvConfig;
+
+    // Brand color
+    var brandInput = document.getElementById("settingBrandColor");
+    brandInput.value = cfg.brandColor;
+    document.getElementById("settingBrandHex").textContent = cfg.brandColor;
+
+    brandInput.addEventListener("input", function() {
+      document.getElementById("settingBrandHex").textContent = brandInput.value;
+    });
+
+    // Color presets
+    document.getElementById("colorPresets").innerHTML = presetColors.map(function(p) {
+      var isActive = cfg.brandColor.toLowerCase() === p.color.toLowerCase();
+      return '<div data-preset-color="' + p.color + '" style="cursor:pointer; width:36px; height:36px; border-radius:8px; background:' + p.color + '; border:2px solid ' + (isActive ? 'white' : 'transparent') + '; display:flex; align-items:center; justify-content:center;" title="' + p.label + '">' + (isActive ? '<span style="color:white; font-size:14px;">✓</span>' : '') + '</div>';
+    }).join("");
+
+    document.querySelectorAll("[data-preset-color]").forEach(function(el) {
+      el.addEventListener("click", function() {
+        brandInput.value = el.getAttribute("data-preset-color");
+        document.getElementById("settingBrandHex").textContent = brandInput.value;
+        renderSettings();
+      });
+    });
+
+    // Logo
+    var logoInput = document.getElementById("settingLogoUrl");
+    logoInput.value = cfg.logoUrl;
+    var logoPreview = document.getElementById("settingLogoPreview");
+    var logoStatus = document.getElementById("settingLogoStatus");
+    if (cfg.logoUrl) {
+      logoPreview.src = cfg.logoUrl;
+      logoPreview.style.display = "block";
+      logoStatus.textContent = "Logo loaded";
+    }
+    logoInput.addEventListener("input", function() {
+      var url = logoInput.value.trim();
+      if (url) {
+        logoPreview.src = url;
+        logoPreview.style.display = "block";
+        logoPreview.onerror = function() { logoPreview.style.display = "none"; logoStatus.textContent = "Failed to load image"; };
+        logoPreview.onload = function() { logoStatus.textContent = "Logo loaded"; };
+      } else {
+        logoPreview.style.display = "none";
+        logoStatus.textContent = "Enter a URL to preview";
+      }
+    });
+
+    // Company name
+    document.getElementById("settingCompanyName").value = cfg.companyName;
+
+    // TV title/subtitle
+    document.getElementById("settingTvTitle").value = cfg.tvTitle;
+    document.getElementById("settingTvSubtitle").value = cfg.tvSubtitle;
+
+    // Background theme
+    document.getElementById("bgThemeOptions").innerHTML = bgThemes.map(function(t) {
+      var isActive = cfg.bgTheme === t.id;
+      return '<div data-bg-theme="' + t.id + '" style="cursor:pointer; padding:8px 14px; border-radius:8px; border:2px solid ' + (isActive ? 'var(--brand)' : 'var(--border)') + '; background:' + (isActive ? 'rgba(0,153,204,.1)' : 'transparent') + '; font-size:12px;">' +
+        '<div style="font-weight:600;">' + t.label + '</div>' +
+        '<div style="font-size:10px; color:var(--muted);">' + t.colors + '</div></div>';
+    }).join("");
+
+    document.querySelectorAll("[data-bg-theme]").forEach(function(el) {
+      el.addEventListener("click", function() {
+        cfg.bgTheme = el.getAttribute("data-bg-theme");
+        renderSettings();
+      });
+    });
+
+    // Layout
+    document.getElementById("tvLayoutOptions").innerHTML = tvLayouts.map(function(l) {
+      var isActive = cfg.layout === l.id;
+      return '<div data-tv-layout="' + l.id + '" style="cursor:pointer; padding:8px 14px; border-radius:8px; border:2px solid ' + (isActive ? 'var(--brand)' : 'var(--border)') + '; background:' + (isActive ? 'rgba(0,153,204,.1)' : 'transparent') + '; font-size:12px; font-weight:' + (isActive ? '600' : '400') + ';">' + l.label + '</div>';
+    }).join("");
+
+    document.querySelectorAll("[data-tv-layout]").forEach(function(el) {
+      el.addEventListener("click", function() {
+        cfg.layout = el.getAttribute("data-tv-layout");
+        renderSettings();
+      });
+    });
+
+    // Slide interval
+    var slider = document.getElementById("settingSlideInterval");
+    slider.value = cfg.slideInterval;
+    document.getElementById("settingSlideLabel").textContent = cfg.slideInterval + "s";
+    slider.addEventListener("input", function() {
+      document.getElementById("settingSlideLabel").textContent = slider.value + "s";
+    });
+
+    // Checkboxes
+    document.getElementById("settingShowStats").checked = cfg.showStats;
+    document.getElementById("settingShowWeekly").checked = cfg.showWeekly;
+    document.getElementById("settingShowMonthly").checked = cfg.showMonthly;
+    document.getElementById("settingShowHighlights").checked = cfg.showHighlights;
+    document.getElementById("settingShowTicker").checked = cfg.showTicker;
+    document.getElementById("settingShowClock").checked = cfg.showClock;
+
+    // Ticker
+    document.getElementById("settingTickerMsg").value = cfg.tickerMsg;
+  }
+
+  renderSettings();
+
+  // Save settings
+  document.getElementById("saveSettingsBtn").addEventListener("click", function() {
+    tvConfig = {
+      brandColor: document.getElementById("settingBrandColor").value,
+      logoUrl: document.getElementById("settingLogoUrl").value.trim(),
+      companyName: document.getElementById("settingCompanyName").value.trim() || "Axxess",
+      tvTitle: document.getElementById("settingTvTitle").value.trim() || "Customer Recognition",
+      tvSubtitle: document.getElementById("settingTvSubtitle").value.trim(),
+      bgTheme: tvConfig.bgTheme,
+      layout: tvConfig.layout,
+      slideInterval: parseInt(document.getElementById("settingSlideInterval").value) || 8,
+      showStats: document.getElementById("settingShowStats").checked,
+      showWeekly: document.getElementById("settingShowWeekly").checked,
+      showMonthly: document.getElementById("settingShowMonthly").checked,
+      showHighlights: document.getElementById("settingShowHighlights").checked,
+      showTicker: document.getElementById("settingShowTicker").checked,
+      showClock: document.getElementById("settingShowClock").checked,
+      tickerMsg: document.getElementById("settingTickerMsg").value.trim()
+    };
+    saveTvConfig(tvConfig);
+
+    // Also update admin brand color
+    state = updateBrandPrimary(tvConfig.brandColor);
+    root.style.setProperty("--brand", tvConfig.brandColor);
     renderAll();
+    renderSettings();
+    showToast("All settings saved. TV dashboard will update on next refresh.", "success");
   });
 
-  brandColorPicker.addEventListener("change", function() {
-    showToast("Brand color updated to " + brandColorPicker.value, "success");
+  // Reset settings
+  document.getElementById("resetSettingsBtn").addEventListener("click", function() {
+    if (!confirm("Reset all settings to defaults?")) return;
+    tvConfig = Object.assign({}, defaultTvConfig);
+    saveTvConfig(tvConfig);
+    state = updateBrandPrimary(tvConfig.brandColor);
+    root.style.setProperty("--brand", tvConfig.brandColor);
+    renderAll();
+    renderSettings();
+    showToast("Settings reset to defaults", "success");
+  });
+
+  // Preview TV
+  document.getElementById("previewTvBtn").addEventListener("click", function() {
+    // Save first
+    document.getElementById("saveSettingsBtn").click();
+    setTimeout(function() { window.open("./tv.html", "_blank"); }, 200);
   });
 
   // --- RESET ---

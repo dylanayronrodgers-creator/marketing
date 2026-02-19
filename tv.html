@@ -10,7 +10,7 @@
   <style>
     * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      background: var(--tv-bg, linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%));
       min-height: 100vh;
       color: white;
       overflow: hidden;
@@ -374,6 +374,75 @@
   <script src="./app.js"></script>
   <script>
 (function() {
+  // --- LOAD TV CONFIG ---
+  var TV_CONFIG_KEY = "axxess_tv_config";
+  var tvCfg;
+  try { tvCfg = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)) || {}; } catch(e) { tvCfg = {}; }
+
+  // Background themes
+  var bgMap = {
+    dark: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+    midnight: "linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%)",
+    charcoal: "linear-gradient(135deg, #18181b 0%, #27272a 50%, #18181b 100%)",
+    ocean: "linear-gradient(135deg, #0c1222 0%, #162032 50%, #0c1222 100%)",
+    forest: "linear-gradient(135deg, #052e16 0%, #14532d 50%, #052e16 100%)",
+    wine: "linear-gradient(135deg, #1c0a1a 0%, #2d1228 50%, #1c0a1a 100%)"
+  };
+
+  // Apply background
+  if (tvCfg.bgTheme && bgMap[tvCfg.bgTheme]) {
+    document.body.style.background = bgMap[tvCfg.bgTheme];
+  }
+
+  // Apply logo
+  var logoEl = document.querySelector(".tv-header .logo");
+  if (tvCfg.logoUrl && logoEl) logoEl.src = tvCfg.logoUrl;
+
+  // Apply title
+  var titleEl = document.querySelector(".tv-header .title");
+  if (tvCfg.tvTitle && titleEl) titleEl.textContent = tvCfg.tvTitle;
+
+  // Apply brand color to accent elements
+  if (tvCfg.brandColor) {
+    document.documentElement.style.setProperty("--tv-brand", tvCfg.brandColor);
+  }
+
+  // Apply page title
+  if (tvCfg.companyName) document.title = tvCfg.companyName + " - " + (tvCfg.tvTitle || "Customer Recognition Dashboard");
+
+  // Visibility toggles
+  var statRow = document.querySelector(".stat-row");
+  if (statRow && tvCfg.showStats === false) statRow.style.display = "none";
+
+  var footerEl = document.querySelector(".tv-footer");
+  if (footerEl && tvCfg.showTicker === false) footerEl.style.display = "none";
+
+  var clockContainer = document.querySelector(".tv-header .clock");
+  if (clockContainer && tvCfg.showClock === false) clockContainer.style.display = "none";
+
+  // Layout adjustments
+  var tvMain = document.querySelector(".tv-main");
+  var tvLeft = document.querySelector(".tv-left");
+  var highlightCard = tvMain ? tvMain.querySelector(":scope > .tv-card.glass.grow") : null;
+
+  if (tvCfg.layout === "highlights-only" && tvMain && tvLeft) {
+    tvLeft.style.display = "none";
+    tvMain.style.gridTemplateColumns = "1fr";
+  } else if (tvCfg.layout === "leaderboard-only" && tvMain && highlightCard) {
+    highlightCard.style.display = "none";
+    tvMain.style.gridTemplateColumns = "1fr";
+  }
+
+  // Weekly/Monthly visibility within left panel
+  if (tvLeft) {
+    var weeklyCard = tvLeft.querySelector(".tv-card.glass.grow");
+    var monthlyCard = tvLeft.querySelector(".tv-card.glass:not(.grow)");
+    if (weeklyCard && tvCfg.showWeekly === false) weeklyCard.style.display = "none";
+    if (monthlyCard && tvCfg.showMonthly === false) monthlyCard.style.display = "none";
+  }
+
+  if (highlightCard && tvCfg.showHighlights === false) highlightCard.style.display = "none";
+
   var state = loadState();
   var elWeek = document.getElementById("tvWeek");
   var elWeekSmall = document.getElementById("tvWeekSmall");
@@ -386,7 +455,7 @@
   var clockEl = document.getElementById("clock");
   var highlightIdx = 0;
   var highlights = [];
-  var SLIDE_INTERVAL = 8000;
+  var SLIDE_INTERVAL = (tvCfg.slideInterval || 8) * 1000;
   var lastStateHash = "";
 
   // Clock
@@ -484,6 +553,7 @@
       "Total: " + state.items.length,
       stats.avgSentiment
     ];
+    if (tvCfg.tickerMsg) tickerItems.push(tvCfg.tickerMsg);
     var loop = tickerItems.concat(tickerItems).concat(tickerItems);
     ticker.textContent = loop.map(function(t) { return "     ·     " + t; }).join("");
   }
