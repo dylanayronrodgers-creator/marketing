@@ -24,7 +24,7 @@
         <a class="navItem" href="#approved" data-view="approved">Approved Reviews</a>
         <a class="navItem" href="#agents" data-view="agents">Agents &amp; Teams</a>
         <a class="navItem" href="#negative" data-view="negative">Negative (Internal)</a>
-        <a class="navItem" href="#import" data-view="import">Import / Export</a>
+        <a class="navItem" href="#import" data-view="import">Agents Import / Config</a>
       </div>
     </aside>
 
@@ -159,26 +159,62 @@
         </div>
       </section>
       <section id="view-import" style="display:none;">
-        <div class="sectionTitle">Import Feedback</div>
+        <div class="sectionTitle">Import Agents from Excel / CSV</div>
         <div class="split">
           <div class="preview">
-            <div class="previewLabel">Mass Import Email Feedback</div>
-            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Paste email feedback below (one per line). Format: <strong>reviewer name | rating (1-5) | feedback text</strong></div>
-            <textarea id="emailImportText" class="select" rows="8" style="width:100%; resize:vertical; font-size:12px;" placeholder="John Smith | 5 | Great service from the support team!&#10;Jane Doe | 4 | Fast installation, very happy&#10;Bob Wilson | 2 | Waited too long for a response"></textarea>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-              <select class="select" id="importTeam" style="flex:1;"></select>
-              <button class="btn success" id="importEmailBtn" style="flex:0 0 auto;">Import Feedback</button>
-            </div>
-            <div id="importResult" style="margin-top:10px; font-size:12px;"></div>
+            <div class="previewLabel">Upload Agent List</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Upload an <strong>.xlsx, .xls, or .csv</strong> file with agent data. Expected columns: <strong>name</strong> (required), email, team. Columns are auto-detected.</div>
+            <input type="file" id="agentFileInput" accept=".xlsx,.xls,.csv" class="select" style="padding:8px;" />
+            <button class="btn" id="agentPreviewBtn" style="margin-top:10px; width:100%;">Preview Agents</button>
+            <div id="agentPreviewArea" style="margin-top:10px; max-height:320px; overflow:auto; font-size:12px;"></div>
+            <button class="btn success" id="agentConfirmBtn" style="margin-top:10px; width:100%; display:none;">Confirm Import</button>
+            <div id="agentImportResult" style="margin-top:10px; font-size:12px;"></div>
           </div>
           <div class="preview">
-            <div class="previewLabel">Import from Excel / CSV</div>
-            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Upload an <strong>.xlsx, .xls, or .csv</strong> file. Columns are auto-detected from the header row. Expected: <strong>name, rating, text</strong> (team, agent optional).</div>
-            <input type="file" id="fileImportInput" accept=".xlsx,.xls,.csv" class="select" style="padding:8px;" />
-            <button class="btn" id="filePreviewBtn" style="margin-top:10px; width:100%;">Preview File</button>
-            <div id="filePreviewArea" style="margin-top:10px; max-height:300px; overflow:auto; font-size:12px;"></div>
-            <button class="btn success" id="fileConfirmBtn" style="margin-top:10px; width:100%; display:none;">Confirm Import</button>
-            <div id="fileResult" style="margin-top:10px; font-size:12px;"></div>
+            <div class="previewLabel">Assign Imported Agents to Teams</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">After previewing, you can assign a default team to agents that don't have one in the file.</div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:11px; color:var(--muted);">Default team for agents without a team column:</label>
+              <select class="select" id="agentImportDefaultTeam" style="margin-top:4px;"></select>
+            </div>
+            <div class="previewLabel" style="margin-top:16px;">Quick Stats</div>
+            <div id="agentImportStats" style="font-size:12px; color:var(--muted);">Upload a file to see stats.</div>
+          </div>
+        </div>
+
+        <div class="sectionTitle" style="margin-top:20px;">Review Sources</div>
+        <div class="split">
+          <div class="preview">
+            <div class="previewLabel">SerpAPI (Active)</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Reviews are scraped automatically via SerpAPI every 12 hours using GitHub Actions. Sorted by newest first.</div>
+            <div style="font-size:11px; margin-bottom:6px;">
+              <strong>Status:</strong> <span style="color:#22c55e;">Configured</span><br>
+              <strong>Schedule:</strong> Every 12 hours (6 AM / 6 PM UTC)<br>
+              <strong>Sort:</strong> Newest first<br>
+              <strong>Pages per run:</strong> 3 (~30 reviews)
+            </div>
+            <div class="previewText" style="font-size:11px; color:var(--muted);">To run manually: GitHub repo &rarr; Actions &rarr; "Scrape Google Reviews" &rarr; Run workflow</div>
+          </div>
+          <div class="preview">
+            <div class="previewLabel">Google Places API (Direct)</div>
+            <div class="previewText" style="font-size:12px; color:var(--muted); margin-bottom:10px;">Connect directly to Google's Places API for real-time review fetching. Requires a Google Cloud API key with Places API enabled.</div>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:11px; color:var(--muted);">Google API Key:</label>
+              <input class="select" id="googleApiKey" type="password" placeholder="AIza..." style="margin-top:4px; font-size:12px;" />
+            </div>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:11px; color:var(--muted);">Google Place ID:</label>
+              <input class="select" id="googlePlaceId" placeholder="ChIJ..." style="margin-top:4px; font-size:12px;" />
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn" id="saveGoogleConfigBtn" style="flex:1;">Save Config</button>
+              <button class="btn success" id="fetchGoogleReviewsBtn" style="flex:1;">Fetch Reviews Now</button>
+            </div>
+            <div id="googleApiResult" style="margin-top:8px; font-size:12px;"></div>
+            <div class="previewText" style="font-size:10px; color:var(--muted); margin-top:8px;">
+              <strong>Setup:</strong> 1) Go to <a href="https://console.cloud.google.com" target="_blank" style="color:var(--brand);">Google Cloud Console</a>
+              2) Enable "Places API" 3) Create an API key 4) Restrict key to Places API only 5) Paste key above
+            </div>
           </div>
         </div>
 
@@ -226,7 +262,7 @@
     approved: "Manage approved reviews shown on the TV dashboard",
     agents: "Manage agent directory and team mapping",
     negative: "Internal-only negative feedback themes",
-    import: "Import email feedback and export reports"
+    import: "Import agents, configure review sources, and export reports"
   };
 
   function setActive(view) {
@@ -236,7 +272,7 @@
     document.querySelectorAll("#nav .navItem").forEach(function(a) {
       a.classList.toggle("active", a.getAttribute("data-view") === view);
     });
-    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)", import: "Import / Export" };
+    var titles = { overview: "Overview", queue: "Approvals Queue", approved: "Approved Reviews", agents: "Agents & Teams", negative: "Negative (Internal)", import: "Import & Config" };
     viewTitle.textContent = titles[view] || view;
     viewSubtitle.textContent = subtitles[view] || "";
   }
@@ -603,6 +639,7 @@
     renderAgents();
     renderApproved();
     renderNegative();
+    renderAgentImportTeams();
 
     var helpBanner = document.getElementById("helpBanner");
     if (helpBanner) helpBanner.style.display = state.items.length === 0 ? "block" : "none";
@@ -642,63 +679,8 @@
     });
   }
 
-  // --- IMPORT / EXPORT ---
+  // --- AGENT IMPORT ---
 
-  // Populate import team dropdown
-  function renderImportTeam() {
-    var importTeam = document.getElementById("importTeam");
-    if (importTeam) {
-      importTeam.innerHTML = state.teams.map(function(t) { return '<option value="' + t + '">' + t + '</option>'; }).join("");
-    }
-  }
-  renderImportTeam();
-
-  // Email Import
-  document.getElementById("importEmailBtn").addEventListener("click", function() {
-    var text = document.getElementById("emailImportText").value.trim();
-    var team = document.getElementById("importTeam").value;
-    if (!text) { showToast("Please paste feedback text", "error"); return; }
-
-    var lines = text.split("\n").filter(function(l) { return l.trim(); });
-    var imported = 0;
-
-    lines.forEach(function(line) {
-      var parts = line.split("|").map(function(p) { return p.trim(); });
-      var name = parts[0] || "Anonymous";
-      var rating = parts.length > 1 ? parseInt(parts[1]) : null;
-      if (rating && (rating < 1 || rating > 5)) rating = null;
-      var feedbackText = parts.length > 2 ? parts[2] : parts[0];
-
-      var sentiment = rating >= 4 ? "Positive" : rating === 3 ? "Neutral" : rating <= 2 ? "Negative" : "Neutral";
-      var status = sentiment === "Negative" ? "Flagged (Negative)" : "Pending";
-
-      var id = "EM-" + String(Date.now()).slice(-6) + "-" + String(imported);
-      state.items.push({
-        id: id,
-        createdAt: new Date().toISOString(),
-        source: "Email",
-        rating: rating,
-        sentiment: sentiment,
-        status: status,
-        agent: "Unknown",
-        team: team,
-        theme: "",
-        keywords: [],
-        tvSnippet: feedbackText.length > 120 ? feedbackText.substring(0, 120) + "..." : feedbackText,
-        text: feedbackText,
-        reviewerName: name
-      });
-      imported++;
-    });
-
-    saveState(state);
-    document.getElementById("emailImportText").value = "";
-    document.getElementById("importResult").innerHTML = '<span style="color:#22c55e;">Imported ' + imported + ' feedback items as "' + team + '"</span>';
-    renderAll();
-    showToast("Imported " + imported + " email feedback items", "success");
-  });
-
-  // Excel / CSV Import with Preview (uses SheetJS)
   function findColIdx(headers, names) {
     for (var n = 0; n < names.length; n++) {
       var idx = headers.indexOf(names[n]);
@@ -712,11 +694,17 @@
     return -1;
   }
 
-  var fileParsedRows = [];
-  var fileColMap = {};
+  // Populate default team dropdown
+  function renderAgentImportTeams() {
+    var dd = document.getElementById("agentImportDefaultTeam");
+    if (dd) dd.innerHTML = state.teams.map(function(t) { return '<option value="' + t + '">' + t + '</option>'; }).join("");
+  }
+  renderAgentImportTeams();
 
-  document.getElementById("filePreviewBtn").addEventListener("click", function() {
-    var fileInput = document.getElementById("fileImportInput");
+  var agentParsedRows = [];
+
+  document.getElementById("agentPreviewBtn").addEventListener("click", function() {
+    var fileInput = document.getElementById("agentFileInput");
     if (!fileInput.files || !fileInput.files[0]) { showToast("Please select a file first", "error"); return; }
 
     var file = fileInput.files[0];
@@ -732,105 +720,229 @@
         if (jsonRows.length < 2) { showToast("File needs a header row + at least 1 data row", "error"); return; }
 
         var headers = jsonRows[0].map(function(h) { return String(h).toLowerCase().replace(/[^a-z0-9]/g, ""); });
-        console.log("Sheet: " + sheetName + ", Headers:", headers);
+        console.log("Agent import headers:", headers);
 
-        fileColMap = {
-          name: findColIdx(headers, ["name", "reviewer", "customer", "from", "person", "client", "author"]),
-          rating: findColIdx(headers, ["rating", "score", "stars", "rate"]),
-          text: findColIdx(headers, ["text", "feedback", "comment", "review", "message", "body", "description", "note", "content"]),
-          team: findColIdx(headers, ["team", "department", "group", "division"]),
-          agent: findColIdx(headers, ["agent", "assignee", "rep", "representative", "employee", "staff"])
+        var colMap = {
+          name: findColIdx(headers, ["name", "fullname", "agent", "agentname", "employee", "staff", "person", "firstname"]),
+          email: findColIdx(headers, ["email", "emailaddress", "mail", "contact"]),
+          team: findColIdx(headers, ["team", "department", "group", "division", "unit", "section"])
         };
 
-        if (fileColMap.text < 0 && fileColMap.name < 0) {
+        if (colMap.name < 0) {
           var rawHeaders = jsonRows[0].map(function(h) { return String(h); }).join(", ");
-          showToast("Could not auto-detect columns. Found headers: " + rawHeaders, "error");
-          document.getElementById("filePreviewArea").innerHTML = '<div style="color:#f87171; font-size:12px;">Headers found: <strong>' + rawHeaders + '</strong><br>Expected at least one of: name, reviewer, customer, text, feedback, comment, review</div>';
+          showToast("Could not find a 'name' column.", "error");
+          document.getElementById("agentPreviewArea").innerHTML = '<div style="color:#f87171; font-size:12px;">Headers found: <strong>' + rawHeaders + '</strong><br>Expected a column named: name, fullname, agent, employee, staff</div>';
           return;
         }
 
-        fileParsedRows = [];
+        agentParsedRows = [];
+        var existingNames = state.agents.map(function(a) { return a.name.toLowerCase(); });
+        var duplicates = 0;
+
         for (var i = 1; i < jsonRows.length; i++) {
           var cols = jsonRows[i];
-          var allEmpty = cols.every(function(c) { return String(c).trim() === ""; });
-          if (allEmpty) continue;
+          var name = String(cols[colMap.name] || "").trim();
+          if (!name) continue;
 
-          var name = fileColMap.name >= 0 ? String(cols[fileColMap.name] || "Anonymous") : "Anonymous";
-          var rating = fileColMap.rating >= 0 ? parseInt(cols[fileColMap.rating]) : null;
-          if (rating !== null && (isNaN(rating) || rating < 1 || rating > 5)) rating = null;
-          var text = fileColMap.text >= 0 ? String(cols[fileColMap.text] || "") : String(cols[0] || "");
-          var team = fileColMap.team >= 0 ? String(cols[fileColMap.team] || "Unknown") : "Unknown";
-          var agent = fileColMap.agent >= 0 ? String(cols[fileColMap.agent] || "Unknown") : "Unknown";
+          var email = colMap.email >= 0 ? String(cols[colMap.email] || "").trim() : "";
+          var team = colMap.team >= 0 ? String(cols[colMap.team] || "").trim() : "";
+          var isDuplicate = existingNames.indexOf(name.toLowerCase()) >= 0;
+          if (isDuplicate) duplicates++;
 
-          fileParsedRows.push({ name: name, rating: rating, text: text, team: team, agent: agent });
+          agentParsedRows.push({ name: name, email: email, team: team, isDuplicate: isDuplicate });
         }
 
-        if (fileParsedRows.length === 0) { showToast("No valid data rows found", "error"); return; }
+        if (agentParsedRows.length === 0) { showToast("No valid agent rows found", "error"); return; }
 
-        // Column mapping info
-        var mapInfo = Object.keys(fileColMap).map(function(k) {
-          return '<span style="margin-right:10px;"><strong>' + k + ':</strong> ' + (fileColMap[k] >= 0 ? '"' + jsonRows[0][fileColMap[k]] + '" (col ' + (fileColMap[k] + 1) + ')' : '<span style="color:#f87171;">not found</span>') + '</span>';
+        // Column mapping
+        var mapInfo = Object.keys(colMap).map(function(k) {
+          return '<span style="margin-right:10px;"><strong>' + k + ':</strong> ' + (colMap[k] >= 0 ? '"' + jsonRows[0][colMap[k]] + '"' : '<span style="color:#f87171;">not found</span>') + '</span>';
         }).join("");
 
-        // Sheet info
-        var html = '<div style="margin-bottom:6px; font-size:11px; color:#94a3b8;">File: <strong>' + file.name + '</strong> &middot; Sheet: <strong>' + sheetName + '</strong> &middot; ' + workbook.SheetNames.length + ' sheet(s)</div>';
-        html += '<div style="margin-bottom:8px; font-size:11px; color:#64748b;">Column mapping: ' + mapInfo + '</div>';
-        html += '<div style="font-size:12px; font-weight:600; margin-bottom:6px; color:#22c55e;">' + fileParsedRows.length + ' rows ready to import</div>';
-        html += '<table class="table" style="font-size:11px;"><thead><tr><th>#</th><th>Name</th><th>Rating</th><th>Text</th><th>Team</th><th>Agent</th></tr></thead><tbody>';
-        var previewCount = Math.min(fileParsedRows.length, 15);
-        for (var j = 0; j < previewCount; j++) {
-          var r = fileParsedRows[j];
-          var shortText = r.text.length > 80 ? r.text.substring(0, 80) + "..." : r.text;
-          html += '<tr><td>' + (j + 1) + '</td><td>' + r.name + '</td><td>' + (r.rating || "\u2014") + '</td><td>' + shortText + '</td><td>' + r.team + '</td><td>' + r.agent + '</td></tr>';
+        // Stats
+        var teamsInFile = {};
+        agentParsedRows.forEach(function(r) { if (r.team) teamsInFile[r.team] = (teamsInFile[r.team] || 0) + 1; });
+        var newAgents = agentParsedRows.filter(function(r) { return !r.isDuplicate; }).length;
+        var statsHtml = '<div style="margin-top:6px;">';
+        statsHtml += '<div><strong>Total in file:</strong> ' + agentParsedRows.length + '</div>';
+        statsHtml += '<div style="color:#22c55e;"><strong>New agents:</strong> ' + newAgents + '</div>';
+        statsHtml += '<div style="color:#f59e0b;"><strong>Already exist (will skip):</strong> ' + duplicates + '</div>';
+        if (Object.keys(teamsInFile).length > 0) {
+          statsHtml += '<div style="margin-top:6px;"><strong>Teams in file:</strong></div>';
+          Object.keys(teamsInFile).forEach(function(t) {
+            var isNew = state.teams.indexOf(t) === -1;
+            statsHtml += '<div>&nbsp;&nbsp;' + t + ' (' + teamsInFile[t] + ')' + (isNew ? ' <span style="color:#22c55e; font-size:10px;">NEW</span>' : '') + '</div>';
+          });
         }
-        if (fileParsedRows.length > 15) html += '<tr><td colspan="6" style="text-align:center; color:#64748b;">... and ' + (fileParsedRows.length - 15) + ' more rows</td></tr>';
+        statsHtml += '</div>';
+        document.getElementById("agentImportStats").innerHTML = statsHtml;
+
+        // Preview table with inline team editing
+        var html = '<div style="margin-bottom:6px; font-size:11px; color:#94a3b8;">File: <strong>' + file.name + '</strong> &middot; Sheet: <strong>' + sheetName + '</strong></div>';
+        html += '<div style="margin-bottom:8px; font-size:11px; color:#64748b;">Columns: ' + mapInfo + '</div>';
+        html += '<table class="table" style="font-size:11px;"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Team</th><th>Status</th></tr></thead><tbody>';
+        var previewCount = Math.min(agentParsedRows.length, 20);
+        for (var j = 0; j < previewCount; j++) {
+          var r = agentParsedRows[j];
+          var statusBadge = r.isDuplicate ? '<span style="color:#f59e0b; font-size:10px;">EXISTS</span>' : '<span style="color:#22c55e; font-size:10px;">NEW</span>';
+          var teamDisplay = r.team || '<span style="color:#64748b; font-style:italic;">default</span>';
+          html += '<tr style="' + (r.isDuplicate ? 'opacity:0.5;' : '') + '"><td>' + (j + 1) + '</td><td>' + r.name + '</td><td>' + (r.email || '\u2014') + '</td><td>' + teamDisplay + '</td><td>' + statusBadge + '</td></tr>';
+        }
+        if (agentParsedRows.length > 20) html += '<tr><td colspan="5" style="text-align:center; color:#64748b;">... and ' + (agentParsedRows.length - 20) + ' more</td></tr>';
         html += '</tbody></table>';
 
-        document.getElementById("filePreviewArea").innerHTML = html;
-        document.getElementById("fileConfirmBtn").style.display = "block";
-        document.getElementById("fileResult").innerHTML = "";
+        document.getElementById("agentPreviewArea").innerHTML = html;
+        document.getElementById("agentConfirmBtn").style.display = newAgents > 0 ? "block" : "none";
+        document.getElementById("agentImportResult").innerHTML = newAgents === 0 ? '<span style="color:#f59e0b;">All agents already exist. Nothing to import.</span>' : "";
       } catch (err) {
         showToast("Error reading file: " + err.message, "error");
-        console.error("File import error:", err);
+        console.error("Agent import error:", err);
       }
     };
     reader.readAsArrayBuffer(file);
   });
 
-  document.getElementById("fileConfirmBtn").addEventListener("click", function() {
-    if (!fileParsedRows.length) { showToast("No data to import. Preview first.", "error"); return; }
+  document.getElementById("agentConfirmBtn").addEventListener("click", function() {
+    if (!agentParsedRows.length) { showToast("Preview first", "error"); return; }
 
+    var defaultTeam = document.getElementById("agentImportDefaultTeam").value || "Unknown";
     var imported = 0;
-    var ts = Date.now();
-    fileParsedRows.forEach(function(row) {
-      var sentiment = row.rating >= 4 ? "Positive" : row.rating === 3 ? "Neutral" : (row.rating != null && row.rating <= 2) ? "Negative" : "Neutral";
-      var status = sentiment === "Negative" ? "Flagged (Negative)" : "Pending";
-      state.items.push({
-        id: "IMP-" + String(ts).slice(-6) + "-" + String(imported),
-        createdAt: new Date().toISOString(),
-        source: "Email",
-        rating: row.rating,
-        sentiment: sentiment,
-        status: status,
-        agent: row.agent,
-        team: row.team,
-        theme: "",
-        keywords: [],
-        tvSnippet: row.text.length > 120 ? row.text.substring(0, 120) + "..." : row.text,
-        text: row.text,
-        reviewerName: row.name
+    var newTeams = [];
+
+    agentParsedRows.forEach(function(row) {
+      if (row.isDuplicate) return;
+      var team = row.team || defaultTeam;
+
+      // Auto-create team if it doesn't exist
+      if (state.teams.indexOf(team) === -1) {
+        state.teams.push(team);
+        newTeams.push(team);
+      }
+
+      state.agents.push({
+        id: "AG-" + String(Date.now()).slice(-6) + "-" + String(imported),
+        name: row.name,
+        team: team,
+        email: row.email || ""
       });
       imported++;
     });
 
     saveState(state);
-    document.getElementById("fileImportInput").value = "";
-    document.getElementById("filePreviewArea").innerHTML = "";
-    document.getElementById("fileConfirmBtn").style.display = "none";
-    document.getElementById("fileResult").innerHTML = '<span style="color:#22c55e;">Successfully imported ' + imported + ' rows</span>';
-    fileParsedRows = [];
+    document.getElementById("agentFileInput").value = "";
+    document.getElementById("agentPreviewArea").innerHTML = "";
+    document.getElementById("agentConfirmBtn").style.display = "none";
+    var msg = 'Imported ' + imported + ' agents';
+    if (newTeams.length > 0) msg += ' (created ' + newTeams.length + ' new team' + (newTeams.length > 1 ? 's' : '') + ': ' + newTeams.join(', ') + ')';
+    document.getElementById("agentImportResult").innerHTML = '<span style="color:#22c55e;">' + msg + '</span>';
+    document.getElementById("agentImportStats").innerHTML = "Upload a file to see stats.";
+    agentParsedRows = [];
     renderAll();
-    showToast("Imported " + imported + " items", "success");
+    showToast(msg, "success");
+  });
+
+  // --- GOOGLE PLACES API ---
+  var GOOGLE_CONFIG_KEY = "axxess_google_api_config";
+
+  function loadGoogleConfig() {
+    try { return JSON.parse(localStorage.getItem(GOOGLE_CONFIG_KEY)) || {}; } catch(e) { return {}; }
+  }
+
+  // Load saved config
+  var googleConfig = loadGoogleConfig();
+  var googleApiKeyInput = document.getElementById("googleApiKey");
+  var googlePlaceIdInput = document.getElementById("googlePlaceId");
+  if (googleConfig.apiKey) googleApiKeyInput.value = googleConfig.apiKey;
+  if (googleConfig.placeId) googlePlaceIdInput.value = googleConfig.placeId;
+
+  document.getElementById("saveGoogleConfigBtn").addEventListener("click", function() {
+    var apiKey = googleApiKeyInput.value.trim();
+    var placeId = googlePlaceIdInput.value.trim();
+    if (!apiKey) { showToast("Please enter a Google API key", "error"); return; }
+    if (!placeId) { showToast("Please enter a Google Place ID", "error"); return; }
+    localStorage.setItem(GOOGLE_CONFIG_KEY, JSON.stringify({ apiKey: apiKey, placeId: placeId }));
+    googleConfig = { apiKey: apiKey, placeId: placeId };
+    showToast("Google API config saved", "success");
+    document.getElementById("googleApiResult").innerHTML = '<span style="color:#22c55e;">Config saved. Click "Fetch Reviews Now" to test.</span>';
+  });
+
+  document.getElementById("fetchGoogleReviewsBtn").addEventListener("click", function() {
+    var apiKey = googleApiKeyInput.value.trim();
+    var placeId = googlePlaceIdInput.value.trim();
+    if (!apiKey || !placeId) { showToast("Please enter API key and Place ID first", "error"); return; }
+
+    var resultEl = document.getElementById("googleApiResult");
+    resultEl.innerHTML = '<span style="color:#64748b;">Fetching reviews from Google Places API...</span>';
+
+    // Google Places API (New) - Place Details with reviews
+    var url = "https://places.googleapis.com/v1/places/" + placeId + "?fields=displayName,rating,userRatingCount,reviews&key=" + apiKey;
+
+    fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(function(res) {
+      if (!res.ok) return res.json().then(function(err) { throw new Error(err.error ? err.error.message : "HTTP " + res.status); });
+      return res.json();
+    })
+    .then(function(data) {
+      if (!data.reviews || data.reviews.length === 0) {
+        resultEl.innerHTML = '<span style="color:#f59e0b;">No reviews returned. Check your Place ID and API key permissions.</span>';
+        return;
+      }
+
+      var imported = 0;
+      var existingIds = state.items.map(function(i) { return i.id; });
+
+      data.reviews.forEach(function(review) {
+        var rating = review.rating || 5;
+        var text = review.text ? (review.text.text || "") : "";
+        var authorName = review.authorAttribution ? review.authorAttribution.displayName : "Anonymous";
+        var authorPhoto = review.authorAttribution ? review.authorAttribution.photoUri : null;
+        var publishTime = review.publishTime || new Date().toISOString();
+
+        var uniqueId = "GAPI-" + authorName.replace(/[^a-z0-9]/gi, "").slice(0, 10) + "-" + publishTime.slice(0, 10).replace(/-/g, "");
+        if (existingIds.indexOf(uniqueId) >= 0) return;
+
+        var sentiment = rating >= 4 ? "Positive" : rating === 3 ? "Neutral" : "Negative";
+        var status = sentiment === "Negative" ? "Flagged (Negative)" : "Pending";
+        var tvSnippet = text.length > 120 ? text.substring(0, 120) + "..." : text;
+
+        state.items.push({
+          id: uniqueId,
+          createdAt: publishTime,
+          source: "Google",
+          rating: rating,
+          sentiment: sentiment,
+          status: status,
+          agent: "Unknown",
+          team: "Unknown",
+          theme: "",
+          keywords: [],
+          tvSnippet: tvSnippet,
+          text: text,
+          reviewerName: authorName,
+          reviewerThumbnail: authorPhoto
+        });
+        imported++;
+      });
+
+      saveState(state);
+      renderAll();
+
+      var placeRating = data.rating ? data.rating.toFixed(1) : "N/A";
+      var totalReviews = data.userRatingCount || "N/A";
+      resultEl.innerHTML = '<span style="color:#22c55e;">Fetched ' + data.reviews.length + ' reviews (' + imported + ' new). Business rating: ' + placeRating + ' (' + totalReviews + ' total)</span>';
+      if (imported > 0) showToast("Imported " + imported + " new Google reviews", "success");
+      else showToast("No new reviews to import", "success");
+    })
+    .catch(function(err) {
+      console.error("Google API error:", err);
+      resultEl.innerHTML = '<span style="color:#f87171;">Error: ' + err.message + '</span>';
+      if (err.message.indexOf("API key") >= 0 || err.message.indexOf("denied") >= 0) {
+        resultEl.innerHTML += '<br><span style="font-size:10px; color:#64748b;">Make sure the Places API (New) is enabled and the API key is not restricted to other APIs.</span>';
+      }
+    });
   });
 
   // Export helpers
