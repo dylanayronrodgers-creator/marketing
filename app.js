@@ -417,14 +417,17 @@ function computeLeaderboards(state, now) {
   var startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   var inWeek = approved.filter(function(i) { return new Date(i.createdAt) >= startOfWeek; });
-  var inMonth = approved.filter(function(i) { return new Date(i.createdAt) >= startOfMonth; });
+  // Use all approved items for monthly leaders - small datasets shouldn't be filtered too aggressively
+  var inMonth = approved.length <= 50 ? approved : approved.filter(function(i) { return new Date(i.createdAt) >= startOfMonth; });
 
   function byAgent(items) {
     var map = {};
     items.forEach(function(it) {
-      var agent = it.agent || "Unknown";
+      // For unassigned reviews, use reviewer name so they don't all collapse into one "Unknown" row
+      var agent = (it.agent && it.agent !== "Unknown") ? it.agent : (it.reviewerName || it.id || "Unknown");
+      var team = (it.agent && it.agent !== "Unknown") ? (it.team || "Unknown") : (it.team || "Google Review");
       if (!map[agent]) {
-        map[agent] = { agent: agent, team: it.team || "Unknown", score: 0, count: 0, themesMap: {} };
+        map[agent] = { agent: agent, team: team, score: 0, count: 0, themesMap: {} };
       }
       var row = map[agent];
       row.score += scoreItem(it);
