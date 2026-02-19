@@ -331,7 +331,7 @@
       qTeam.innerHTML = teamsList.map(function(t) { return '<option value="' + t + '"' + (t === savedTeam ? ' selected' : '') + '>' + t + '</option>'; }).join("");
     }
     if (qStatus) {
-      var statuses = ["All", "Pending", "On hold", "Approved", "Flagged (Negative)"];
+      var statuses = ["All", "Pending", "On hold"];
       qStatus.innerHTML = statuses.map(function(s) { return '<option value="' + s + '"' + (s === savedStatus ? ' selected' : '') + '>' + s + '</option>'; }).join("");
     }
   }
@@ -343,7 +343,7 @@
     var status = qStatus && qStatus.value || "All";
 
     return state.items
-      .filter(function(i) { return i.status !== "Approved" || i.sentiment === "Negative"; })
+      .filter(function(i) { return i.status === "Pending" || i.status === "On hold"; })
       .filter(function(i) { return source === "All" || i.source === source; })
       .filter(function(i) { return team === "All" || i.team === team; })
       .filter(function(i) { return status === "All" || i.status === status; })
