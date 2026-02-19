@@ -60,11 +60,11 @@ function updateCache() {
   }, null, 2));
 }
 
-async function fetchJSON(url, retries = 3) {
+async function fetchJSON(url, retries = 4) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
-        const req = https.get(url, { timeout: 60000 }, (res) => {
+        const req = https.get(url, { timeout: 120000 }, (res) => {
           if (res.statusCode !== 200) {
             reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
             return;
@@ -85,8 +85,9 @@ async function fetchJSON(url, retries = 3) {
       return result;
     } catch (err) {
       if (attempt < retries) {
-        console.log(`   ⚠️ Attempt ${attempt + 1} failed: ${err.message}. Retrying in 5s...`);
-        await new Promise(r => setTimeout(r, 5000));
+        const delay = 10 + (attempt * 5);
+        console.log(`   ⚠️ Attempt ${attempt + 1} failed: ${err.message}. Retrying in ${delay}s...`);
+        await new Promise(r => setTimeout(r, delay * 1000));
       } else {
         throw err;
       }
