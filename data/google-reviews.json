@@ -1,11 +1,72 @@
 {
-  "scrapedAt": "2026-02-17T19:01:03.812Z",
+  "scrapedAt": "2026-02-19T11:20:36.290Z",
   "businessName": "Axxess",
   "overallRating": 4.5,
-  "totalReviews": 5643,
+  "totalReviews": 5645,
   "scrapedCount": 28,
   "dataId": "0x1e7ad23632467f91:0x57bec90a7dc50866",
   "reviews": [
+    {
+      "id": "GR-68165914-20260219",
+      "createdAt": "2026-02-19T05:19:12Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great service",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "Have been with Axxess for over a decade. A dedicated and caring service provider. Haven't had a single issue with them.",
+      "text": "Have been with Axxess for over a decade. A dedicated and caring service provider. Haven't had a single issue with them.",
+      "reviewerName": "Harichand Somaroo",
+      "reviewerLink": "https://www.google.com/maps/contrib/107186797656668165914?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLqxywicRT8IrFr97g4opsO6hu7ybc8dIQwuK9PECaww8Ww6Q=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-64425774-20260219",
+      "createdAt": "2026-02-19T05:14:20Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "great",
+        "helpful"
+      ],
+      "tvSnippet": "I have been with Axxess for years and have always had great service and your staff are always super helpful",
+      "text": "I have been with Axxess for years and have always had great service and your staff are always super helpful",
+      "reviewerName": "Suzanne Codd",
+      "reviewerLink": "https://www.google.com/maps/contrib/109817282175564425774?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLIXf1OzluQJO15mEgWE4oz082pckPBIjEJviyWCaYJFFTX3Q=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-51981737-20240716",
+      "createdAt": "2024-07-16T19:37:16Z",
+      "source": "Google",
+      "rating": 3,
+      "sentiment": "Neutral",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "",
+      "text": "",
+      "reviewerName": "Sheridan Hayidakis",
+      "reviewerLink": "https://www.google.com/maps/contrib/113743885079251981737?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVWj2spE5w2Z4JeHr2gKiqRHGM34YrUQchQd3xtf_9ERhdV-znKkQ=s120-c-rp-mo-br100",
+      "likes": 0
+    },
     {
       "id": "GR-17964904-20260213",
       "createdAt": "2026-02-13T08:30:14Z",
@@ -28,27 +89,6 @@
       "likes": 0
     },
     {
-      "id": "GR-88498657-20260212",
-      "createdAt": "2026-02-12T12:19:02Z",
-      "source": "Google",
-      "rating": 2,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Smooth installation",
-      "keywords": [
-        "bad",
-        "delayed"
-      ],
-      "tvSnippet": "Had a wonderful service duration up until my move date. Because Openserve had issues with my address (which is the only ...",
-      "text": "Had a wonderful service duration up until my move date. Because Openserve had issues with my address (which is the only thing I got from my rental agency) when we moved in, my install was delayed for 2 months when I moved in. Now I am moving and apparently my service can't be moved, it has to be cancelled and also reapplied for at the new premises, meaning I need to pay double for fibre. Just make sure you understand this process before you get into this contract, you can't move it, you have to let it run for the duration of the year whether you live there or not. And you'll be paying double for a new service at your new flat.\n\nUPDATE: At least you can cancel with a calendar's month notice and you can get a new service some place else with reduced first month payment so the fact that you'll be essentially paying for fibre at a premises you no longer live at isn't so bad. Also, they only account your install date, not the actual application date which in my case was 6 weeks. Sorry that a wonderful service had to come to such an end.",
-      "reviewerName": "Gerda",
-      "reviewerLink": "https://www.google.com/maps/contrib/105141208635488498657?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjXqi0oV-3wPs5JpsXLtc3nei4Z2qTt0qGZhycQIjrFshho4gjE=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
       "id": "GR-72785234-20220323",
       "createdAt": "2022-03-23T17:16:37Z",
       "source": "Google",
@@ -66,26 +106,6 @@
       "reviewerName": "Mark Groch",
       "reviewerLink": "https://www.google.com/maps/contrib/103958576524172785234?hl=en-US",
       "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWhNVQNvdjUWpRBVUGf3v_wmV_311vlHklRgSb0c00yKvf-jyc=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-32303456-20260211",
-      "createdAt": "2026-02-11T15:04:29Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "Special recognition goes to Shane in Technical Support (if I'm not mistaken). I have been reaching out to Axxess Account...",
-      "text": "Special recognition goes to Shane in Technical Support (if I'm not mistaken). I have been reaching out to Axxess Accounts for days with no real help, and this afternoon Shane took the time to investigate my issue and resolve it. This is what real customer care is about. Kudos Shane!",
-      "reviewerName": "Nanah B",
-      "reviewerLink": "https://www.google.com/maps/contrib/105900170153332303456?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjX79yxP_cJ9aVdowwc7oiqwgw_pk-5Q8L7ngrGy1USLhq763F1k=s120-c-rp-mo-ba4-br100",
       "likes": 0
     },
     {
@@ -129,27 +149,6 @@
       "likes": 0
     },
     {
-      "id": "GR-76611397-20240902",
-      "createdAt": "2024-09-02T12:32:11Z",
-      "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great support",
-      "keywords": [
-        "helpful",
-        "good"
-      ],
-      "tvSnippet": "They give really good customer service never had a problem with their service. Staff are always helpful",
-      "text": "They give really good customer service never had a problem with their service. Staff are always helpful",
-      "reviewerName": "Zainab Jacobs",
-      "reviewerLink": "https://www.google.com/maps/contrib/116501182921676611397?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKWQE_cRiWHL0p484qKOSI3go9aZdB2-VHC_ljYFnFaLJHyTQ=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
       "id": "GR-87374418-20260204",
       "createdAt": "2026-02-04T07:58:30Z",
       "source": "Google",
@@ -187,26 +186,6 @@
       "reviewerName": "Ralton Adams",
       "reviewerLink": "https://www.google.com/maps/contrib/107621177982528341862?hl=en",
       "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJ9LjDp7iKO0-Zdli8Gzi0rPkFdi35HmDFQNMcJEYGayBUgrQ=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-52947959-20260202",
-      "createdAt": "2026-02-02T13:44:42Z",
-      "source": "Google",
-      "rating": 2,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Needs improvement",
-      "keywords": [
-        "poor"
-      ],
-      "tvSnippet": "Service is poor",
-      "text": "Service is poor",
-      "reviewerName": "Greg Blandford",
-      "reviewerLink": "https://www.google.com/maps/contrib/102521382485752947959?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjV_mZuWkCUTyMTmbP2c7sCoUaiyO83xHU5cfkVTKT5qJ000BbR-yg=s120-c-rp-mo-ba4-br100",
       "likes": 0
     },
     {
@@ -267,6 +246,28 @@
       "reviewerName": "Rochelle Shepherd",
       "reviewerLink": "https://www.google.com/maps/contrib/109354790521248981949?hl=en",
       "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVW5IXRqmMD7_mchP6pANr7K0GJOW6n3OSfaMgUj9PZm9KxnUFulg=s120-c-rp-mo-ba5-br100",
+      "likes": 0
+    },
+    {
+      "id": "GR-83156707-20260125",
+      "createdAt": "2026-01-25T08:42:33Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "excellent",
+        "good",
+        "bad"
+      ],
+      "tvSnippet": "Excellent service which is what saves any situation.\nI rely heavily on connectivity and our line speed had been bad for ...",
+      "text": "Excellent service which is what saves any situation.\nI rely heavily on connectivity and our line speed had been bad for a while. We'd have the line reset, reboot the router, have good speeds and then it would drop shortly after.\n\nOn Friday morning I reported the issue via WhatsApp (very convenient!l). After attempting two line resets a ticket was logged at 12:00. At 12:15 I received a call from Marvel with the cause (hight traffic) and a solution (router upgrade). By 13:15 I collected my new router from Marvel at their offices.\n\nThanks for the continued support with your services.",
+      "reviewerName": "Jason Howard",
+      "reviewerLink": "https://www.google.com/maps/contrib/118203291511483156707?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjUqjl7qmSJSANGykNTgAxbhCynR6W5IXtR2Qdn_URAlnEPKjDvF=s120-c-rp-mo-ba3-br100",
       "likes": 0
     },
     {
