@@ -6,22 +6,28 @@
   <title>Axxess - Customer Recognition Dashboard</title>
   <link rel="stylesheet" href="./styles.css" />
   <style>
+    :root { --brand: #0099cc; }
     body {
-      background: #f1f5f9;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
     .launch {
-      background: transparent;
+      width: 100%;
+      max-width: 720px;
     }
     .launchCard {
       background: white;
-      box-shadow: 0 4px 20px rgba(0,0,0,.08);
-      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      border-radius: 16px;
       overflow: hidden;
     }
     .launchHeader {
-      background: #0099cc;
-      padding: 28px 32px;
+      background: var(--brand);
+      padding: 32px 36px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -32,15 +38,15 @@
       gap: 16px;
     }
     .launchHeader .logo {
-      height: 44px;
-      border-radius: 6px;
+      height: 48px;
+      border-radius: 8px;
       background: white;
       padding: 4px;
     }
     .launchHeader .title {
       color: white;
       font-size: 22px;
-      font-weight: 700;
+      font-weight: 800;
     }
     .launchHeader .subtitle {
       color: rgba(255,255,255,.75);
@@ -51,9 +57,10 @@
       background: rgba(255,255,255,.15);
       color: white;
       padding: 8px 16px;
-      border-radius: 6px;
+      border-radius: 8px;
       font-weight: 600;
       font-size: 12px;
+      backdrop-filter: blur(4px);
     }
     
     .launchBody {
@@ -62,11 +69,11 @@
     .launchGrid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 16px;
     }
     .bigLink {
       padding: 24px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid #e2e8f0;
       background: #fafbfc;
       display: flex;
@@ -76,9 +83,20 @@
       text-decoration: none;
     }
     .bigLink:hover {
-      border-color: #0099cc;
+      border-color: var(--brand);
       background: #f0f9ff;
-      box-shadow: 0 4px 12px rgba(0,153,204,.1);
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+      transform: translateY(-2px);
+    }
+    .bigLinkIcon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 4px;
     }
     .bigLinkTitle {
       font-weight: 700;
@@ -92,41 +110,110 @@
     }
     .bigLinkArrow {
       margin-top: 8px;
-      color: #0099cc;
+      color: var(--brand);
       font-weight: 600;
       font-size: 13px;
+    }
+    .launchStats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .launchStat {
+      text-align: center;
+    }
+    .launchStatValue {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+    .launchStatLabel {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    @media (max-width: 600px) {
+      .launchGrid { grid-template-columns: 1fr; }
+      .launchStats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
   <div class="launch">
     <div class="launchCard">
-      <div class="launchHeader">
+      <div class="launchHeader" id="launchHeader">
         <div class="brand">
-          <img class="logo" src="https://i.ibb.co/1GrhnMc4/images.jpg" alt="Axxess" />
+          <img class="logo" id="launchLogo" src="https://i.ibb.co/1GrhnMc4/images.jpg" alt="Logo" />
           <div class="titleBlock">
-            <div class="title">Customer Recognition Dashboard</div>
-            <div class="subtitle">Marketing Team Portal</div>
+            <div class="title" id="launchTitle">Customer Recognition Dashboard</div>
+            <div class="subtitle" id="launchSubtitle">Marketing Team Portal</div>
           </div>
         </div>
-        <div class="badge">Prototype v1.0</div>
+        <div class="badge">Live</div>
       </div>
 
       <div class="launchBody">
         <div class="launchGrid">
-          <a class="bigLink" href="./tv.html">
+          <a class="bigLink" href="./tv.html" target="_blank">
+            <div class="bigLinkIcon" style="background:rgba(59,130,246,.1); color:#3b82f6;">&#9733;</div>
             <div class="bigLinkTitle">TV Dashboard</div>
             <div class="bigLinkDesc">Full-screen display for the office showing weekly top performers, customer highlights, and monthly leaders.</div>
-            <div class="bigLinkArrow">Open Dashboard →</div>
+            <div class="bigLinkArrow">Open Dashboard &rarr;</div>
           </a>
           <a class="bigLink" href="./admin.html">
+            <div class="bigLinkIcon" style="background:rgba(16,185,129,.1); color:#10b981;">&#9881;</div>
             <div class="bigLinkTitle">Manager Portal</div>
-            <div class="bigLinkDesc">Review and approve feedback, manage agents and teams, view internal reports.</div>
-            <div class="bigLinkArrow">Open Portal →</div>
+            <div class="bigLinkDesc">Review and approve feedback, manage agents and teams, import agents, configure settings, and export reports.</div>
+            <div class="bigLinkArrow">Open Portal &rarr;</div>
           </a>
+        </div>
+
+        <div class="launchStats" id="launchStats">
+          <div class="launchStat"><div class="launchStatValue" id="lsTotal">-</div><div class="launchStatLabel">Total Reviews</div></div>
+          <div class="launchStat"><div class="launchStatValue" id="lsApproved">-</div><div class="launchStatLabel">Approved</div></div>
+          <div class="launchStat"><div class="launchStatValue" id="lsAgents">-</div><div class="launchStatLabel">Agents</div></div>
+          <div class="launchStat"><div class="launchStatValue" id="lsTeams">-</div><div class="launchStatLabel">Teams</div></div>
         </div>
       </div>
     </div>
   </div>
+
+  <script src="./app.js"></script>
+  <script>
+  (function() {
+    // Load TV config for branding
+    var TV_CONFIG_KEY = "axxess_tv_config";
+    var cfg;
+    try { cfg = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)) || {}; } catch(e) { cfg = {}; }
+
+    // Apply brand color
+    if (cfg.brandColor) {
+      document.documentElement.style.setProperty("--brand", cfg.brandColor);
+      document.getElementById("launchHeader").style.background = cfg.brandColor;
+    }
+
+    // Apply logo
+    if (cfg.logoUrl) document.getElementById("launchLogo").src = cfg.logoUrl;
+
+    // Apply company name
+    if (cfg.companyName) {
+      document.title = cfg.companyName + " - Customer Recognition Dashboard";
+      document.getElementById("launchSubtitle").textContent = cfg.companyName + " Team Portal";
+    }
+
+    // Apply TV title
+    if (cfg.tvTitle) document.getElementById("launchTitle").textContent = cfg.tvTitle;
+
+    // Quick stats
+    var state = loadState();
+    document.getElementById("lsTotal").textContent = state.items.length;
+    document.getElementById("lsApproved").textContent = state.items.filter(function(i) { return i.status === "Approved"; }).length;
+    document.getElementById("lsAgents").textContent = state.agents.length;
+    document.getElementById("lsTeams").textContent = state.teams.length;
+  })();
+  </script>
 </body>
 </html>

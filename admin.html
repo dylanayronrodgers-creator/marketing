@@ -1125,6 +1125,23 @@
     setTimeout(function() { window.open("./tv.html", "_blank"); }, 200);
   });
 
+  // --- AUTO-CLEANUP: Remove old file-imported items that were incorrectly added as reviews ---
+  (function() {
+    var dirty = false;
+    state.items = state.items.filter(function(it) {
+      if (it.id && (it.id.indexOf("IMP-") === 0 || it.id.indexOf("CSV-") === 0 || it.id.indexOf("EM-") === 0) && it.source === "Email") {
+        dirty = true;
+        return false;
+      }
+      return true;
+    });
+    if (dirty) {
+      saveState(state);
+      console.log("Cleaned up old file-imported review items");
+      renderAll();
+    }
+  })();
+
   // --- RESET ---
   var resetBtn = document.getElementById("resetBtn");
   if (resetBtn) {
