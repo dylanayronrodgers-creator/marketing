@@ -535,8 +535,8 @@
         return;
       }
       var s = highlights[highlightIdx % highlights.length];
-      var quote = s.tvSnippet || s.text;
-      if (quote.length > 350) quote = quote.substring(0, 350) + "...";
+      var quote = s.text || s.tvSnippet;
+      if (quote.length > 500) quote = quote.substring(0, 500) + "...";
 
       var avatarHtml;
       if (s.reviewerThumbnail) {

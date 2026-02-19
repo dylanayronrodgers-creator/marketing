@@ -243,8 +243,8 @@ async function scrapeAllReviews() {
       else if (sentiment === 'Positive') theme = 'Great service';
       else if (sentiment === 'Negative') theme = 'Needs improvement';
       
-      // Create TV snippet
-      const tvSnippet = text.length > 120 ? text.substring(0, 120) + '...' : text;
+      // TV snippet - store full text, let dashboard handle truncation
+      const tvSnippet = text;
       
       // Parse date
       let createdAt;
