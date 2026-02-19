@@ -387,11 +387,20 @@ function computeStats(state) {
 
 function scoreItem(it) {
   var r = it.rating == null ? 0 : Number(it.rating);
-  if (r >= 5) return 10;
-  if (r >= 4) return 7;
-  if (r >= 3) return 3;
-  if (r >= 2) return 1;
-  return 0;
+  var base = 0;
+  if (r >= 5) base = 10;
+  else if (r >= 4) base = 7;
+  else if (r >= 3) base = 3;
+  else if (r >= 2) base = 1;
+
+  var mgr = it.managerRating == null ? 0 : Number(it.managerRating);
+  var mgrBase = 0;
+  if (mgr >= 5) mgrBase = 10;
+  else if (mgr >= 4) mgrBase = 7;
+  else if (mgr >= 3) mgrBase = 3;
+  else if (mgr >= 2) mgrBase = 1;
+
+  return base + mgrBase;
 }
 
 function computeLeaderboards(state, now) {
