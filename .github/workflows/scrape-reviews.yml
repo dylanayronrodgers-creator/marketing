@@ -43,4 +43,5 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add data/google-reviews.json
           git commit -m "🔄 Auto-update Google reviews [skip ci]"
+          git pull --rebase origin main
           git push
