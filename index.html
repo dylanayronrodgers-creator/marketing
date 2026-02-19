@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Axxess - Customer Recognition Dashboard</title>
+  <title>Top Reviewa</title>
   <link rel="stylesheet" href="./styles.css" />
   <style>
     :root { --brand: #0099cc; }
@@ -62,7 +62,6 @@
       font-size: 12px;
       backdrop-filter: blur(4px);
     }
-    
     .launchBody {
       padding: 32px;
     }
@@ -140,18 +139,6 @@
       .launchStats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
-<head>
-  <style>
-    .brand {
-      background-color: #e6f2ff;   /* Example: soft blue */
-      padding: 20px;
-    }
-    /* Optional: make logo look better on colored bg */
-    .logo {
-      max-width: 120px;           /* Adjust size as needed */
-      height: auto;
-    }
-  </style>
 </head>
 <body>
   <div class="launch">
@@ -160,15 +147,12 @@
         <div class="brand">
           <img class="logo" id="launchLogo" src="https://i.ibb.co/1GrhnMc4/images.jpg" alt="Logo" />
           <div class="titleBlock">
-            <div class="title" id="launchTitle">Customer Recognition Dashboard</div>
-            <div class="subtitle" id="launchSubtitle">Marketing Team Portal</div>
+            <div class="title" id="launchTitle">Top Reviewa</div>
+            <div class="subtitle" id="launchSubtitle">Axxess Team Portal</div>
           </div>
         </div>
         <div class="badge">Live</div>
       </div>
-    </div>
-  </div>
-</body>
 
       <div class="launchBody">
         <div class="launchGrid">
@@ -199,30 +183,21 @@
   <script src="./app.js"></script>
   <script>
   (function() {
-    // Load TV config for branding
     var TV_CONFIG_KEY = "axxess_tv_config";
     var cfg;
     try { cfg = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)) || {}; } catch(e) { cfg = {}; }
 
-    // Apply brand color
     if (cfg.brandColor) {
       document.documentElement.style.setProperty("--brand", cfg.brandColor);
       document.getElementById("launchHeader").style.background = cfg.brandColor;
     }
-
-    // Apply logo
     if (cfg.logoUrl) document.getElementById("launchLogo").src = cfg.logoUrl;
-
-    // Apply company name
     if (cfg.companyName) {
-      document.title = cfg.companyName + " - Customer Recognition Dashboard";
+      document.title = "Top Reviewa - " + cfg.companyName;
       document.getElementById("launchSubtitle").textContent = cfg.companyName + " Team Portal";
     }
-
-    // Apply TV title
     if (cfg.tvTitle) document.getElementById("launchTitle").textContent = cfg.tvTitle;
 
-    // Quick stats
     var state = loadState();
     document.getElementById("lsTotal").textContent = state.items.length;
     document.getElementById("lsApproved").textContent = state.items.filter(function(i) { return i.status === "Approved"; }).length;
