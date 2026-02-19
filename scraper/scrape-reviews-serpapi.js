@@ -60,11 +60,11 @@ function updateCache() {
   }, null, 2));
 }
 
-async function fetchJSON(url, retries = 2) {
+async function fetchJSON(url, retries = 3) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
-        const req = https.get(url, { timeout: 30000 }, (res) => {
+        const req = https.get(url, { timeout: 60000 }, (res) => {
           if (res.statusCode !== 200) {
             reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
             return;
@@ -85,8 +85,8 @@ async function fetchJSON(url, retries = 2) {
       return result;
     } catch (err) {
       if (attempt < retries) {
-        console.log(`   ⚠️ Attempt ${attempt + 1} failed: ${err.message}. Retrying in 3s...`);
-        await new Promise(r => setTimeout(r, 3000));
+        console.log(`   ⚠️ Attempt ${attempt + 1} failed: ${err.message}. Retrying in 5s...`);
+        await new Promise(r => setTimeout(r, 5000));
       } else {
         throw err;
       }
@@ -193,10 +193,15 @@ async function scrapeAllReviews() {
     
     while (result.serpapi_pagination && result.serpapi_pagination.next_page_token && pageCount < maxPages) {
       pageCount++;
-      result = await fetchReviews(dataId, result.serpapi_pagination.next_page_token);
-      if (result.reviews) {
-        allReviews = allReviews.concat(result.reviews);
-        console.log(`   Page ${pageCount}: +${result.reviews.length} reviews (Total: ${allReviews.length})`);
+      try {
+        result = await fetchReviews(dataId, result.serpapi_pagination.next_page_token);
+        if (result.reviews) {
+          allReviews = allReviews.concat(result.reviews);
+          console.log(`   Page ${pageCount}: +${result.reviews.length} reviews (Total: ${allReviews.length})`);
+        }
+      } catch (pageErr) {
+        console.log(`   ⚠️ Page ${pageCount} failed: ${pageErr.message}. Continuing with ${allReviews.length} reviews already fetched.`);
+        break;
       }
     }
     
