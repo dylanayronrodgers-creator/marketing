@@ -231,7 +231,7 @@ function loadGoogleReviews() {
   return fetch('./data/google-reviews.json')
     .then(function(response) {
       if (!response.ok) {
-        console.log('No Google reviews file found. Using mock data.');
+        console.log('No Google reviews file found.');
         return null;
       }
       return response.json();
@@ -240,48 +240,61 @@ function loadGoogleReviews() {
       if (!data || !data.reviews || data.reviews.length === 0) {
         return null;
       }
-      
+
+      var state = loadState();
+
+      // Check if we already have these exact reviews loaded (avoid unnecessary reload)
       var lastLoaded = localStorage.getItem(GOOGLE_REVIEWS_LOADED_KEY);
-      if (lastLoaded === data.scrapedAt) {
+      var hasGoogleReviews = state.items.some(function(item) { return item.id && item.id.indexOf('GR-') === 0; });
+      if (lastLoaded === data.scrapedAt && hasGoogleReviews) {
         console.log('Google reviews already loaded (scraped at ' + data.scrapedAt + ')');
         return null;
       }
-      
-      var state = loadState();
-      
-      // Keep existing Google reviews, add new ones (avoid duplicates by ID)
-      var existingIds = {};
+
+      // Keep existing Google reviews with their statuses (approved, flagged, etc.)
+      var existingById = {};
       state.items.forEach(function(item) {
-        if (item.id.startsWith('GR-')) {
-          existingIds[item.id] = true;
+        if (item.id && item.id.indexOf('GR-') === 0) {
+          existingById[item.id] = item;
         }
       });
-      
-      // Remove mock data (IDs starting with IT-) but keep existing Google reviews
+
+      // Remove all mock/demo data (IDs starting with IT-)
       state.items = state.items.filter(function(item) {
-        return item.id.startsWith('GR-');
+        return item.id && item.id.indexOf('IT-') !== 0;
       });
-      
-      // Add new reviews that don't already exist
+
+      // Merge scraped reviews: keep existing status/agent assignments, add new ones
+      var mergedIds = {};
+      state.items.forEach(function(item) { mergedIds[item.id] = true; });
+
       data.reviews.forEach(function(review) {
-        if (!existingIds[review.id]) {
+        if (existingById[review.id]) {
+          // Already exists — keep the existing version (preserves status, agent, manager rating)
+          if (!mergedIds[review.id]) {
+            state.items.push(existingById[review.id]);
+            mergedIds[review.id] = true;
+          }
+        } else {
+          // New review
           state.items.push(review);
+          mergedIds[review.id] = true;
         }
       });
-      
+
       // Sort by date (newest first)
       state.items.sort(function(a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
-      
+
       saveState(state);
       localStorage.setItem(GOOGLE_REVIEWS_LOADED_KEY, data.scrapedAt);
-      
+
       console.log('✅ Loaded ' + data.reviews.length + ' Google reviews (Rating: ' + data.overallRating + ')');
-      
+
       // Reload page to show new reviews
       location.reload();
-      
+
       return data;
     })
     .catch(function(err) {
