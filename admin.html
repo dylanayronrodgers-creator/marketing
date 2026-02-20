@@ -7,6 +7,7 @@
   <link rel="icon" type="image/jpeg" href="https://i.ibb.co/1GrhnMc4/images.jpg" />
   <link rel="stylesheet" href="./styles.css" />
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
   <div class="adminShell">
@@ -325,12 +326,27 @@
     </main>
   </div>
 
+  <script src="./supabase-client.js"></script>
   <script src="./app.js"></script>
   <script>
 (function() {
   var root = document.documentElement;
-  var state = loadState();
-  root.style.setProperty("--brand", state.brand.primary);
+
+  // Show loading overlay
+  var loadingEl = document.createElement("div");
+  loadingEl.id = "loadingOverlay";
+  loadingEl.style.cssText = "position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:99999;color:#94a3b8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;";
+  loadingEl.innerHTML = '<div style="text-align:center"><div style="font-size:32px;margin-bottom:12px;">⏳</div>Loading from database...</div>';
+  document.body.appendChild(loadingEl);
+
+  initState().then(function() {
+    var state = loadState();
+    root.style.setProperty("--brand", state.brand.primary);
+    if (loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+    startApp(state);
+  });
+
+  function startApp(state) {
 
   var views = ["overview", "queue", "approved", "agents", "negative", "import", "settings"];
   var viewTitle = document.getElementById("viewTitle");
@@ -620,6 +636,11 @@
         }
         editingAgentId = null;
         saveState(state);
+        if (typeof dbUpsertAgent === "function") dbUpsertAgent(agent);
+        // Update reviews in DB if name changed
+        if (oldName !== agent.name && typeof dbUpdateReview === "function") {
+          state.items.forEach(function(it) { if (it.agent === agent.name) dbUpdateReview(it.id, { agent: agent.name }); });
+        }
         renderAll();
         showToast("Updated " + agent.name, "success");
       });
@@ -639,6 +660,7 @@
         if (!confirm("Remove agent " + agent.name + "?")) return;
         state.agents = state.agents.filter(function(a) { return a.id !== agentId; });
         saveState(state);
+        if (typeof dbDeleteAgent === "function") dbDeleteAgent(agentId);
         renderAll();
         showToast("Removed " + agent.name, "success");
       });
@@ -654,6 +676,7 @@
         if (!confirm("Delete team '" + teamName + "'?")) return;
         state.teams = state.teams.filter(function(t) { return t !== teamName; });
         saveState(state);
+        if (typeof dbSaveTeams === "function") dbSaveTeams(state.teams);
         renderAll();
         showToast("Deleted team " + teamName, "success");
       });
@@ -674,8 +697,10 @@
     if (!team) { showToast("Please select a team", "error"); return; }
 
     var id = "AG-" + String(Date.now()).slice(-6);
-    state.agents.push({ id: id, name: name, team: team, email: email });
+    var newAgent = { id: id, name: name, team: team, email: email };
+    state.agents.push(newAgent);
     saveState(state);
+    if (typeof dbUpsertAgent === "function") dbUpsertAgent(newAgent);
     nameEl.value = "";
     emailEl.value = "";
     renderAll();
@@ -690,6 +715,7 @@
     if (state.teams.indexOf(teamName) !== -1) { showToast("Team already exists", "error"); return; }
     state.teams.push(teamName);
     saveState(state);
+    if (typeof dbSaveTeams === "function") dbSaveTeams(state.teams);
     teamInput.value = "";
     renderAll();
     showToast("Added team " + teamName, "success");
@@ -945,9 +971,20 @@
 
   function saveTvConfig(cfg) {
     localStorage.setItem(TV_CONFIG_KEY, JSON.stringify(cfg));
+    if (typeof dbSaveTvConfig === "function") dbSaveTvConfig(cfg);
   }
 
   var tvConfig = loadTvConfig();
+  // Also load from Supabase if available (overrides localStorage)
+  if (typeof dbLoadTvConfig === "function") {
+    dbLoadTvConfig().then(function(dbCfg) {
+      if (dbCfg) {
+        tvConfig = Object.assign({}, defaultTvConfig, dbCfg);
+        saveTvConfig(tvConfig); // sync to localStorage
+        updateSettingsUI();
+      }
+    });
+  }
 
   // Color presets
   var presetColors = [
@@ -1332,16 +1369,19 @@
         newTeams.push(team);
       }
 
-      state.agents.push({
+      var newAgent = {
         id: "AG-" + String(Date.now()).slice(-6) + "-" + String(imported),
         name: row.name,
         team: team,
         email: row.email || ""
-      });
+      };
+      state.agents.push(newAgent);
+      if (typeof dbUpsertAgent === "function") dbUpsertAgent(newAgent);
       imported++;
     });
 
     saveState(state);
+    if (newTeams.length > 0 && typeof dbSaveTeams === "function") dbSaveTeams(state.teams);
     document.getElementById("agentFileInput").value = "";
     document.getElementById("agentPreviewArea").innerHTML = "";
     document.getElementById("agentConfirmBtn").style.display = "none";
@@ -1547,6 +1587,8 @@
   });
 
   console.log("Manager Portal ready. Items:", state.items.length);
+
+  } // end startApp
 })();
   </script>
 </body>

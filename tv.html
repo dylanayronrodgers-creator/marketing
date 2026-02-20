@@ -351,10 +351,12 @@
     </footer>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="./supabase-client.js"></script>
   <script src="./app.js"></script>
   <script>
 (function() {
-  // --- LOAD TV CONFIG ---
+  // --- LOAD TV CONFIG (localStorage first, then Supabase override) ---
   var TV_CONFIG_KEY = "axxess_tv_config";
   var tvCfg;
   try { tvCfg = JSON.parse(localStorage.getItem(TV_CONFIG_KEY)) || {}; } catch(e) { tvCfg = {}; }
@@ -433,6 +435,46 @@
   var highlights = [];
   var SLIDE_INTERVAL = (tvCfg.slideInterval || 8) * 1000;
   var lastStateHash = "";
+  var renderInterval = null;
+
+  // Load state from Supabase, then start rendering
+  initState().then(function(s) {
+    state = s;
+    // Also load TV config from Supabase
+    if (typeof dbLoadTvConfig === "function") {
+      dbLoadTvConfig().then(function(dbCfg) {
+        if (dbCfg) {
+          tvCfg = Object.assign({}, tvCfg, dbCfg);
+          applyTvConfig();
+        }
+        startDashboard();
+      });
+    } else {
+      startDashboard();
+    }
+  });
+
+  function applyTvConfig() {
+    if (tvCfg.bgTheme && bgMap[tvCfg.bgTheme]) document.body.style.background = bgMap[tvCfg.bgTheme];
+    var logoEl2 = document.querySelector(".tv-header .logo");
+    if (tvCfg.logoUrl && logoEl2) logoEl2.src = tvCfg.logoUrl;
+    var titleEl2 = document.querySelector(".tv-header .title");
+    if (tvCfg.tvTitle && titleEl2) titleEl2.textContent = tvCfg.tvTitle;
+    if (tvCfg.brandColor) document.documentElement.style.setProperty("--tv-brand", tvCfg.brandColor);
+    if (tvCfg.companyName) document.title = tvCfg.companyName + " - " + (tvCfg.tvTitle || "Top Reviewa");
+    SLIDE_INTERVAL = (tvCfg.slideInterval || 8) * 1000;
+  }
+
+  function startDashboard() {
+    render();
+    renderInterval = setInterval(render, 30000);
+    renderSlide();
+    setInterval(renderSlide, SLIDE_INTERVAL);
+    // Re-fetch from Supabase every 60s for live updates
+    setInterval(function() {
+      initState().then(function(s) { state = s; });
+    }, 60000);
+  }
 
   // Clock
   function updateClock() {
@@ -564,12 +606,9 @@
   }
 
   slide.style.transition = "opacity 0.35s ease";
-  render();
-  renderSlide();
-  setInterval(renderSlide, SLIDE_INTERVAL);
-  setInterval(render, 15000);
 
-  console.log("TV Dashboard ready. Items:", state.items.length);
+  // Initial render/intervals are now handled by startDashboard() after Supabase loads
+  console.log("TV Dashboard initialized, waiting for Supabase...");
 })();
   </script>
 </body>

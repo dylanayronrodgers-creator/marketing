@@ -181,6 +181,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="./supabase-client.js"></script>
   <script src="./app.js"></script>
   <script>
   (function() {
@@ -191,22 +193,33 @@
     // Migrate old title
     if (cfg.tvTitle === "Customer Recognition") cfg.tvTitle = "Top Reviewa";
 
-    if (cfg.brandColor) {
-      document.documentElement.style.setProperty("--brand", cfg.brandColor);
-      document.getElementById("launchHeader").style.background = cfg.brandColor;
+    function applyCfg(c) {
+      if (c.brandColor) {
+        document.documentElement.style.setProperty("--brand", c.brandColor);
+        document.getElementById("launchHeader").style.background = c.brandColor;
+      }
+      if (c.logoUrl) document.getElementById("launchLogo").src = c.logoUrl;
+      if (c.companyName) {
+        document.title = "Top Reviewa - " + c.companyName;
+        document.getElementById("launchSubtitle").textContent = c.companyName + " Team Portal";
+      }
+      if (c.tvTitle) document.getElementById("launchTitle").textContent = c.tvTitle;
     }
-    if (cfg.logoUrl) document.getElementById("launchLogo").src = cfg.logoUrl;
-    if (cfg.companyName) {
-      document.title = "Top Reviewa - " + cfg.companyName;
-      document.getElementById("launchSubtitle").textContent = cfg.companyName + " Team Portal";
-    }
-    if (cfg.tvTitle) document.getElementById("launchTitle").textContent = cfg.tvTitle;
+    applyCfg(cfg);
 
-    var state = loadState();
-    document.getElementById("lsTotal").textContent = state.items.length;
-    document.getElementById("lsApproved").textContent = state.items.filter(function(i) { return i.status === "Approved"; }).length;
-    document.getElementById("lsAgents").textContent = state.agents.length;
-    document.getElementById("lsTeams").textContent = state.teams.length;
+    initState().then(function(state) {
+      document.getElementById("lsTotal").textContent = state.items.length;
+      document.getElementById("lsApproved").textContent = state.items.filter(function(i) { return i.status === "Approved"; }).length;
+      document.getElementById("lsAgents").textContent = state.agents.length;
+      document.getElementById("lsTeams").textContent = state.teams.length;
+
+      // Load TV config from Supabase
+      if (typeof dbLoadTvConfig === "function") {
+        dbLoadTvConfig().then(function(dbCfg) {
+          if (dbCfg) applyCfg(dbCfg);
+        });
+      }
+    });
   })();
   </script>
 </body>

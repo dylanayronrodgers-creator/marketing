@@ -9,6 +9,7 @@
     "scrape:places-api": "node scrape-reviews-api.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
     "puppeteer": "^21.6.1"
   }
 }

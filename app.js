@@ -1,8 +1,17 @@
 // ============================================
-// AXXESS DASHBOARD - BUNDLED (NO SERVER NEEDED)
+// TOP REVIEWA DASHBOARD - SUPABASE BACKEND
 // ============================================
 
-// --- MOCK DATA GENERATOR ---
+// --- Local state cache (synchronous access for rendering) ---
+var _stateCache = {
+  brand: { name: "Axxess", primary: "#0099cc" },
+  teams: ["Sales", "Support", "Fibre Orders", "Accounts", "Walk-In Centre"],
+  agents: [],
+  items: []
+};
+var _stateLoaded = false;
+
+// --- MOCK DATA GENERATOR (kept for reset/demo only) ---
 function mulberry32(a) {
   return function () {
     let t = (a += 0x6d2b79f5);
@@ -189,12 +198,9 @@ function generateItems() {
   return items;
 }
 
-// --- SEED DATA ---
+// --- SEED DATA (used only for demo reset) ---
 var seed = {
-  brand: {
-    name: "Axxess",
-    primary: "#0099cc"
-  },
+  brand: { name: "Axxess", primary: "#0099cc" },
   teams: ["Sales", "Support", "Fibre Orders", "Accounts", "Walk-In Centre"],
   agents: [
     { id: "AG-001", name: "Leah Mokoena", team: "Support", email: "leah.mokoena@axxess.local" },
@@ -208,172 +214,73 @@ var seed = {
     { id: "AG-009", name: "Priya Pillay", team: "Accounts", email: "priya.pillay@axxess.local" },
     { id: "AG-010", name: "Liam Smith", team: "Walk-In Centre", email: "liam.smith@axxess.local" }
   ],
-  items: generateItems()
+  items: []
 };
 
-// --- STORE (localStorage) ---
-var STORAGE_KEY = "axxess_dashboard_state_v2";
-var GOOGLE_REVIEWS_LOADED_KEY = "axxess_google_reviews_loaded";
+// --- STORE (Supabase-backed with local cache) ---
 
+// Synchronous: returns cached state (call initState first)
 function loadState() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return JSON.parse(JSON.stringify(seed));
-    var parsed = JSON.parse(raw);
-    return mergeWithSeed(parsed);
-  } catch (e) {
-    return JSON.parse(JSON.stringify(seed));
+  return _stateCache;
+}
+
+// Async: load full state from Supabase into cache
+function initState() {
+  if (typeof dbLoadState !== "function") {
+    console.warn("Supabase client not loaded, using empty state");
+    return Promise.resolve(_stateCache);
   }
-}
-
-// Load Google Reviews from scraped JSON file
-function loadGoogleReviews() {
-  return fetch('./data/google-reviews.json')
-    .then(function(response) {
-      if (!response.ok) {
-        console.log('No Google reviews file found.');
-        return null;
-      }
-      return response.json();
-    })
-    .then(function(data) {
-      if (!data || !data.reviews || data.reviews.length === 0) {
-        return null;
-      }
-
-      var state = loadState();
-
-      // Check if we already have these exact reviews loaded (avoid unnecessary reload)
-      var lastLoaded = localStorage.getItem(GOOGLE_REVIEWS_LOADED_KEY);
-      var hasGoogleReviews = state.items.some(function(item) { return item.id && item.id.indexOf('GR-') === 0; });
-      if (lastLoaded === data.scrapedAt && hasGoogleReviews) {
-        console.log('Google reviews already loaded (scraped at ' + data.scrapedAt + ')');
-        return null;
-      }
-
-      // Keep existing Google reviews with their statuses (approved, flagged, etc.)
-      var existingById = {};
-      state.items.forEach(function(item) {
-        if (item.id && item.id.indexOf('GR-') === 0) {
-          existingById[item.id] = item;
-        }
-      });
-
-      // Remove all mock/demo data (IDs starting with IT-)
-      state.items = state.items.filter(function(item) {
-        return item.id && item.id.indexOf('IT-') !== 0;
-      });
-
-      // Merge scraped reviews: keep existing status/agent assignments, add new ones
-      var mergedIds = {};
-      state.items.forEach(function(item) { mergedIds[item.id] = true; });
-
-      data.reviews.forEach(function(review) {
-        if (existingById[review.id]) {
-          // Already exists — keep the existing version (preserves status, agent, manager rating)
-          if (!mergedIds[review.id]) {
-            state.items.push(existingById[review.id]);
-            mergedIds[review.id] = true;
-          }
-        } else {
-          // New review
-          state.items.push(review);
-          mergedIds[review.id] = true;
-        }
-      });
-
-      // Sort by date (newest first)
-      state.items.sort(function(a, b) {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      });
-
-      saveState(state);
-      localStorage.setItem(GOOGLE_REVIEWS_LOADED_KEY, data.scrapedAt);
-
-      console.log('✅ Loaded ' + data.reviews.length + ' Google reviews (Rating: ' + data.overallRating + ')');
-
-      // Reload page to show new reviews
-      location.reload();
-
-      return data;
-    })
-    .catch(function(err) {
-      console.log('Could not load Google reviews:', err.message);
-      return null;
-    });
-}
-
-// Initialize Google reviews on page load
-if (typeof window !== 'undefined') {
-  window.addEventListener('DOMContentLoaded', function() {
-    loadGoogleReviews();
+  return dbLoadState().then(function(state) {
+    _stateCache = state;
+    _stateLoaded = true;
+    console.log("✅ State loaded from Supabase:", state.items.length, "reviews,", state.agents.length, "agents");
+    return _stateCache;
+  }).catch(function(err) {
+    console.error("Failed to load state from Supabase:", err);
+    return _stateCache;
   });
 }
 
+// Save full state to cache (DB writes happen via specific functions)
 function saveState(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  _stateCache = state;
 }
 
+// Reset to demo data
 function resetState() {
-  localStorage.removeItem(STORAGE_KEY);
   seed.items = generateItems();
-  return JSON.parse(JSON.stringify(seed));
-}
-
-function mergeWithSeed(state) {
-  var s = JSON.parse(JSON.stringify(seed));
-
-  if (state && typeof state === "object") {
-    if (state.brand && typeof state.brand === "object") {
-      s.brand = Object.assign({}, s.brand, state.brand);
-    }
-    if (Array.isArray(state.teams)) s.teams = state.teams;
-    if (Array.isArray(state.agents)) s.agents = state.agents;
-    if (Array.isArray(state.items)) {
-      s.items = state.items.map(function(it) {
-        var item = {
-          id: String(it.id || Math.random().toString(36).substr(2, 9)),
-          createdAt: String(it.createdAt || new Date().toISOString()),
-          source: String(it.source || "Google"),
-          rating: it.rating == null ? null : Number(it.rating),
-          sentiment: String(it.sentiment || "Neutral"),
-          status: String(it.status || "Pending"),
-          team: String(it.team || "Unknown"),
-          agent: String(it.agent || "Unknown"),
-          text: String(it.text || ""),
-          keywords: Array.isArray(it.keywords) ? it.keywords.map(String) : [],
-          theme: String(it.theme || ""),
-          tvSnippet: String(it.tvSnippet || ""),
-          managerRating: it.managerRating == null ? null : Number(it.managerRating)
-        };
-        if (it.reviewerName) item.reviewerName = String(it.reviewerName);
-        if (it.reviewerThumbnail) item.reviewerThumbnail = String(it.reviewerThumbnail);
-        if (it.reviewerLink) item.reviewerLink = String(it.reviewerLink);
-        if (it.likes != null) item.likes = Number(it.likes);
-        return item;
-      });
-    }
+  _stateCache = JSON.parse(JSON.stringify(seed));
+  // Also reset in DB
+  if (typeof dbDeleteAllReviews === "function") {
+    dbDeleteAllReviews().then(function() {
+      return dbUpsertReviews(_stateCache.items);
+    });
   }
-  return s;
+  return _stateCache;
 }
 
+// Update brand color (async DB write)
 function updateBrandPrimary(color) {
-  var state = loadState();
-  state.brand.primary = color;
-  saveState(state);
-  return state;
+  _stateCache.brand.primary = color;
+  if (typeof dbSaveBrand === "function") {
+    dbSaveBrand(_stateCache.brand);
+  }
+  return _stateCache;
 }
 
+// Update a single review item (async DB write)
 function updateItem(id, patch) {
-  var state = loadState();
   var idx = -1;
-  for (var i = 0; i < state.items.length; i++) {
-    if (state.items[i].id === id) { idx = i; break; }
+  for (var i = 0; i < _stateCache.items.length; i++) {
+    if (_stateCache.items[i].id === id) { idx = i; break; }
   }
-  if (idx === -1) return state;
-  state.items[idx] = Object.assign({}, state.items[idx], patch);
-  saveState(state);
-  return state;
+  if (idx === -1) return _stateCache;
+  _stateCache.items[idx] = Object.assign({}, _stateCache.items[idx], patch);
+  // Write to DB
+  if (typeof dbUpdateReview === "function") {
+    dbUpdateReview(id, patch);
+  }
+  return _stateCache;
 }
 
 function getApprovedItems(state) {
@@ -485,4 +392,4 @@ function showToast(message, type) {
   }, 2500);
 }
 
-console.log("Axxess Dashboard loaded. Items in seed:", seed.items.length);
+console.log("Top Reviewa Dashboard loaded (Supabase backend)");

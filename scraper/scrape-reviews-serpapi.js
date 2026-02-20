@@ -15,6 +15,12 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
+
+// Supabase config
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hzjtthgofkeubksrprmg.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY || '';
+const supabaseClient = SUPABASE_KEY ? createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 // Set your SerpAPI key via environment variable
 // Windows: set SERPAPI_KEY=your_key_here
@@ -291,6 +297,58 @@ async function scrapeAllReviews() {
     fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
     console.log(`\n💾 Saved ${dashboardReviews.length} reviews to data/google-reviews.json`);
     
+    // Step 6: Write to Supabase
+    if (supabaseClient) {
+      console.log('\n📤 Writing to Supabase...');
+      const dbRows = dashboardReviews.map(r => ({
+        id: r.id,
+        created_at: r.createdAt,
+        source: r.source || 'Google',
+        rating: r.rating,
+        sentiment: r.sentiment || 'Neutral',
+        status: r.status || 'Pending',
+        agent: r.agent || 'Unknown',
+        team: r.team || 'Unknown',
+        theme: r.theme || '',
+        keywords: r.keywords || [],
+        tv_snippet: r.tvSnippet || '',
+        text: r.text || '',
+        reviewer_name: r.reviewerName || null,
+        reviewer_thumbnail: r.reviewerThumbnail || null,
+        reviewer_link: r.reviewerLink || null,
+        likes: r.likes || 0
+      }));
+
+      // Insert new reviews only (don't overwrite admin-set fields like status, agent)
+      // First, check which IDs already exist
+      const existingIds = new Set();
+      const { data: existingRows } = await supabaseClient
+        .from('reviews')
+        .select('id')
+        .in('id', dbRows.map(r => r.id));
+      if (existingRows) existingRows.forEach(r => existingIds.add(r.id));
+
+      const newRows = dbRows.filter(r => !existingIds.has(r.id));
+      let upsertError = null;
+      if (newRows.length > 0) {
+        const res = await supabaseClient
+          .from('reviews')
+          .insert(newRows);
+        upsertError = res.error;
+        console.log(`   ${newRows.length} new, ${existingIds.size} already in DB`);
+      } else {
+        console.log(`   All ${dbRows.length} reviews already in DB`);
+      }
+
+      if (upsertError) {
+        console.error('❌ Supabase upsert error:', upsertError.message);
+      } else {
+        console.log(`✅ Upserted ${dbRows.length} reviews to Supabase`);
+      }
+    } else {
+      console.log('\n⚠️  No Supabase key found, skipping DB write');
+    }
+
     // Update cache timestamp
     updateCache();
     
