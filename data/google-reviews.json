@@ -1,11 +1,32 @@
 {
-  "scrapedAt": "2026-02-19T18:54:35.304Z",
+  "scrapedAt": "2026-02-20T07:01:00.485Z",
   "businessName": "Axxess",
   "overallRating": null,
   "totalReviews": 100,
   "scrapedCount": 100,
   "dataId": "0x1e7ad23632467f91:0x57bec90a7dc50866",
   "reviews": [
+    {
+      "id": "GR-17964904-20260213",
+      "createdAt": "2026-02-13T08:30:14Z",
+      "source": "Google",
+      "rating": 5,
+      "sentiment": "Positive",
+      "status": "Pending",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Fast service",
+      "keywords": [
+        "friendly",
+        "quick"
+      ],
+      "tvSnippet": "Quick to respond on queries , they will assist you with your router setup and guide you. Visited this place a few times , very friendly and a warm welcome.\n\nThanks to Reception and Gershon!",
+      "text": "Quick to respond on queries , they will assist you with your router setup and guide you. Visited this place a few times , very friendly and a warm welcome.\n\nThanks to Reception and Gershon!",
+      "reviewerName": "Dee",
+      "reviewerLink": "https://www.google.com/maps/contrib/109071484097917964904/reviews?hl=en-US",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKRJdwjuU7kYVShLvDmxgh7RyaXxjavkOsZULHNRYYbRkRbEw=s64-c-rp-mo-ba2-br100",
+      "likes": 1
+    },
     {
       "id": "GR-82506322-20260207",
       "createdAt": "2026-02-07T14:51:53Z",
@@ -804,26 +825,6 @@
       "reviewerName": "Taine Warren",
       "reviewerLink": "https://www.google.com/maps/contrib/111782007120283357515/reviews?hl=en-US",
       "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKnNHj9BvSKQOrzV9GVT68YQ1lY8lXVaN4g7lddU66p5yEh_w=s64-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-46887666-20251007",
-      "createdAt": "2025-10-07T12:39:35Z",
-      "source": "Google",
-      "rating": 1,
-      "sentiment": "Negative",
-      "status": "Flagged (Negative)",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Needs improvement",
-      "keywords": [
-        "horrible"
-      ],
-      "tvSnippet": "Horrible service! Internet always having issues. Can't cancel because service is not longer than 3 month but they advertise as month to month and can cancel anytime.\n\nWILL NOT RECOMMMED TO ANYONE.",
-      "text": "Horrible service! Internet always having issues. Can't cancel because service is not longer than 3 month but they advertise as month to month and can cancel anytime.\n\nWILL NOT RECOMMMED TO ANYONE.",
-      "reviewerName": "Yes Sir",
-      "reviewerLink": "https://www.google.com/maps/contrib/103437553400746887666/reviews?hl=en-US",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKef6EIUK5zkJkBh9Mmy64WqPJKAls8P8sRG4-gqCVuuOqM=s64-c-rp-mo-br100",
       "likes": 0
     },
     {
