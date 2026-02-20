@@ -30,8 +30,10 @@ const SERPAPI_KEY = process.env.SERPAPI_KEY;
 // Search query to find Axxess on Google Maps
 const SEARCH_QUERY = 'Axxess DSL South Africa';
 
-// Data ID for Axxess - found via SerpAPI
-// This skips the search step and saves 1 API credit per run
+// Place ID for Axxess on Google Maps
+const PLACE_ID = 'ChIJkX9GMjbSeh4RZgjFfQrJvlc';
+
+// Data ID for Axxess - used as fallback
 let PLACE_DATA_ID = '0x1e7ad23632467f91:0x57bec90a7dc50866';
 
 // Cache settings - only scrape once every 12 hours to save API credits
@@ -137,9 +139,8 @@ async function findPlaceDataId() {
 async function fetchReviews(dataId, nextPageToken = null) {
   console.log(nextPageToken ? '📄 Fetching next page of reviews...' : '📝 Fetching reviews...');
   
-  // sort_by=date gets the most recent reviews instead of "most relevant"
-  // SerpAPI values: date (newest), rating_high, rating_low — NOT "newestFirst"
-  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&data_id=${dataId}&sort_by=date&hl=en&api_key=${SERPAPI_KEY}`;
+  // Use place_id with sort_by=newestFirst for newest reviews
+  let reviewsUrl = `https://serpapi.com/search.json?engine=google_maps_reviews&place_id=${PLACE_ID}&sort_by=newestFirst&hl=en&api_key=${SERPAPI_KEY}`;
   
   if (nextPageToken) {
     reviewsUrl += `&next_page_token=${nextPageToken}`;
