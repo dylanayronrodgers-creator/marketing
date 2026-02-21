@@ -1,5 +1,5 @@
 {
-  "scrapedAt": "2026-02-20T18:53:34.131Z",
+  "scrapedAt": "2026-02-21T06:47:27.531Z",
   "businessName": "Axxess",
   "overallRating": 4.5,
   "totalReviews": 5648,
@@ -129,6 +129,26 @@
       "likes": 0
     },
     {
+      "id": "GR-66634075-20260210",
+      "createdAt": "2026-02-10T12:26:51Z",
+      "source": "Google",
+      "rating": 1,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Needs improvement",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "55 min and counting waiting for technical staff to answer my call.",
+      "text": "55 min and counting waiting for technical staff to answer my call.",
+      "reviewerName": "Wouter Vermaak",
+      "reviewerLink": "https://www.google.com/maps/contrib/114930511798666634075?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjXkbZXyWFcqPUmV9v2fQXFAYpV242chJU3qVsIyPLRU4HU_FmY=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
       "id": "GR-46600361-20260207",
       "createdAt": "2026-02-07T19:43:52Z",
       "source": "Google",
@@ -169,23 +189,23 @@
       "likes": 0
     },
     {
-      "id": "GR-48981949-20260127",
-      "createdAt": "2026-01-27T13:29:20Z",
+      "id": "GR-52947959-20260202",
+      "createdAt": "2026-02-02T13:44:42Z",
       "source": "Google",
-      "rating": 5,
-      "sentiment": "Positive",
-      "status": "Pending",
+      "rating": 2,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
       "agent": "Unknown",
       "team": "Unknown",
-      "theme": "Fast service",
+      "theme": "Needs improvement",
       "keywords": [
-        "quick"
+        "poor"
       ],
-      "tvSnippet": "Returned wifi router. Service was quick and efficient. No hassle, no wasted time!",
-      "text": "Returned wifi router. Service was quick and efficient. No hassle, no wasted time!",
-      "reviewerName": "Rochelle Shepherd",
-      "reviewerLink": "https://www.google.com/maps/contrib/109354790521248981949?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVW5IXRqmMD7_mchP6pANr7K0GJOW6n3OSfaMgUj9PZm9KxnUFulg=s120-c-rp-mo-ba5-br100",
+      "tvSnippet": "Service is poor",
+      "text": "Service is poor",
+      "reviewerName": "Greg Blandford",
+      "reviewerLink": "https://www.google.com/maps/contrib/102521382485752947959?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjV_mZuWkCUTyMTmbP2c7sCoUaiyO83xHU5cfkVTKT5qJ000BbR-yg=s120-c-rp-mo-ba4-br100",
       "likes": 0
     },
     {
@@ -1469,6 +1489,26 @@
       "likes": 0
     },
     {
+      "id": "GR-59960289-20251002",
+      "createdAt": "2025-10-02T06:53:36Z",
+      "source": "Google",
+      "rating": 2,
+      "sentiment": "Negative",
+      "status": "Flagged (Negative)",
+      "agent": "Unknown",
+      "team": "Unknown",
+      "theme": "Great support",
+      "keywords": [
+        "customer feedback"
+      ],
+      "tvSnippet": "I reserve 1 star for Home Affairs. But Axxess, you were very very close. Bill me ahead of time for a service but forgot to send the router. Costing me 2 days of work now. Only 1 ticket responded to within 12 hours (to justify billing. I had to phone every time to get an answer.\nI've always supported Axxess but since going the 'digital communication' route , you've taken away accountability from your staff. Web Africa did this . Telkom did this. Now you. I left Afrihost for Axxess but I expected more from.\nStarting to regret the move (and still without internet)",
+      "text": "I reserve 1 star for Home Affairs. But Axxess, you were very very close. Bill me ahead of time for a service but forgot to send the router. Costing me 2 days of work now. Only 1 ticket responded to within 12 hours (to justify billing. I had to phone every time to get an answer.\nI've always supported Axxess but since going the 'digital communication' route , you've taken away accountability from your staff. Web Africa did this . Telkom did this. Now you. I left Afrihost for Axxess but I expected more from.\nStarting to regret the move (and still without internet)",
+      "reviewerName": "Ricardo Steyn",
+      "reviewerLink": "https://www.google.com/maps/contrib/111028416240059960289?hl=en",
+      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjW3WAnxsa1tlNyjCo5hukROSCOckA4OEvVLPG9tube82x6lkcM=s120-c-rp-mo-br100",
+      "likes": 0
+    },
+    {
       "id": "GR-11642656-20251002",
       "createdAt": "2025-10-02T06:43:12Z",
       "source": "Google",
@@ -1510,46 +1550,6 @@
       "reviewerName": "Mmabatho Shibise",
       "reviewerLink": "https://www.google.com/maps/contrib/113636621809024842096?hl=en",
       "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWVgwiUo8MMNTha3P2l6H0g4kPuTOFWnHpJcWZyq1W32sXHi0x7=s120-c-rp-mo-ba2-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-16561803-20250923",
-      "createdAt": "2025-09-23T07:44:17Z",
-      "source": "Google",
-      "rating": 3,
-      "sentiment": "Neutral",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Fast service",
-      "keywords": [
-        "slow"
-      ],
-      "tvSnippet": "I have been with Axxess for close to five years now. My uptime is steady and speeds are okay. I've never reached promised speeds, but the ones I get are sufficient.\n\nThe missing one star is for the live chat when requiring assistance. It is slow. On a chat I waited 4 minutes after type just to get a response that says \"one moment\". Meaning I was going to wait longer.",
-      "text": "I have been with Axxess for close to five years now. My uptime is steady and speeds are okay. I've never reached promised speeds, but the ones I get are sufficient.\n\nThe missing one star is for the live chat when requiring assistance. It is slow. On a chat I waited 4 minutes after type just to get a response that says \"one moment\". Meaning I was going to wait longer.",
-      "reviewerName": "Pako Molema",
-      "reviewerLink": "https://www.google.com/maps/contrib/113686448335616561803?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVZ2-UvPrQWNKZsJL79R0W_IO4C1AJ44GgnONACZMrAXhBwPxtO=s120-c-rp-mo-br100",
-      "likes": 0
-    },
-    {
-      "id": "GR-19920588-20250922",
-      "createdAt": "2025-09-22T11:51:55Z",
-      "source": "Google",
-      "rating": 4,
-      "sentiment": "Positive",
-      "status": "Pending",
-      "agent": "Unknown",
-      "team": "Unknown",
-      "theme": "Great service",
-      "keywords": [
-        "customer feedback"
-      ],
-      "tvSnippet": "So far am happy with the them.",
-      "text": "So far am happy with the them.",
-      "reviewerName": "jahangir Alam",
-      "reviewerLink": "https://www.google.com/maps/contrib/107444325712619920588?hl=en",
-      "reviewerThumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjWgC1MTPfBvE3_TiE4obJWnwLNhq4BWtrOPAfAI6VtZFpSXb5c=s120-c-rp-mo-br100",
       "likes": 0
     },
     {
